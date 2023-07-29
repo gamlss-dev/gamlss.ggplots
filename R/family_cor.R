@@ -5,12 +5,6 @@
 #   family orthogonality of parameters  
 #   Mikis Stasinopoulos Bob Rigby Fernanda de Bastiani
 #   February, 2022 
-#   NOTE that for binonial type of data `to' plays the role of 
-#   binomial denominator so only one binomial denominator is allowed
-#   here
-#   TO DO:
-#   i) TEST especially BI type 
-#   ii) can be extended to other things 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -81,34 +75,34 @@ gamlss.bi.list <- .binom
   if(any(fname%in%.gamlss.bi.list)) bd <- bd   
 ## the number of plots  
     lobs <- max(c(length(mu),length(sigma),length(nu),length(tau)))
-#################################################################     
+#################################################################  
 # get the parameters
 if ("mu"%in%par.names)
    { if (is.null(mu)) stop("At least one value of mu has to be set")
       mu.var <- rep(mu, length = lobs) 
       if (!fam$mu.valid(mu.var))  stop( "`mu' parameter out of range")
-      samp <- eval(call(rorfun, name=no.sim , mu=mu.var))
+      samp <- eval(call(rorfun, no.sim, mu=mu.var))
    }
 if ("sigma"%in%par.names)
    { if (is.null(sigma)) stop("At least one value of sigma has to be set") 
       sigma.var <- rep(sigma, length = lobs)
       if (!fam$sigma.valid(sigma.var))  stop( "`sigma' parameter out of range")
-      samp <- eval(call(rorfun, name=no.sim , mu=mu.var, sigma=sigma.var))
+      samp <- eval(call(rorfun, no.sim , mu=mu.var, sigma=sigma.var))
     }
 if ("nu"%in%par.names)
    { 
       if (is.null(nu)) stop("At least one value of nu has to be set")
       nu.var <- rep(nu, length = lobs)
       if (!fam$nu.valid(nu.var))  stop( "`nu' parameter out of range")
-      samp <- eval(call(rorfun, name=no.sim , mu=mu.var, sigma=sigma.var, nu=nu.var))
+      samp <- eval(call(rorfun, no.sim , mu=mu.var, sigma=sigma.var, nu=nu.var))
    }
 if ("tau"%in%par.names)
    { if (is.null(tau)) stop("At least one value of tau has to be set") 
       tau.var <- rep(tau, length = lobs)
       if (!fam$tau.valid(tau.var))  stop( "`tau' parameter out of range")
-      samp <- eval(call(rorfun, name=no.sim, mu=mu.var, sigma=sigma.var, nu=nu.var, tau=tau.var))
+      samp <- eval(call(rorfun, no.sim, mu=mu.var, sigma=sigma.var, nu=nu.var, tau=tau.var))
 }
-    
+  
      model0 <- gamlssML(samp, family=fname) 
          CC <- vcov(model0, type="cor")
          CC <- base::round(x = CC, digits = digits)
