@@ -18,6 +18,7 @@
 # 20) data_outliers    : identify outliers using z-scores SHASH
 # 20) data_zscores_plot: for continuous variables plots the z scores SHASH
 # 21) y_trans 
+# 
 ################################################################################
 ################################################################################
 ################################################################################
@@ -650,3 +651,29 @@ data_remove <- function(data, what)
 ################################################################################
 ################################################################################
 ################################################################################
+################################################################################
+data_rm1val <- function(data) 
+{
+  # what is the data
+  if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
+  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data, "array")) stop("the data is an array the function needs a data.frame")  
+  Names <- names(data)
+  PP <- list()
+  for (i in 1:length(Names))
+  {
+    PP[[i]] <- length(table(data[,Names[i]]))
+  }
+  pp=unlist(PP)
+  names(pp) <- Names
+  if (any(pp==1))
+  {
+   w1val <-  which(pp==1)
+   removed <- names(data)[w1val]
+   data[,w1val] <- NULL 
+  }
+  cat("the var", removed, "has been removed \n")
+ invisible(data)
+}
