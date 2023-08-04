@@ -62,7 +62,7 @@ van Buuren and Fredriks M. (2001) Worm plot: simple diagnostic device for modell
             \emph{Statistics in Medicine}, \bold{20}, 1259--1277
 
 }
-\author{Mikis Stasinopoulos \email{d.stasinopoulos@londonmet.ac.uk}, Bob Rigby and Fernanda De Bastiani}
+\author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
