@@ -7,12 +7,12 @@
 \title{Detrended Transformed Owen's Plot and ECDF for the residuals}
 \description{
 
-The function \code{resid_dtop()} provides single detrended transformed  Owen's plot, Owen (1995), for a GAMLSS fitted objects or any other residual vector (suitable standardised). This is a diagnostic tool for checking whether the normalised quantile residuals are coming from a normal distribution or not. 
+The function \code{resid_dtop()} provides single de-trended transformed  Owen's plot, Owen (1995), for a GAMLSS fitted objects or any other residual vector (suitable standardised). This is a diagnostic tool for checking whether the normalised quantile residuals are coming from a normal distribution or not. 
 This could be true if the horizontal line is within the confidence intervals.
 
 The function \code{resid_ecdf()} provides the empirical cumulative distribution function of the residuals.
 
-The function \code{y_ecdf()} provides the empirical cumulative distribution function of any  numerical vectot \code{y}.
+The function \code{y_ecdf()} provides the empirical cumulative distribution function of any numerical vector \code{y}.
 
 }
 \usage{
@@ -45,7 +45,8 @@ y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2,
 }
 \value{A ggplot is generated}
 \references{
-Jager, L. and Wellner, J. A (2004) A new goodness of fit test: the reversed Berk-Jones statistic, University of Washington, Department of Statistics, Technical report 443.    
+Jager, L. and Wellner, J. A (2004) A new goodness of fit test: the reversed Berk-Jones statistic, University of Washington, Department of Statistics, Technical report 443. 
+
 Owen A. B. (1995) Nonparametric Confidence Bands for a Distribution Function. Journal of the American Statistical Association Vol. 90, No 430, pp. 516-521.
 
 Rigby, R. A. and Stasinopoulos D. M. (2005). Generalized additive models for location, scale and shape,(with discussion), Appl. Statist., 54, part 3, 1-38.
