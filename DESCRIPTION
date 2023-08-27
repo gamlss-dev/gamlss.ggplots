@@ -8,7 +8,7 @@ Date: 2023-08-05
 Depends:  R (>= 3.5.0), gamlss.dist, gamlss (>= 4.3.3),  gamlss.foreach
 Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2
 Suggests: glmnet, reshape2, igraph, networkD3, grid, gridExtra
-Author: Mikis Stasinopoulos <d.stasinopoulos@londonmet.ac.ukg>, Bob Rigby, Fernanda De Bastiani, Julian Merder 
+Author: Mikis Stasinopoulos <d.stasinopoulos@gre.ac.ukg>, Bob Rigby, Fernanda De Bastiani, Julian Merder 
 Maintainer: Mikis Stasinopoulos <d.stasinopoulos@gre.ac.uk>
 License: GPL-2 | GPL-3
 URL: https://www.gamlss.com/
