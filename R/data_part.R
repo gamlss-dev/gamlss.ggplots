@@ -5,48 +5,8 @@
 # PARTITION 
 ################################################################################
 ################################################################################
-# function 1
-# data_partition <- function(data, partition=2, probs, setseed=123, ...)
-# {
-# set.seed(setseed)
-# if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
-# if(missing(probs))
-# {
-#     probs <- if (partition==2)  c(0.6,0.4) 
-#                         else    c(0.6,0.2,0.2)
-# } else probs <- probs
-#   if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
-# 
-# if (partition==2)
-# {
-#      rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
-#     train <- subset(data, rand==1)
-#      test <- subset(data, rand==2)
-#       out <- list(train=train , test=test, partition=rand)
-#     return(out)
-# }
-# if (partition==3)
-# {
-#      rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
-#     train <- subset(data, rand==1)
-#     valid <- subset(data, rand==2)
-#      test <- subset(data, rand==3)
-#       out <- list(train=train, valid=valid, test=test, partition=rand)
-#     return(out)              
-#   }  
-# }
+# function 1 saving data with a partition factor
 ################################################################################
-################################################################################
-################################################################################
-################################################################################
-# a=data_partition(rent)
-# mosaicplot(table(a$partition))
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 2
-# save a data frame with partition as factor
 data_part <- function(data, partition=2L, probs, setseed=123, ...)
 {
   set.seed(setseed)
@@ -85,12 +45,65 @@ if (partition>=4L)
     out <- data.frame(data, partition=rand)
     invisible(return(out))    
 }
-################################################################################
-################################################################################
-################################################################################
-################################################################################
 #mosaicplot(table(da$partition))
-
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 2 removing variables with only one value
+################################################################################ 
+data_rm1val <- function(data) 
+{
+  # what is the data
+  if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
+  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data, "array")) stop("the data is an array the function needs a data.frame")  
+  Names <- names(data)
+  PP <- list()
+  for (i in 1:length(Names))
+  {
+    PP[[i]] <- length(table(data[,Names[i]]))
+  }
+  pp <- unlist(PP)
+  names(pp) <- Names
+  if (any(pp==1))
+  {
+    w1val <-  which(pp==1)
+    removed <- names(data)[w1val]
+    data[,w1val] <- NULL 
+  }
+  cat("the var", removed, "has been removed \n")
+  invisible(data)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_rm <- function(data, vars)
+{
+  if (is(data, "list"))  
+    stop("the data is list  the function needs a data.frame") 
+  if (is(data, "table")) 
+    stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data, "array"))   
+    stop("the data is an array the function needs a data.frame")
+  if (is.character(vars))
+  {
+    da <- subset(data, select=setdiff(names(data), vars))  
+  } else
+  {
+    da <- subset(data, select=setdiff(1:dim(data)[2], vars)) 
+  }  
+  da
+}  
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 
 
 
