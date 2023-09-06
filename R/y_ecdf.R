@@ -15,7 +15,7 @@ y_ecdf <- function(y,
                 points.col = "steelblue4", 
              check_overlap = TRUE,
              show.outliers = FALSE, 
-                      title,  ...)
+             from, to, title,  ...)
 {
 ################################################################################
 # local functions
@@ -123,6 +123,8 @@ other_prep_data <- function (y, value=2, na.rm=TRUE)
 ################################################################################   
 # main starts here
 if (missing(y))   stop("the first argument y is needed")
+     xlimitfrom <- if (missing(from))   min(y) else from
+       xlimitto <- if (missing(to))     max(y) else to  
   conf.level <- match.arg(conf.level)
         type <- match.arg(type)
            d <- other_prep_data(y, value=value) 
@@ -143,6 +145,7 @@ if (missing(y))   stop("the first argument y is needed")
         ggplot2::geom_hline(yintercept = 0, colour = "gray")+
         ggplot2::geom_hline(yintercept = 1, colour = "gray") +
         ggplot2::ggtitle(txt.title)+
+        ggplot2::xlim(xlimitfrom, xlimitto)+ 
 if  (show.outliers)  ggplot2::geom_text(data = d, ggplot2::aes(x = y,
                    y = scores, label = txt),hjust = -0.1, nudge_x = 0.05, 
                    size = 3,check_overlap = check_overlap, family = "serif", 
