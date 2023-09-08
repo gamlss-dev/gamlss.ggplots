@@ -73,11 +73,11 @@ if (plot)
   txt.title <- if (missing(title))  main
                 else title  
 #  first the curve
-  gg <-ggplot(data.frame(x = c(min, max)), aes(x)) +
-       stat_function(fun=prof.fun, color=line.col)+
-        xlab(xlab)+
-        ylab(ylab)+
-        ggtitle(txt.title)
+  gg <-ggplot2::ggplot(data.frame(x = c(min, max)), aes(x)) +
+    ggplot2::stat_function(fun=prof.fun, color=line.col)+
+    ggplot2::xlab(xlab)+
+    ggplot2::ylab(ylab)+
+    ggplot2::ggtitle(txt.title)
   plims <- par("usr")
 # then the minimum
 # we need more in the plot if GD
@@ -85,7 +85,8 @@ if(criterion=="GD")
  { 
   if (lim < max(I.C)) 
     { gg <- gg + 
-          geom_hline(aes(yintercept = lim), lty=dash.line.type, linewidth=dash.line.size)
+      ggplot2::geom_hline(aes(yintercept = lim), lty=dash.line.type, 
+                          linewidth=dash.line.size)
       y0 <- plims[3]
     scal <- (1/10 * (plims[4] - y0))/par("pin")[2] #
      scx <- (2/10 * (plims[2] - plims[1]))/par("pin")[1] 
@@ -94,21 +95,21 @@ if(criterion=="GD")
        Y <- lim + scal
        P <- paste(perc,"%")
       gg <-  gg + 
-             annotate(geom = "text", x = X, y = Y, label = P, size=text.size)
+        ggplot2::annotate(geom = "text", x = X, y = Y, label = P, size=text.size)
      }
   if (I.C[1] > lim)  #Defines the lower bound 
     {
   leftFun <- function(x)  {prof.fun(x)-lim} # 
 lcrossing <- uniroot(leftFun, c(min, PML))$root # get the ML
    CI[1] <- lcrossing
-      gg <- gg + geom_vline(aes(xintercept = lcrossing),  
+      gg <- gg + ggplot2::geom_vline(aes(xintercept = lcrossing),  
                             lty=dash.line.type, linewidth=dash.line.size)
     }
   if (I.C[m] > lim)  #Defines the upper bound
     {
 rcrossing <- uniroot(leftFun, c(PML, max))$root # get the ML
     CI[2] <- rcrossing
-       gg <- gg + geom_vline(aes(xintercept = rcrossing),  
+       gg <- gg + ggplot2::geom_vline(aes(xintercept = rcrossing),  
                     lty=dash.line.type, linewidth=dash.line.size)
         #            segments( rcrossing, y0,  rcrossing, lim, lty = 3)
     print(gg)    

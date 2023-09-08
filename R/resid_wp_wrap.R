@@ -77,30 +77,31 @@ for (i in levels(z))# get the right subset
         se <- getSE(max(abs(d$x))+.5, N=N.i)
          d <- data.frame(d,Z=i)
        DA1 <- data.frame(rbind(DA1,d))
-        se <-  data.frame(se,Z=i)
+        se <- data.frame(se,Z=i)
        DA2 <- data.frame(rbind(DA2,se))
 }
         x <- rqres <- z <- low <- high <- txt <- NULL
 txt.title <- if (missing(title))  paste("Worm-plot for model", deparse(substitute(obj)))
              else title  
      ymax <- if (missing(ylim))  (max(abs(DA1$rqres))+0.1) else ylim
-       gg <- ggplot(data=DA1, aes(x = x, y = rqres)) + 
-             geom_point(  color =  points_col, alpha=.8 ) + # shape = 1, must include argument label "data"
-             geom_line(data = DA1, aes(x = x, y = fv), lty=1, colour=poly_col)+
-             geom_ribbon(data=DA2, aes(ymin = low, ymax = high, x = z), alpha = alpha_bound)+
-             geom_line(data = DA2, aes(x = z, y = low), lty=2)+
-             geom_line(data = DA2, aes(x = z, y = high), lty=2)+
-             xlab("Unit normal quantile") + 
-             facet_wrap(~Z)+ theme(legend.position = "none")+
-             ylab("Deviation") +
-             coord_cartesian(ylim = c(-ymax, ymax)) +
-             geom_hline(yintercept = 0, colour = "gray")+
-             geom_vline(xintercept = 0, colour = "gray")+
-             geom_text(data = DA1, aes(x = x, y = rqres, label = txt),
+       gg <- ggplot2::ggplot(data=DA1, aes(x = x, y = rqres)) + 
+         ggplot2::geom_point(  color =  points_col, alpha=.8 ) + 
+         ggplot2::geom_line(data = DA1, aes(x = x, y = fv), lty=1, colour=poly_col)+
+         ggplot2::geom_ribbon(data=DA2, aes(ymin = low, ymax = high, x = z), 
+                              alpha = alpha_bound)+
+         ggplot2::geom_line(data = DA2, aes(x = z, y = low), lty=2)+
+         ggplot2::geom_line(data = DA2, aes(x = z, y = high), lty=2)+
+         ggplot2::xlab("Unit normal quantile") + 
+         ggplot2::facet_wrap(~Z)+ theme(legend.position = "none")+
+         ggplot2::ylab("Deviation") +
+         ggplot2::coord_cartesian(ylim = c(-ymax, ymax)) +
+         ggplot2::geom_hline(yintercept = 0, colour = "gray")+
+         ggplot2::geom_vline(xintercept = 0, colour = "gray")+
+         ggplot2::geom_text(data = DA1, aes(x = x, y = rqres, label = txt),
              hjust = -0.2, nudge_x = 0.05, size = 3,
              check_overlap = check_overlap, family = "serif", 
              fontface = "italic", colour = "darkred", na.rm = TRUE)+
-             ggtitle(txt.title)
+         ggplot2::ggtitle(txt.title)
   suppressWarnings(return(gg))
 }
 #######################################################################

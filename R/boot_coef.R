@@ -61,11 +61,14 @@ boot_coef <- function(x,
     da1 <- data.frame(x=da[,i])
     #da2 <- data.frame(x=da0[,i])
     #    data.frame(t(x$orig.coef))
-    gg <- ggplot(da1, aes(x = x)) + 
-      geom_density(alpha = alpha, fill = dens.fill) + xlab(names[i]) + 
-      ylab("density") + ggtitle(txt.title)+geom_rug()+
-      geom_vline(xintercept= quantile(da[,i], c(0.025, .5, .975)), color="gray")+
-      geom_vline( xintercept=da0[,i])
+    gg <- ggplot2::ggplot(da1, aes(x = x)) + 
+      ggplot2::geom_density(alpha = alpha, fill = dens.fill) + 
+      ggplot2::xlab(names[i]) + 
+      ggplot2::ylab("density") + 
+      ggplot2::ggtitle(txt.title)+geom_rug()+
+      ggplot2::geom_vline(xintercept= quantile(da[,i], c(0.025, .5, .975)),
+                          color="gray")+
+      ggplot2::geom_vline( xintercept=da0[,i])
     GG[[i]] <- gg
   }
   if (one.by.one)
