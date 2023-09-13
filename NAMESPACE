@@ -111,6 +111,7 @@ import(ggridges)
 import(ggplot2)
 ################################################################################
 importFrom("grid", "grid.layout", "grid.newpage", "pushViewport", "viewport")
+importFrom("stats", "model.matrix")
 ################################################################################
 importFrom("gamlss.inf", "gen.Zadj", "gen.Inf0to1")
 ################################################################################

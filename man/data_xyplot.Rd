@@ -34,7 +34,7 @@ data_bucket(data, value = 3, max.levels = 20,
            
 y_zscores(x, family = SHASHo, plot = TRUE, hist = FALSE, ...)
 
-data_zscores(data, plot.hist = TRUE, value = 3, family = SHASH,
+data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           max.levels = 10, hist.col = "black", hist.fill = "white", 
           dens.fill = "#FF6666", nrow = NULL, ncol = NULL, 
           plots.per.page = 9, one.by.one = FALSE, title, ...)

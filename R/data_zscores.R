@@ -21,8 +21,10 @@ attr(zscores, "parameter") <-   switch(lparam, c("mu"),
 if (plot) 
 {
    title <- paste0("z-scores of ",name)
-  if (hist) print(gamlss.ggplots::y_hist(zscores)+xlab(title))
-  else     print(gamlss.ggplots::y_dots(zscores)+xlab(title))
+  if (hist) print(gamlss.ggplots::y_hist(zscores)+
+                  ggplot2::xlab(name))
+  else      print(gamlss.ggplots::y_dots(zscores)+
+                  ggplot2::xlab(name))
 }
 invisible(zscores)
 }
@@ -32,9 +34,10 @@ invisible(zscores)
 ################################################################################
 # function 
 data_zscores <- function(data, 
-                     plot.hist = TRUE,
+                          plot = TRUE,
+                          hist = FALSE,
                          value = 3, 
-                        family = SHASH,
+                        family = SHASHo,
                     max.levels = 10,
                       hist.col = "black", 
                      hist.fill = "white", 
@@ -45,6 +48,7 @@ data_zscores <- function(data,
                     one.by.one = FALSE,
                          title,...)
 {
+# data   
 if (is(data, "list"))  
   stop("the data is list  the function needs a data.frame") 
 if (is(data, "table")) 
@@ -64,48 +68,53 @@ warning(cat(l1-l2, "observations were omitted from the data", "\n"))
   }
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data") 
-if (dimD[1]< 20)   stop(cat("the size of the data set is too small", "\n", "to                      detect non-linear correlations", "\n"))   
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
               data_distinct(data) < max.levels|
               sapply(data, function(x) is(x, class2="Date"))
       daTa <- subset(data,  select=!sat.cont)  
        Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")         
-if (Dim[2]==1) stop("only one variable is left after taking out the factors")     
+if (Dim[2]==1) stop("only one variable is left after taking out the factors")   
      Names <- names(daTa)
 class_Vars <- sapply(daTa,class)
         PP <- list()
+     zlist <- list()
 for (i in 1:length(class_Vars))
 {
-      izsc <- y_zscores(daTa[,i], family="SHASH",plot=FALSE) 
+      izsc <- y_zscores(daTa[,i], family=family, plot=FALSE) 
   if  (any(!is.finite(izsc)))
   {
-      II <- which(!(is.finite(izsc)))
+        II <- which(!(is.finite(izsc)))
       izsc <-  izsc[which(is.finite(izsc))]
       warning("observations ", II, " taken out in ", Names[i],"\n" )
   }
-      PP[[i]] <-   if (plot.hist)  y_hist(izsc,  title="") + xlab(Names[i]) else
-                        y_dots(izsc,  title="") + xlab(Names[i]) 
-}
-# pchisq(momentSK(log(rGA(199))$jarque.bera.test,2)
-      n.plots <- length(PP)       
-if (one.by.one)
+      zlist[[i]] <- izsc
+if (plot)
+ {
+  PP[[i]] <- if (hist)  y_hist(izsc,  title="") + ggplot2::xlab(Names[i]) 
+             else y_dots(izsc,  title="") + ggplot2::xlab(Names[i])
+ }
+} #end of loop
+if (plot)
+{
+  n.plots <- length(PP)       
+ if (one.by.one)
   {
-       oask <- devAskNewPage(one.by.one)
-       on.exit(devAskNewPage(oask))
- for (i in 1:n.plots) print(PP[[i]])
+    oask <- devAskNewPage(one.by.one)
+    on.exit(devAskNewPage(oask))
+    for (i in 1:n.plots) print(PP[[i]])
   } else
   { # multiple plots
 ################################################################# 
-   define_region <- function(row, col){
-      viewport(layout.pos.row=row, layout.pos.col=col) }
+define_region <- function(row, col){
+      grid::viewport(layout.pos.row=row, layout.pos.col=col) }
 #################################################################  
-if (n.plots>plots.per.page)
-  {
+  if (n.plots>plots.per.page)
+    {
       pages <- ceiling(n.plots/plots.per.page)  
-       page <- n.plots%/%plots.per.page
-        ppp <- rep(plots.per.page,page) 
-  if (n.plots%%plots.per.page != 0) ppp <- c(ppp, n.plots%%plots.per.page)
+      page <- n.plots%/%plots.per.page
+      ppp <- rep(plots.per.page,page) 
+      if (n.plots%%plots.per.page != 0) ppp <- c(ppp, n.plots%%plots.per.page)
       if (plots.per.page==9)
       {
         nc <- 3
@@ -113,30 +122,30 @@ if (n.plots>plots.per.page)
         IJ <- expand.grid(j=1:nc, i=1:nr) 
       } else
       {
-        if (is.null(nrow)||is.null(nrow)) stop("the nrow and ncol need to be defined") 
+  if (is.null(nrow)||is.null(nrow)) stop("the nrow and ncol need to be defined") 
         if (plots.per.page> ncol*nrow) stop("the nrow or ncol has to increase") 
         nc <- ncol
         nr <- nrow
         IJ <- expand.grid(j=1:nc, i=1:nr) 
         IJ <- IJ[1:plots.per.page,]
       }  
-       start <- 1
+      start <- 1
       finish <- ppp[1]
-    for (pa in 1:pages)
+  for (pa in 1:pages)
       {
-        grid.newpage()
-        pushViewport(viewport(layout=grid.layout(nrow=nr,ncol=nc)))   
+        grid::grid.newpage()
+        grid::pushViewport(grid::viewport(layout=grid.layout(nrow=nr,ncol=nc)))   
         for (p  in start:finish) 
-        {
+          {
           print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
-        }
-        start <- finish +1
-       finish <- finish+ppp[pa+1] 
-           IJ <- rbind(IJ, IJ)
-         oask <- devAskNewPage(ask=TRUE)
+          }
+         start <- finish +1
+        finish <- finish+ppp[pa+1] 
+            IJ <- rbind(IJ, IJ)
+          oask <- devAskNewPage(ask=TRUE)
         on.exit(devAskNewPage(oask))
       } 
-  } else  
+    } else  
     {
       pages <- 1
         ppp <- n.plots%/%pages
@@ -144,17 +153,24 @@ if (n.plots>plots.per.page)
     if (nc < 1)    nr <- nc <- 1
     if (nc * nr < ppp) nc <- nc + 1
     if (nc * nr < ppp) nr <- nr + 1 
-        IJ <- expand.grid(j=1:nc, i=1:nr)
-  grid.newpage()
-    pushViewport(viewport(layout=grid.layout(nrow=nr,ncol=nc)))
-for (p  in 1:n.plots) 
+         IJ <- expand.grid(j=1:nc, i=1:nr)
+      grid::grid.newpage()
+      grid::pushViewport(grid::viewport(layout=
+                          grid::grid.layout(nrow=nr,ncol=nc)))
+  for (p  in 1:n.plots) 
       {
         print(PP[[p]], vp=define_region(IJ$i[p],IJ$j[p]))
       }
     }      
   } 
-  on.exit( pushViewport(viewport(layout=grid.layout(nrow=1,ncol=1))))        
-  invisible(PP) 
+  on.exit( grid::pushViewport(grid::viewport(layout=
+                                   grid::grid.layout(nrow=1,ncol=1))))        
+  return(invisible(PP))   
+}  
+               mm <- matrix(unlist(zlist), ncol=length(zlist))   
+               MM <- as.data.frame(mm)
+        names(MM) <- Names
+return(MM)
 }
 ################################################################################
 ################################################################################
