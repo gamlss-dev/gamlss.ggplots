@@ -28,7 +28,7 @@ data_stand<- function(data, response,
                  exclude = NULL,
                    scale = c("z-scores", "0to1"),  
                   family = SHASHo,
-                    type = c("main.effect", "first.order", "none"),
+                    type = c( "none","main.effect", "first.order"),
                  weights = NULL)
 {
 # all the variable in data are used to create the data.frame
@@ -83,7 +83,8 @@ if (!is.null(exclude))  data <- data[, setdiff(names(data),exclude)]
 ## scale only the continuous variables 
 if (scale=="z-scores")          
   {
-     DF1 <- data_zscores(data[,-c(pp, pos_res)], plot=FALSE, family=family)
+  suppressWarnings(DF1 <- data_zscores(data[,-c(pp, pos_res)], 
+                                       plot=FALSE, family=family))
 data[,names(DF1)] <- DF1 
   }
 if (scale=="0to1")             
