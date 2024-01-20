@@ -13,15 +13,15 @@
 # as.data.frame(t(sapply(sample(rep_len(1:nfolds, length.out= dim(aids)[1]), replace=FALSE),"!=",1:nfolds)))
 # lapply(as.data.frame(t(sapply(sample(rep_len(1:nfolds, length.out= dim(aids)[1]), replace=FALSE),"!=",1:nfolds))), which)
 
-data_indexing <- function(data, kfolds=2, bootstrap=FALSE)
-{
-  dD <- dim(data)
- if (bootstrap)  
-   {
-   mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:dD[1], length.out= dD[1]), replace=TRUE),"!=",1:kfolds))), which)    
-   } else 
-   {
-mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:kfolds, length.out= dD[1]), replace=FALSE),"!=",1:kfolds))), which) 
-   } 
-mm
-}
+# data_indexing <- function(data, kfolds=2, bootstrap=FALSE)
+# {
+#   dD <- dim(data)
+#  if (bootstrap)  
+#    {
+#    mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:dD[1], length.out= dD[1]), replace=TRUE),"!=",1:kfolds))), which)    
+#    } else 
+#    {
+# mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:kfolds, length.out= dD[1]), replace=FALSE),"!=",1:kfolds))), which) 
+#    } 
+# mm
+# }

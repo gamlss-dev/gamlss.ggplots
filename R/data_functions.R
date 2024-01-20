@@ -36,64 +36,6 @@
 ################################################################################
 ################################################################################
 
-
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 3
-#require(gridExtra)
-data_response <- function(data, response, plot=TRUE)
-{
-#  what is the data
-if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
-if (is(data, "table")) stop("the data is a table the function needs a data.frame")
-if (is(data, "matrix"))    data <- as.data.frame(data)
-if (is(data[1],"mts"))     data <- as.data.frame(data)
-if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-      Y <-  deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data") 
-   actY <- data[,Y]
-     cY <- class(actY)
-cat("the class of the response is", cY, "is this correct?", "\n")   
-if (cY=="character")
-{
-  actY <- factor(actY)
-if (nlevels(actY)>20)  
-  stop("something is wrong here the number of levels are too big")
-if (nlevels==2) cat("binary response", "/n") else
-               cat("multinonial response", "/n")
-}
-if (cY=="integer")
-   {
-cat("If the response is a true integer a count data distribution could be used", "\n")
-cat("otherwhise make it numeric", "\n") 
-   }
-if (cY=="numeric")
-   {
-   if (any(actY < 0)) 
-     cat("a continuous distribution in the realline could be used", "\n")
-   else if (all(actY > 0 & actY< 1))  
-stop("a continuous distribution on (0,1) should be used")
-  else cat("a continuous distribution on (0,inf) could be used", "\n")
-}
-if (plot)
-{ 
-  #layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
-  GG1 <- y_hist(actY, title="(a)")+xlab(Y)
-  GG2 <- y_dots(actY, title="(b)")+xlab(Y)
-    z <- y_zscores(actY, plot=FALSE)
-  GG3 <- y_hist(z, title="(c)")+xlab(paste(Y, "z-scores"))
-  GG4 <- y_dots(z, title="(d)")+xlab(paste(Y, "z-scores"))
-  gridExtra::grid.arrange(GG1, GG2, GG3, GG4 )
-}  
-invisible(data)   
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# TRANSFORMATION functions
 ################################################################################
 ################################################################################ 
 # function 5
@@ -300,28 +242,6 @@ if (is(data, "table"))
 ################################################################################
 ################################################################################
 ################################################################################
-# function 
-# get only continuous variables??
-data_continuous <- function(data, response)
-{
-if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
-if (is(data, "table")) stop("the data is a table the function needs a data.frame")
-if (is(data, "matrix"))    data <- as.data.frame(data)
-if (is(data[1],"mts"))     data <- as.data.frame(data)
-if (is(data, "array")) stop("the data is an array the function needs a data.frame")
-          Y <-  deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data") 
-     Names <- names(data)
-       pos <- match(Y, Names)
-      daTa <- data[,-pos] # data without response 
-class_Vars <- sapply(daTa,class)
-      daTa <- daTa[,(class_Vars=="numeric")|(class_Vars=="integer")]# only numeric
-daTa    
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
 # TIME functions 
 ################################################################################
 ################################################################################
@@ -350,60 +270,3 @@ as.numeric(t)
 ################################################################################
 ################################################################################
 # END of TIME functions
-################################################################################
-################################################################################
-# function 3
-data_formula <- function(data, response)
-{
-if (is(data, "list"))  
-    stop("the data is list  the function needs a data.frame") 
-if (is(data, "table")) 
-    stop("the data is a table the function needs a data.frame")
-if (is(data, "matrix"))    data <- as.data.frame(data)
-if (is(data[1],"mts"))     data <- as.data.frame(data)
-if (is(data, "array")) 
-    stop("the data is an array the function needs a data.frame")
-      Y <- deparse(substitute(response))
-if (any(!(Y %in%names(data)))) stop("the response should be in data") 
-  #.   Names <- names(data)
-    pos <- match(Y, names(data))
-  nameS <- names(data)[-pos]
-     PP <- list() 
-   actY <- data[,Y]
-     cY <- class(actY) 
-      I <- 0
-     
-     f1 <- formula(paste(paste0(Y,"~"),paste0(nameS, collapse='+')), 
-                   data=data,      envir=globalenv())#.GlobalEnv
-     f2 <- formula( paste0(paste0(Y,"~"), 
-                    paste0("(",paste0(nameS, collapse='+'),")^2")), 
-                   data=data,      envir=globalenv())#.GlobalEnv
-     f3 <- formula(paste("~",paste0(nameS, collapse='+')), 
-                   data=data,      envir=globalenv())#.GlobalEnv
-     f4 <- formula( paste0(paste0("~"), 
-                           paste0("(",paste0(nameS, collapse='+'),")^2")), 
-                    data=data,      envir=globalenv())#.GlobalEnv
-  invisible(list(rme=f1,rint=f2, me=f3, int=f4))         
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-data_exclude <- function(data, class="factor")
-{
-if (is(data, "list"))  
-    stop("the data is list  the function needs a data.frame") 
-if (is(data, "table")) 
-    stop("the data is a table the function needs a data.frame")
-if (is(data, "matrix"))    data <- as.data.frame(data)
-if (is(data[1],"mts"))     data <- as.data.frame(data)
-if (is(data, "array"))   
-  stop("the data is an array the function needs a data.frame")
-  CData <- sapply(data,class)
-     da <- subset(data, select=CData!=class)
-da
-}  
-################################################################################
-################################################################################
-################################################################################
-################################################################################

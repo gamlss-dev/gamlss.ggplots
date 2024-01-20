@@ -3,10 +3,10 @@ Description: Plotting functions for Generalised Additive Models for
        Location Scale and Shape.
 Title: Plotting Generalised Additive Model for Location, Scale and Shape
 LazyLoad: yes
-Version: 2.1-5
-Date: 2023-09-15
+Version: 2.1-8
+Date: 2023-12-12
 Depends:  R (>= 3.5.0), gamlss.dist, gamlss (>= 4.3.3),  gamlss.foreach
-Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2
+Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2, yaImpute
 Suggests: glmnet, reshape2, igraph, networkD3, grid, gridExtra
 Author: Mikis Stasinopoulos <d.stasinopoulos@gre.ac.ukg>, Bob Rigby, Fernanda De Bastiani, Julian Merder 
 Maintainer: Mikis Stasinopoulos <d.stasinopoulos@gre.ac.uk>

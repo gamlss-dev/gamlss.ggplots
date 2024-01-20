@@ -6,7 +6,9 @@ data_plot <- function(data,
                   dens.fill = "#FF6666", 
                        nrow = NULL,
                        ncol = NULL,
-                  plot.hist = FALSE,
+                 percentage = TRUE, # for big data take % of data
+                 seed = 123,
+                  plot.hist = TRUE,
              plots.per.page = 9,
                  one.by.one = FALSE,
                       title,...)
@@ -18,6 +20,19 @@ if (is(data, "table"))
 if (is(data, "matrix"))    data <- as.data.frame(data)
 if (is(data[1],"mts"))     data <- as.data.frame(data)
 if (is(data, "array")) stop("the data is an array the function needs a data.frame")
+if (percentage)
+{
+  nobs <- dim(data)[1] 
+  # check the size of the data 
+  per <- ifelse(nobs<50000,1,         # all data 
+                ifelse(nobs<100000,.5,# 50% of data 
+                       ifelse(nobs<1000000,.2, # 20% of data 
+                              ifelse(nobs>1000000,1))))  # 10% of data
+  set.seed(seed)
+  ind <- sample(nobs, per*nobs)
+  data <- data[ind,]
+}
+
 # checking data  
   class_Vars <- sapply(data,class)
 if (any(class_Vars=="character"))
@@ -115,3 +130,71 @@ if (one.by.one)
   on.exit( pushViewport(viewport(layout=grid.layout(nrow=1,ncol=1))))        
   invisible(PP) 
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_response <- function(data, 
+                          response, 
+                          plot=TRUE, 
+                          percentage = TRUE) # for big data take % of data)
+{
+  #  what is the data
+  if (is(data, "list"))  stop("the data is list  the function needs a data.frame")
+  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
+  if (is(data, "matrix"))    data <- as.data.frame(data)
+  if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data, "array")) stop("the data is an array the function needs a data.frame")
+  if (percentage)
+  {
+    nobs <- dim(data)[1] 
+    # check the size of the data 
+    per <- ifelse(nobs<50000,1,         # all data 
+                  ifelse(nobs<100000,.5,# 50% of data 
+                         ifelse(nobs<1000000,.2, # 20% of data 
+                                ifelse(nobs>1000000,1))))  # 10% of data    
+    ind <- sample(nobs, per*nobs)
+    data <- data[ind,]
+  }  
+  Y <-  deparse(substitute(response))
+  if (any(!(Y %in%names(data)))) stop("the response should be in data") 
+  actY <- data[,Y]
+  cY <- class(actY)
+  cat("the class of the response is", cY, "is this correct?", "\n")   
+  if (cY=="character")
+  {
+    actY <- factor(actY)
+    if (nlevels(actY)>20)  
+      stop("something is wrong here the number of levels are too big")
+    if (nlevels==2) cat("binary response", "/n") else
+      cat("multinonial response", "/n")
+  }
+  if (cY=="integer")
+  {
+    cat("If the response is a true integer a count data distribution could be used", "\n")
+    cat("otherwhise make it numeric", "\n") 
+  }
+  if (cY=="numeric")
+  {
+    if (any(actY < 0)) 
+      cat("a continuous distribution in the realline could be used", "\n")
+    else if (all(actY > 0 & actY< 1))  
+      stop("a continuous distribution on (0,1) should be used")
+    else cat("a continuous distribution on (0,inf) could be used", "\n")
+  }
+  if (plot)
+  { 
+    #layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
+    GG1 <- y_hist(actY, title="(a)")+xlab(Y)
+    GG2 <- y_dots(actY, title="(b)")+xlab(Y)
+    z <- y_zscores(actY, plot=FALSE)
+    GG3 <- y_hist(z, title="(c)")+xlab(paste(Y, "z-scores"))
+    GG4 <- y_dots(z, title="(d)")+xlab(paste(Y, "z-scores"))
+    gridExtra::grid.arrange(GG1, GG2, GG3, GG4 )
+  }  
+  invisible(data)   
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################

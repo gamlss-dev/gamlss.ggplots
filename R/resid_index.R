@@ -14,7 +14,7 @@ resid_index <- function (obj, resid, plot = TRUE, value=2, title, annotate=TRUE,
 gamlss_prep_data <- function (obj, value=2) 
   {
   #  color <- NULL
-    sdres <- obj$residuals
+    sdres <- residuals(obj)
 #sdres_out <- abs(sdres) > value
       obs <- seq_len(length(sdres))
  # outlier <- sdres[sdres_out]
@@ -49,7 +49,7 @@ out$fct_color <- ordered(factor(out$color), levels =
 #######################################################################
 # the main function starts here  
   if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
-  if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
           d <- if (missing(obj)) other_prep_data(resid, value=value) 
                 else             gamlss_prep_data(obj,   value=value) 
   txt.title <- if (missing(title))  paste("Quantile residuals of model",deparse(substitute(obj)))

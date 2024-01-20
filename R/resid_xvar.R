@@ -13,7 +13,7 @@ resid_xvar <- function (obj, xvar, plot = TRUE, value=2, title, annotate=TRUE)
 # local functions 
 gamlss_prep_data <- function (obj, xvar, value=2) 
 {
-    sdres <- obj$residuals
+    sdres <- residuals(obj)
        fv <- obj$mu.fv
 #sdres_out <- abs(sdres) > value
       obs <- seq_len(length(sdres))

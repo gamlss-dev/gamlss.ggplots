@@ -49,6 +49,7 @@ data_which_na <- function(data)
   if (is(data, "table")) stop("the data is a table the function needs a data.frame")
   if (is(data, "matrix"))    data <- as.data.frame(data)
   if (is(data[1],"mts"))     data <- as.data.frame(data)
+  if (is(data[1],"tible"))  data <- as.data.frame(data)
   if (is(data, "array")) stop("the data is an array the function needs a data.frame")  
   Names <- names(data)
   PP <- list()
@@ -58,7 +59,8 @@ data_which_na <- function(data)
   }
   pp=unlist(PP)
   names(pp) <- Names
-  pp
+  print(pp)
+  invisible(data) 
 }
 ################################################################################
 ################################################################################
@@ -95,6 +97,7 @@ data_names <- function(data)
   }
   cat("**************************************************************",  "\n")
   cat("**************************************************************",  "\n")
+  invisible(data) 
 }  
 ################################################################################
 ################################################################################

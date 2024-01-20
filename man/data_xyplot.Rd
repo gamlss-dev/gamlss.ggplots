@@ -19,37 +19,43 @@ The function \code{data_zscores()} calculates and plots the z-scores (obtained a
 The function \code{y_zscores()}  calculates and plots the z-scores (obtained after fitting the SHASHo distribution) for a single variable. 
 }
 \usage{
-data_xyplot(data, response, point.size = 0.5, nrow = NULL, ncol = NULL, 
-          max.levels = 10, plots.per.page = 9, one.by.one = FALSE, 
-          title, ...)
+data_xyplot(data, response, point.size = 0.5, nrow = NULL, 
+           ncol = NULL, percentage = TRUE, seed = 123, 
+           max.levels = 10, plots.per.page = 9, one.by.one = FALSE, title, ...)
           
 data_plot(data, value = 3, hist.col = "black", hist.fill = "white", 
            dens.fill = "#FF6666", nrow = NULL, ncol = NULL, 
-           plot.hist = FALSE, plots.per.page = 9, one.by.one = FALSE, 
-           title, ...) 
+           percentage = TRUE, seed = 123, 
+           plot.hist = TRUE, plots.per.page = 9, 
+           one.by.one = FALSE,  
+           title, ...)
            
 data_bucket(data, value = 3, max.levels = 20, 
            nrow = NULL, ncol = NULL, plots.per.page = 9, 
-           one.by.one = FALSE, title, ...)  
+           one.by.one = FALSE, title, percentage = TRUE, seed = 123, 
+           ...)  
            
 y_zscores(x, family = SHASHo, plot = TRUE, hist = FALSE, ...)
 
 data_zscores(data, plot = TRUE, hist=FALSE, value = 3, family = SHASHo,
           max.levels = 10, hist.col = "black", hist.fill = "white", 
           dens.fill = "#FF6666", nrow = NULL, ncol = NULL, 
-          plots.per.page = 9, one.by.one = FALSE, title, ...)
+          plots.per.page = 9, one.by.one = FALSE, title, percentage = TRUE, 
+          seed = 123,...)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{a data frame}
   \item{x}{a single variable}
-   \item{family}{a gamlss distribution family (continuous)}
+  \item{family}{a gamlss distribution family (continuous)}
   \item{response}{the respose variable should be in the data}
   \item{point.size}{the size of points in scatter plots}
   \item{nrow}{the number of rows in the plot}
   \item{ncol}{the number of columns in the plot}
   \item{plots.per.page}{maximu plots per page}
+  \item{percentage}{this is for big data sets. if more tha a milion ony 10\% is plotted, if from 100.00 to a milion, 20\%, if 50.000 to 100.000, 50\% otherwise 100\% of the data.}
+  \item{seed}{Setting a seed value for selection of the percantage of data (for big data sets)}
   \item{one.by.one}{whether plotted individually}
   \item{value}{value to identify outliers if  \code{y_dots} is used 
   i.e. for upper tail an outliers is if it is greater than Q_3+value*IQ}

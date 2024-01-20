@@ -4,8 +4,8 @@
 ################################################################################
 # created on the 08-06-2021
 # TO DO
-# i) what is data set incules character vectors no declared as factors
-# ii) not going aoud the whole dat but only the ones in formulae
+# i) what is data set includes character vectors no declared as factors
+# ii) not going holding the whole data but only the ones in formulae
 ################################################################################
 ################################################################################
 ################################################################################
@@ -201,7 +201,7 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
 } # end going thought the variables
 ## predict  
 # pp = attr(predict(obj,  type = "term", parameter = parameter),"constant")
-fittted.star  <- predict(obj, newdata=tail(dat.temp, n.points), type = type, parameter = parameter)
+fittted.star  <- predict.gamlss(obj, newdata=tail(dat.temp, n.points), type = type, parameter = parameter)
 if (it.is.factor) {
    value1stlevel <- fittted.star[1] 
    fittted.orig  <- fittted.star-value1stlevel
@@ -386,7 +386,7 @@ for (i in 1:dim(dat.temp)[2])
     }
 } # end going thought the variables
 ## predict     
-fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type, parameter = parameter)
+fittted.orig <- predict.gamlss(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type, parameter = parameter)
    name.obj  <-  if (is.null(name.obj))  deparse(substitute(obj)) else name.obj
    txt.title <- if (missing(title))  
       paste("Partial effect of", terms[1], "and", terms[2], "for", parameter, "for model", name.obj)

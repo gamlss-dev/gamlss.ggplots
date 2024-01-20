@@ -1,9 +1,12 @@
 ################################################################################
 ################################################################################
 ################################################################################
-###############################################################################
+################################################################################
 # function 1
-y_zscores <- function(x, family=SHASHo, plot=TRUE, hist=FALSE,...)
+y_zscores <- function(x, 
+                    family = SHASHo, 
+                      plot = TRUE, 
+                      hist = FALSE,...)
 {
    name <- deparse(substitute(x))
      m1 <- gamlssML(x, family=family)
@@ -46,7 +49,10 @@ data_zscores <- function(data,
                           ncol = NULL,
                 plots.per.page = 9,
                     one.by.one = FALSE,
-                         title,...)
+                         title,
+                    percentage = TRUE, # for big data take % of data
+                          seed = 123,
+                        ...)
 {
 # data   
 if (is(data, "list"))  
@@ -68,8 +74,20 @@ warning(cat(l1-l2, "observations were omitted from the data", "\n"))
   }
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data") 
+if (percentage)
+       {
+         # check the size of the data 
+         nobs <- dim(data)[1] 
+         per <- ifelse(nobs<50000,1,         # all data 
+                       ifelse(nobs<100000,.5,# 50% of data 
+                              ifelse(nobs<1000000,.2, # 20% of data 
+                                     ifelse(nobs>1000000,1))))  # 10% of data  
+         set.seed(seed)
+         ind <- sample(nobs, per*nobs)
+         data <- data[ind,]
+       }       
   sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
-              data_distinct(data) < max.levels|
+    data_distinct(data, get.distinct=TRUE) < max.levels|
               sapply(data, function(x) is(x, class2="Date"))
       daTa <- subset(data,  select=!sat.cont)  
        Dim <- dim(daTa)
@@ -105,10 +123,10 @@ if (plot)
     for (i in 1:n.plots) print(PP[[i]])
   } else
   { # multiple plots
-################################################################# 
+################################################################################ 
 define_region <- function(row, col){
       grid::viewport(layout.pos.row=row, layout.pos.col=col) }
-#################################################################  
+################################################################################  
   if (n.plots>plots.per.page)
     {
       pages <- ceiling(n.plots/plots.per.page)  

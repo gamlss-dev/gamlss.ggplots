@@ -13,7 +13,7 @@ resid_qqplot <- function(obj, resid,
 # local function 
   gamlss_prep_data <- function (obj, value=3) 
   {
-      rqres <- obj$residuals
+      rqres <- residuals(obj)
 #  rqres_out <- abs(rqres) > value
         obs <- seq_len(length(rqres))
    #outlier <- rqres[rqres_out]

@@ -6,7 +6,7 @@
 # functions 
 # i)   ACE3
 # ii)  ACE
-# iii) print.ACE
+# iii) print.ACE                      
 # iv)  plot.ACE
 # v)   mcor
 # vi)  data_mcor:   m-correlations for data using foreach 

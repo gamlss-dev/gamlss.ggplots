@@ -50,62 +50,174 @@ if (partition>=4L)
 ################################################################################
 ################################################################################
 ################################################################################
-# function 2 removing variables with only one value
-################################################################################ 
-data_rm1val <- function(data) 
+data_indexing <- function(data, kfolds=2, bootstrap=FALSE)
 {
-  # what is the data
-  if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
-  if (is(data, "table")) stop("the data is a table the function needs a data.frame")
-  if (is(data, "matrix"))    data <- as.data.frame(data)
-  if (is(data[1],"mts"))     data <- as.data.frame(data)
-  if (is(data, "array")) stop("the data is an array the function needs a data.frame")  
-  Names <- names(data)
-  PP <- list()
-  for (i in 1:length(Names))
+  dD <- dim(data)
+  if (bootstrap)  
   {
-    PP[[i]] <- length(table(data[,Names[i]]))
-  }
-  pp <- unlist(PP)
-  names(pp) <- Names
-  if (any(pp==1))
+    mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:dD[1], length.out= dD[1]), replace=TRUE),"!=",1:kfolds))), which)    
+  } else 
   {
-    w1val <-  which(pp==1)
-    removed <- names(data)[w1val]
-    data[,w1val] <- NULL 
-  }
-  cat("the var", removed, "has been removed \n")
-  invisible(data)
+    mm <-    lapply(as.data.frame(t(sapply(sample(rep_len(1:kfolds, length.out= dD[1]), replace=FALSE),"!=",1:kfolds))), which) 
+  } 
+  mm
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-data_rm <- function(data, vars)
+data_Kfold <- function(data, K=6, setseed=123 )
 {
-  if (is(data, "list"))  
-    stop("the data is list  the function needs a data.frame") 
-  if (is(data, "table")) 
-    stop("the data is a table the function needs a data.frame")
-  if (is(data, "matrix"))    data <- as.data.frame(data)
-  if (is(data[1],"mts"))     data <- as.data.frame(data)
-  if (is(data, "array"))   
-    stop("the data is an array the function needs a data.frame")
-  if (is.character(vars))
+  set.seed(setseed)
+  nfolds <- K
+  n <- dim(data)[1]
+  # folds for cross-validation 
+  CVfolds <-  lapply(
+    as.data.frame(
+      t(
+        sapply(
+          sample(rep_len(1:nfolds,length.out=n),replace=FALSE)
+          ,"!=", 1:nfolds)
+      )
+    )
+    , which )   
+  CVfolds
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+data_boot <- function(data, K=10, setseed=123 )
+{
+  set.seed(setseed)
+  nfolds <- K
+  n <- dim(data)[1]
+  BOOTfolds<- lapply( 
+    as.data.frame(
+      matrix(
+        sample(1:n, nfolds*n, replace=TRUE)
+        , n)
+    ),
+    sort) 
+  BOOTfolds
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+
+
+
+
+
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################            
+# type none
+
+# nofunction <- function(x)
+# {
+#   
+# if (type=="first.order")
+# {
+# if (nonlinear)
+#   {
+#      daC <- data[,-c(pp, pos_res)]
+#      ndc <- names(daC)
+#     lndc <- length(ndc)
+#     args <- deparse(substitute(arg))
+#     newn <- paste0(basis, "(", ndc, ",", args, ")")
+#     mindex <- match(ndc,x_Names)
+#     qq <- character(length=lndc)
+#     for (i in 1:lndc) qq[i] <- gsub(ndc[i], newn[i], x_Names[mindex[i]])
+#     x_Names[mindex] <- qq
+#     formula <- as.formula(paste(paste0(response_t,"~"), 
+#                                 paste0(paste0("(",paste(x_Names, collapse='+')), ")^2")))  
+#     XX <- model.matrix(formula, weights=weights, data=data)[,-1]
+#     d2 <- dim(XX)[2]
+#     Names <- character(d2)
+#     for (i in 1:d2) 
+#     {
+#       Names[i] <-  gsub(":", ".", colnames(XX)[i])
+#     }
+#     #for (i in 1:length(Names)) colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], 1:pp)      
+#     colnames(XX) <- Names
+#     ## create a data frame  
+#     ## 
+#     #for (i in 1:lndc) colnames(XX)[grep(ndc[i], colnames(XX))] <- paste0(ndc[i], 1:pp)   
+#     dXX <-  as.data.frame(XX)
+#     dXX[, response_t] <- data[, response_t]
+#     return(dXX)
+#   } else 
+#   {
+#           
+#      formula <- as.formula(paste(paste0(response_t,"~"), 
+#                                 paste0(paste0("(",paste(x_Names, collapse='+')), ")^2"))) 
+#                XX <- model.matrix(formula, weights=weights, data=data)[,-1]
+#                d2 <- dim(XX)[2]
+#             Names <- character(d2)
+#     for (i in 1:d2) 
+#     {
+#          Names[i] <-  gsub(":", ".", colnames(XX)[i])
+#     }
+#      colnames(XX) <- Names
+#               dXX <-  as.data.frame(XX)
+# ## in order to have a complete data frame we need also the response 
+# dXX[, response_t] <- data[, response_t]
+#     return(dXX)
+#   }  
+# } # type= first order 
+#   
+# }
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# old function from 2020
+data.partition <- function(data, partition=2, probs, setseed=123, ...)
+{
+  set.seed(setseed)
+  if (partition!=2&&partition!=3) stop("partition should be 2 or 3")
+  if(missing(probs))
   {
-    da <- subset(data, select=setdiff(names(data), vars))  
-  } else
+    probs <- if (partition==2)  c(0.6,0.4) 
+    else c(0.6,0.2,0.2)
+  } else probs <- probs
+  if (length(probs)>4||length(probs)<=0) stop("the length of probs should be  2 o 3")
+  if (sum(probs)!=1) stop("probs should add up to 1")
+  if (partition==2)
   {
-    da <- subset(data, select=setdiff(1:dim(data)[2], vars)) 
+    rand <- sample(2, dim(data)[1], replace=TRUE, prob=probs)
+    train <- subset(data, rand==1)
+    test <- subset(data, rand==2)
+    out <- list(train=train , test=test)
+    return(out)
+  }
+  if (partition==3)
+  {
+    rand <- sample(3, dim(data)[1], replace=TRUE, prob=probs)
+    train <- subset(data, rand==1)
+    valid <- subset(data, rand==2)
+    test <- subset(data, rand==3)
+    out <- list(train=train, valid=valid, test=test)
+    return(out)              
   }  
-  da
-}  
-################################################################################
-################################################################################
-################################################################################
-################################################################################
+}
 
 
 
+
+
+
+
+
+########
+
+#data_rm(rent99, c("rentsqm", "district"))
+#data_rm(rent99, c(2, 9))
 
 

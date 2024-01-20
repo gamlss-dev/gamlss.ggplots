@@ -138,3 +138,6 @@ importFrom("stats", "optimise")
 ################################################################################
 importFrom("foreach", "%dopar%", "foreach", "%do%")
 ################################################################################
+importFrom("graphics", "axis", "contour", "image", "rect")
+importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit")
+importFrom("yaImpute", "ann")  

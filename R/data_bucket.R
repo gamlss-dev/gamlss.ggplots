@@ -10,7 +10,10 @@ data_bucket <- function(data,
                         ncol = NULL,
               plots.per.page = 9,
                   one.by.one = FALSE,
-                        title,...)
+                      title,
+                  percentage = TRUE, 
+                        seed = 123,
+                            ...)
 {
 if (is(data, "list"))  
   stop("the data is list  the function needs a data.frame") 
@@ -28,15 +31,27 @@ if (any(is.na(data)))
     data <- na.omit(data)
       l2 <- dim(data)[1]
     warning(cat(l1-l2, "observations were omitted from the data", "\n"))
-  }
+}
 #  if is a list or table
 if (is.null(dimD)) stop("only one variable in the data") 
 if (dimD[1]<20)   stop(cat("the size of the data set is too small", "\n",
-                             "to detect non-linear correlations", "\n"))   
+                             "for the bucket plot", "\n"))  
+if (percentage)
+      {
+        # check the size of the data 
+        nobs <- dim(data)[1] 
+        per <- ifelse(nobs<50000,1,         # all data 
+                      ifelse(nobs<100000,.5,# 50% of data 
+                             ifelse(nobs<1000000,.2, # 20% of data 
+                                    ifelse(nobs>1000000,1))))  # 10% of data  
+        set.seed(seed)
+        ind <- sample(nobs, per*nobs)
+        data <- data[ind,]
+      }          
              sat.cont <- sapply(data,is.factor)|sapply(data,is.character)|
-                         data_distinct(data) < max.levels|
+                         data_distinct(data, get.distinct=TRUE) < max.levels|
                          sapply(data, function(x) is(x, class2="Date"))
-                 daTa <- subset(data,  select=!sat.cont)  
+                 daTa <- subset(data,  select=!sat.cont) 
                   Dim <- dim(daTa)
 if (Dim[2]==0) stop("no variable is left after taking out the factors")         
 if (Dim[2]==1) stop("only one variable is left after taking out the factors")   

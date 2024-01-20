@@ -8,7 +8,7 @@ resid_density <- function(obj, resid,
   # local functions 
   gamlss_prep_data <- function (obj) 
   {
-    rqres <- obj$residuals
+    rqres <- residuals(obj)
     obs <- seq_len(length(rqres))
     obs <- obs[obj$weights!=0]
     rqres <- rqres[obj$weights!=0]
@@ -28,7 +28,7 @@ resid_density <- function(obj, resid,
   ######################################################################## 
   rqres <- NULL 
   if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
-  if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
   d <- if (missing(obj)) other_prep_data(resid) 
   else             gamlss_prep_data(obj) 
   txt.title <- if (missing(title))   paste("Quantile residuals of model",deparse(substitute(obj)))

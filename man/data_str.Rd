@@ -15,7 +15,7 @@ his is a set of function are designed to help the user to deal with the structur
 \usage{
 data_str(data, min.values = 100, min.levels = 10)
 y_distinct(var)
-data_distinct(data)
+data_distinct(data, get.distinct = FALSE)
 data_cha2fac(data, show.str = FALSE)
 data_few2fac(data, min.levels = 10, show.str = FALSE)
 data_int2num(data, min.values = 50, show.str = FALSE)
@@ -27,6 +27,7 @@ data_int2num(data, min.values = 50, show.str = FALSE)
   \item{min.values}{the minimal value distinct values befor warning }
   \item{min.levels}{the minimal value distinct levels befor warning}
   \item{var}{a vector}
+   \item{get.distinct}{TRUE if you need to save the values FALSE if not not}
   \item{show.str}{whether to show the structure}
 }
 \details{

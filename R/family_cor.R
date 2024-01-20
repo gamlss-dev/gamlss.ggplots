@@ -71,7 +71,7 @@ gamlss.bi.list <- .binom
 ##    whether discrete distribution or not
       # y.var <- if(type=="Discrete")  seq(from, to, by=1)
       #         else seq(from, to, length=no.points)
-## whether binimial type
+## whether binomial type
   if(any(fname%in%.gamlss.bi.list)) bd <- bd   
 ## the number of plots  
     lobs <- max(c(length(mu),length(sigma),length(nu),length(tau)))
@@ -102,7 +102,6 @@ if ("tau"%in%par.names)
       if (!fam$tau.valid(tau.var))  stop( "`tau' parameter out of range")
       samp <- eval(call(rorfun, no.sim, mu=mu.var, sigma=sigma.var, nu=nu.var, tau=tau.var))
 }
-  
      model0 <- gamlssML(samp, family=fname) 
          CC <- vcov(model0, type="cor")
          CC <- base::round(x = CC, digits = digits)

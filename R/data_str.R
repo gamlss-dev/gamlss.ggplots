@@ -35,7 +35,7 @@ y_distinct <- function(var)
 ################################################################################
 ################################################################################
 # function 2
-data_distinct <- function(data) 
+data_distinct <- function(data, get.distinct=FALSE) 
 {
   # what is the data
   if (is(data, "list"))  stop("the data is list  the function needs a data.frame") 
@@ -52,7 +52,8 @@ data_distinct <- function(data)
   pp=unlist(PP)
   names(pp) <- Names
   if (any(pp==1)) warning("at least one variable has only 1 distinct value, please remove from data")
-  pp
+  print(pp)
+  if (get.distinct) return(pp) else invisible(data)
 }
 ################################################################################
 ################################################################################
@@ -87,8 +88,9 @@ cat("**************************************************************",  "\n")
 cat("**************************************************************",  "\n") 
        nCh <- nchar(Names)
 class_Vars <- sapply(data,class)
-      dist <- data_distinct(data)
-       out <-data.frame(class=class_Vars,  dist.values=dist, name.no.ch=nCh)
+cat("distinct values in variables","\n")
+      dist <- data_distinct(data, get.distinct=TRUE)
+       out <- data.frame(class=class_Vars,  dist.values=dist, name.no.ch=nCh)
       Iint <- out$class=="integer"  &out$dist.values < min.levels
       Icha <- out$class=="character"&out$dist.values < min.levels
       Inum <- out$class=="numeric"  &out$dist.values < min.levels
@@ -116,11 +118,6 @@ if (any(Ivar=="TRUE"))
   cat("and those integer vectors into mumeric:", "\n")
   cat(Names[Ivar], "\n" )
 }
-cat("**************************************************************",  "\n")  
-cat("**************************************************************",  "\n") 
-pp <-  data_distinct(data)
-cat("distinct values in variables","\n")
-print(pp)
 cat("**************************************************************",  "\n")  
 cat("**************************************************************",  "\n") 
 invisible(data)
@@ -195,7 +192,7 @@ if (is(data, "array"))
 cat("**************************************************************",  "\n")
        Names <- names(data)
   class_Vars <- sapply(data,class)
-      dvdata <- data_distinct(data)
+      dvdata <- data_distinct(data, get.distinct=TRUE)
          ind <- 0
 for (i in 1:length(Names)) 
   {
@@ -244,7 +241,7 @@ cat("**************************************************************",  "\n")
  class_Vars <- sapply(data,class)
   which_Int <- class_Vars=="integer"
 if (!any(which_Int))  return(cat("no integer vector is found", "\n"))
-    dis.val <- data_distinct(data)
+    dis.val <- data_distinct(data, get.distinct=TRUE)
     all_Int <- Names[which_Int]
     dis.val <- dis.val[which_Int] 
         ind <- 0
