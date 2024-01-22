@@ -78,7 +78,7 @@ export( resid_index,
         data_cha2fac, data_few2fac, data_int2num,
         data_xyplot, data_plot, data_bucket, data_zscores, y_zscores,
         prof_term, data_outliers, y_outliers,
-        data_part, data_rm1val
+        data_part
 )        
 ################################################################################
 # ACE object

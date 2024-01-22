@@ -1,6 +1,5 @@
 \name{data_part}
 \alias{data_part}
-\alias{data_rm1val}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -10,16 +9,9 @@ A function to partition a data frame
 The function \code{data_part()} creates a index which partition randomly the observations of a \code{data.frame} into subsets. 
 It creates randomly a factor  of length n called \code{partition}, which subdivide the data i) into either two sets, training, \code{train}, and test, \code{test}, or ii)  into three sets  training, \code{train}, validation, \code{val} and test, \code{test} or iii) into a k-fold cross validation sets.
 
-The function \code{data_rm1val()} removes from  a \code{data.frame} variables which have only one value.
-
-
-
 }
 \usage{
 data_part(data, partition = 2L, probs, setseed = 123, ...)
-
-data_rm1val(data)
-
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
