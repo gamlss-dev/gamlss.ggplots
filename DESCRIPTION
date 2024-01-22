@@ -1,15 +1,7 @@
 Package: gamlss.ggplots
-<<<<<<< HEAD
-Description: Plotting functions for Generalised Additive Models for 
-       Location Scale and Shape.
-Title: Plotting Generalised Additive Model for Location, Scale and Shape
-LazyLoad: yes
+Title: Plotting Generalized Additive Model for Location Scale and Shape
 Version: 2.1-8
 Date: 2023-12-12
-=======
-Title: Plotting Generalized Additive Model for Location Scale and Shape
-Version: 2.1-5
-Date: 2023-09-15
 Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
              email = "d.stasinopoulos@gre.ac.uk", comment = c(ORCID = "0000-0003-2407-5704")),
            person("Robert", "Rigby", role = "aut", email = "r.rigby@gre.ac.uk", comment = c(ORCID = "0000-0003-3853-1707")),
@@ -20,7 +12,6 @@ Description: Plotting functions for Generalized Additive Models for Location Sca
 License: GPL-2 | GPL-3
 URL: https://www.gamlss.com/
 BugReports: https://github.com/gamlss-dev/gamlss.ggplots/issues
->>>>>>> 47296fa0abba1eb975265e3f2718e45b6fc2bd46
 Depends:  R (>= 3.5.0), gamlss.dist, gamlss (>= 4.3.3),  gamlss.foreach
 Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2, yaImpute
 Suggests: glmnet, reshape2, igraph, networkD3, grid, gridExtra
