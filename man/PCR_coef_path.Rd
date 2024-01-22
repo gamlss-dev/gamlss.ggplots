@@ -60,7 +60,7 @@ if (is.null(rownames(x)))
 # fitting
 MM<- fitPCR(x,y, k=log(100))
 pp<-pcr_coef_path(MM)
-pp+ geom_vline(xintercept = MM$pc, colour = "gray") 
+pp+ ggplot2::geom_vline(xintercept = MM$pc, colour = "gray") 
 # using gamlss
 m1 <- gamlss(y~pcr(x=x))
 pcr_path(m1)
