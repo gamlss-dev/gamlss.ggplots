@@ -1,7 +1,7 @@
 Package: gamlss.ggplots
 Title: Plotting Generalized Additive Model for Location Scale and Shape
-Version: 2.1-8
-Date: 2023-12-12
+Version: 2.1-10
+Date: 2024-01-23
 Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
              email = "d.stasinopoulos@gre.ac.uk", comment = c(ORCID = "0000-0003-2407-5704")),
            person("Robert", "Rigby", role = "aut", email = "r.rigby@gre.ac.uk", comment = c(ORCID = "0000-0003-3853-1707")),
