@@ -6,7 +6,7 @@
 Alternating Conditional Expectations
 }
 \description{
-The function \code{ACE()} uses the alternating conditional expectations algorithm to find the transformations of \code{y} and \code{x} that maximise the proportion of variation in y explained by x. It is a less general function  than the \code{ace()} function  of the package \pkg{acepack} in that it takes only one explanatory variable. It uses by the function \code{mcor()}  to calculate the maximal correlation between \code{x} and \code{y}.
+The function \code{ACE()} uses the alternating conditional expectations algorithm to find the transformations of \code{y} and \code{x} that maximise the proportion of variation in y explained by x. It is a less general function  than the \code{ace()} function  of the package \pkg{acepack} in that it takes only one explanatory variable. The function \code{ACE()} is used  by the function \code{mcor()}  to calculate the maximal correlation between \code{x} and \code{y}.
 }
 \usage{
 ACE(x, y, weights, data = NULL, con_crit = 0.001, 
