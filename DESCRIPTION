@@ -1,5 +1,5 @@
 Package: gamlss.ggplots
-Title: Plotting functions for Generalized Additive Model for Location Scale and Shape
+Title: Plotting Functions for Generalized Additive Model for Location Scale and Shape
 Version: 2.1-11
 Date: 2024-02-23
 Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"), 
