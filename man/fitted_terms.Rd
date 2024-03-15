@@ -6,7 +6,7 @@
 
 \description{
 The function \code{fitted_terms()} is doing what the function \code{term.plot()} is doing for GAMLSS models but it uses \code{ggplot2} package. 
-The function \code{pe_terms()} is synonymous to  \code{fitted_terms()}
+The function \code{pe_terms()} is synonymous to  \code{fitted_terms()} in the package \pkg{gamlss}.
 }
 \usage{
 fitted_terms(object, 
@@ -87,7 +87,11 @@ Stasinopoulos D. M. Rigby R.A. (2007) Generalized additive models for location s
 \emph{Journal of Statistical Software}, Vol. \bold{23}, Issue 7, Dec 2007, \url{https://www.jstatsoft.org/v23/i07/}.
 
 Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2017)
-\emph{Flexible Regression and Smoothing: Using GAMLSS in R},  Chapman and Hall/CRC.  
+\emph{Flexible Regression and Smoothing: Using GAMLSS in R},  Chapman and Hall/CRC. 
+
+Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
+
+
 
 (see also \url{https://www.gamlss.com/}).
 }

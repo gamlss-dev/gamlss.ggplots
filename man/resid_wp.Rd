@@ -47,6 +47,9 @@ if object is missing this argument can be used to specify the residual vector (a
 A worm plot is produced
 }
 \references{
+van Buuren and Fredriks M. (2001) Worm plot: simple diagnostic device for modelling growth reference curves. 
+            \emph{Statistics in Medicine}, \bold{20}, 1259--1277
+
 Rigby, R. A., Stasinopoulos, D. M.,  Heller, G. Z.,  and De Bastiani, F. (2019)
 	\emph{Distributions for modeling location, scale, and shape: Using GAMLSS in R}, Chapman and Hall/CRC. An older version can be found in \url{https://www.gamlss.com/}.
 
@@ -56,10 +59,9 @@ Stasinopoulos D. M. Rigby R.A. (2007) Generalized additive models for location s
 Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2017)
 \emph{Flexible Regression and Smoothing: Using GAMLSS in R},  Chapman and Hall/CRC.  
 
-(see also \url{https://www.gamlss.com/}).
+Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-van Buuren and Fredriks M. (2001) Worm plot: simple diagnostic device for modelling growth reference curves. 
-            \emph{Statistics in Medicine}, \bold{20}, 1259--1277
+(see also \url{https://www.gamlss.com/}).
 
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
