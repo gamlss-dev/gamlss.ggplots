@@ -1,6 +1,5 @@
 \name{model_pca}
 \alias{model_pca}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plotting residuals using PCA}
 \description{
 The function \code{model_pca()} plots several GAMLSS residuals using Principal Component Analysis. 
@@ -8,7 +7,6 @@ The function \code{model_pca()} plots several GAMLSS residuals using Principal C
 \usage{
 model_pca(obj, ..., scale = TRUE, arrow_size = 1.5)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{A gamlss object}
   \item{\dots}{for extra GAMLSS models}
@@ -47,12 +45,5 @@ m2 <- gamlss(y~pb(x), data=abdom)
 m3 <- gamlss(y~pb(x), sigma.fo=~pb(x), data=abdom)
 model_pca(m1,m2,m3)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

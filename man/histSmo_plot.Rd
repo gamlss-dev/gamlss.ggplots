@@ -1,6 +1,6 @@
 \name{histSmo_plot}
 \alias{histSmo_plot}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Supporting histSmo()}
 \description{
 This function helps to plot density estimates created by the \code{histSmo()} function.
@@ -9,7 +9,6 @@ This function helps to plot density estimates created by the \code{histSmo()} fu
 histSmo_plot(x, col_fill_bar = gray(0.5), col_bar = "pink", 
         col_line = "darkblue", width_line = 1, title, xlabel)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a \code{histSmo} object}
   \item{col_fill_bar}{The fill colour of the bars}
@@ -45,9 +44,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani 
 }
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{histSmo}}
 }
@@ -56,12 +52,5 @@ a1 <-histSmo(abdom$y)
 gg1 <-histSmo_plot(a1)
 gg1
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

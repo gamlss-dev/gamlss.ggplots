@@ -3,7 +3,7 @@
 \alias{resid_wp}
 \alias{resid_wp_wrap}
 \alias{model_wp_wrap}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Worm plot using ggplot2}
 \description{The function produces worm plot of the residuals of a fitted  model.  A worm plot is a de-trended normal QQ-plot so departure from normality is highlighted.
 
@@ -66,8 +66,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{wp}}
 }
@@ -78,12 +76,5 @@ a<-gamlss(y~pb(x),sigma.fo=~pb(x,1),family=LO,data=abdom)
 resid_wp(a)
 resid_wp(resid=resid(a))
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

@@ -22,7 +22,6 @@ add_resid_qqplot(gg, obj, value = 3, points.col = "sienna",
 model_qqplot(obj, ..., line.col = "steelblue4", title)
 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{A GAMLLS fitted model or}
   \item{resid}{any other residual suitable standardised.}
@@ -54,9 +53,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{plot.gamlss}}
 }
@@ -68,12 +64,5 @@ gg <- resid_qqplot(a)
 add_resid_qqplot(gg, b)
 model_qqplot(a,b)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

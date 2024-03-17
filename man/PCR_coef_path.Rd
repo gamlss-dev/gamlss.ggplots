@@ -14,23 +14,16 @@ pcr_path(x, parameter = c("mu", "sigma", "nu", "tau"),
           legend = FALSE, plot = TRUE)
 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a fitted PCR object (or a fitted GAMLSS object for function \code{pcr_path(}}
   \item{legend}{whether legent is needed}
   \item{plot}{whether to plot the path}
   \item{parameter}{which GAMLSS parameter, between "mu", "sigma", "nu", "tau"}
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
-\value{
-A gg-plot.
-}
+\value{A gg-plot.}
 \references{
 Rigby, R. A. and  Stasinopoulos D. M. (2005). Generalized additive models for location, scale and shape,(with discussion), 
 \emph{Appl. Statist.}, \bold{54}, part 3, pp 507-554.
-
 
 Rigby, R. A., Stasinopoulos, D. M.,  Heller, G. Z.,  and De Bastiani, F. (2019)
 	\emph{Distributions for modeling location, scale, and shape: Using GAMLSS in R}, Chapman and Hall/CRC. An older version can be found in \url{https://www.gamlss.com/}.
@@ -69,12 +62,5 @@ m1 <- gamlss(y~pcr(x=x))
 pcr_path(m1)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

@@ -13,7 +13,6 @@ fitted_leverage(obj, plot = TRUE, title, quan.val = 0.99,
           annotate = TRUE, line.col = "steelblue4", 
           point.col = "steelblue4", annot.col = "darkred")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{A GAMLSS fitted model}
   \item{plot}{whether to plot ot not}
@@ -48,21 +47,11 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{ \code{\link[gamlss]{gamlss}} }
 
 \examples{
 m1 <- gamlss(R~pb(Fl)+pb(A)+loc+H, data=rent, family=GA)
 fitted_leverage(m1)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
- \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
+\keyword{regression}

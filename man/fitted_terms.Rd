@@ -40,7 +40,6 @@ pe_terms(object,
           col.shaded = "gray", ...)          
           
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{a gamlss fitted model}
   \item{what}{which distribution parameters, i.e. "mu"}
@@ -72,9 +71,6 @@ pe_terms(object,
   \item{col.shaded}{he colour of the shaded area}
   \item{\dots}{for extra argument}
 }
-%\details{
-%%  ~~ If necessary, more details than the description above ~~
-%}
 \value{A multiple plot}
 \references{
 Rigby, R. A. and  Stasinopoulos D. M. (2005). Generalized additive models for location, scale and shape,(with discussion), 
@@ -91,17 +87,10 @@ Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2
 
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-
-
 (see also \url{https://www.gamlss.com/}).
 }
 
-\author{Mikis Stasinopoulos }
-%\note{
-%%  ~~further notes~~
-%}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\author{Mikis Stasinopoulos}
 
 \seealso{
 \code{\link[gamlss]{term.plot}}
@@ -109,8 +98,8 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 
 \examples{
 data(aids)
-a<-gamlss(y~pb(x)+qrt,data=aids,family=NBI)
-fitted_terms(a, pages=1)
-rm(a)
+a <- gamlss(y ~ pb(x) + qrt, data = aids, family = NBI)
+fitted_terms(a, pages = 1)
 }
+
 \keyword{regression}

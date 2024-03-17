@@ -7,7 +7,6 @@
 \alias{resid_xvar}
 \alias{resid_quantile}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{A residual plots}
 \description{
 
@@ -124,12 +123,5 @@ resid_xvar(r1, A)
 resid_plots(r1)
 resid_index(r1, no.lines=TRUE)+facet_wrap(~ cut_number(rent$A, 6))
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
- \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
+\keyword{regression}

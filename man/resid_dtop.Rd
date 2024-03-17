@@ -3,7 +3,6 @@
 \alias{resid_ecdf}
 \alias{y_ecdf}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Detrended Transformed Owen's Plot and ECDF for the residuals}
 \description{
 
@@ -28,7 +27,6 @@ y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2,
            points.col = "steelblue4", check_overlap = TRUE, 
            show.outliers = FALSE, from, to, title, ...)           
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{A GAMLSS fitted model}
   \item{resid}{if the object is not specified the residual vector can be given here}
@@ -68,8 +66,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda de Bastiani}
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{\code{\link{resid_wp}}}
 \examples{
 library(ggplot2)
@@ -82,5 +78,4 @@ y <- rGA(1000, mu=3, sigma=1)
 gp<- y_ecdf(y)
 gp + stat_function(fun = pGA, args=list(mu=3, sigma=1)) 
 }
-\keyword{regression}% 
-
+\keyword{regression}

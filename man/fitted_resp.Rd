@@ -4,7 +4,6 @@
 \alias{resp_quantile}
 \alias{quantile_gamlss}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plotting the response against  quantities of the fitted model}
 \description{
 All plots are of  the response variable against  fitted values of interest.
@@ -33,7 +32,6 @@ resp_quantile(obj, quantile = 0.5, title, newdata,
 
 quantile_gamlss(obj, quantile = 0.5, newdata)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{a GAMLSS fitted object}
    \item{param}{which parameters? \code{mu}, \code{sigma}, \code{nu} or  \code{tau}, [only for \code{resp_param()}].}
@@ -75,8 +73,6 @@ Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani
 Do not use this plot if \code{mu} is not a location parameter. 
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link{resid_plots}}
 }
@@ -86,12 +82,6 @@ resp_mu(m1)
 resp_param(m1)
 resp_quantile(m1)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
 \concept{ GAMLSS}
-% \concept{ ~cpt2 }
-% Use only one concept per line.

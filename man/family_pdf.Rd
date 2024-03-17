@@ -37,7 +37,6 @@ predict_pdf(model, newdata, title, from = 0, to = 10, no.points = 201,
          plot.line = TRUE, size.line = 0.2, ...)
          
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{family}{A GAMLSS family}
   \item{model}{A GAMLSS fitted model}
@@ -90,10 +89,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 (see also \url{https://www.gamlss.com/}).
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
-
-
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{  \code{\link{gamlss}}, \code{\link{resid_density} }}
 \examples{

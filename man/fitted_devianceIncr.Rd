@@ -2,8 +2,6 @@
 \alias{fitted_devianceIncr}
 \alias{model_devianceIncr_diff}
 
-
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plotting the deviance increment of GAMLSS}
 \description{
 There are two plotting function here:
@@ -26,7 +24,6 @@ model_devianceIncr_diff(model1, model2, against = "index",
          tol = 20, data, newdata)
 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
  \item{obj}{a GAMLSS fitted object}
  \item{plot}{whether to create just the plot or save also the values with high deviance increment}
@@ -65,17 +62,11 @@ Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2
 
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-
 (see also \url{https://www.gamlss.com/}).
 }
 \author{
 Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani 
 }
-
-
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 
 \seealso{\code{\link{gamlss}}}
 
@@ -85,12 +76,4 @@ m2 <- gamlss(R~pb(Fl)+pb(A)+H+loc, data=rent, family=NO )
 fitted_devianceIncr(m1)
 model_devianceIncr_diff(m1,m2, against="Fl")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
- \keyword{ regression }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+\keyword{ regression }

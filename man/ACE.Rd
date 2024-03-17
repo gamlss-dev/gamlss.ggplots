@@ -1,7 +1,7 @@
 \name{ACE}
 \alias{ACE}
 \alias{mcor}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
 Alternating Conditional Expectations
 }
@@ -17,7 +17,6 @@ mcor(x, y, data = NULL,  fit.method = c("loess", "P-splines"),
         nseg = 10, max.df = 6,  ...)
 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{the unique x-variables}
   \item{y}{the y-variable}
@@ -52,16 +51,11 @@ Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2
 
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-
-
 (see also \url{https://www.gamlss.com/}).
 }
 \author{
 Mikis Stasinopoulos
 }
-
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
 fit_PB
@@ -75,12 +69,5 @@ plot(pp)
 
 mcor(Fl, R, data=rent)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
- \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
+\keyword{regression}

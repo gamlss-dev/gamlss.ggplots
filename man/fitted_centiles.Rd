@@ -3,7 +3,6 @@
 \alias{fitted_centiles_legend}
 \alias{model_centiles}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plotting centile (growth) curves
 }
@@ -91,8 +90,6 @@ Mikis Stasinopoulos, Bob Rigby and Fernanda de Bastiani
 }
 \section{Warning }{This function is appropriate only when one continuous explanatory variable is fitted in the model}  
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{   \code{\link[gamlss]{centiles}} }
 \examples{
 \donttest{
@@ -104,12 +101,6 @@ fitted_centiles_legend(h)
 model_centiles(h, h1)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
 \concept{growth curves}
-% \concept{ ~cpt2 }
-% Use only one concept per line.

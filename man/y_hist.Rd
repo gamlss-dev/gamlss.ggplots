@@ -29,7 +29,6 @@ y_dots(y, data, value=3, point.size = 2, point.col = "gray",
           x.axis.line.type = "solid", seed = 123, from, to, title)
 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{y,x}{a continuous variable}
   \item{data}{where to find argument y}
@@ -74,9 +73,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{\code{\link{plot.ecdf}}}
 \examples{
 library(ggplot2)
@@ -91,6 +87,5 @@ gg + stat_function(fun = dBCT, args=list(mu=3, sigma=.1,  nu=-1, tau=5),
 y_acf(diff(EuStockMarkets[,1]))    
 
 y_dots(rent$R)
-
 }
 \keyword{regression}

@@ -4,7 +4,6 @@
 \alias{pe_2_param}
 \alias{pe_param_grid}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Partial Effect of a term on the parameters and predictors}
 \description{
@@ -48,7 +47,6 @@ pe_2_param(obj = NULL, terms = NULL, data = NULL, n.points = 100,
 
 pe_param_grid(model, terms, maxcol = 2, maxrow = 3, ylim=NULL, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{a GAMLSS fitted object}
    \item{model}{a GAMLSS fitted model}
@@ -117,9 +115,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani 
 }
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{getPEF}}
 }
@@ -136,12 +131,5 @@ pe_param(m1, c("Fl","A"), filled=TRUE)
 pe_param_grid(m1, list(c("Fl","A"), c("H","loc")), filled=TRUE)
 # the terms are additive no interaction
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
- \keyword{ regression }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
+\keyword{ regression }

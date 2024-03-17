@@ -1,7 +1,7 @@
 \name{resid_density}
 \alias{resid_density}
 \alias{model_density}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Density of the residuals in a GAMLLSS model}
 \description{
 The function  \code{resid_density()} plots an histogram and a density estimator of the normalised quantile residuals from a fitted GAMLSS model. The function  \code{model_density()} plots  density estimators of the normalised quantile residuals from more than one  fitted GAMLSS models.
@@ -11,7 +11,6 @@ resid_density(obj, resid, hist.col = "black", hist.fill = "white",
               dens.fill = "#FF6666", title)
 model_density(obj, ..., title)              
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{obj}{
 The function needs a  GAMLSS fitted model or 
@@ -46,9 +45,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{plot.gamlss}}
 }
@@ -59,12 +55,5 @@ b<-gamlss(y~pb(x),family=NO,data=abdom)
 resid_density(a)
 model_density(a,b)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

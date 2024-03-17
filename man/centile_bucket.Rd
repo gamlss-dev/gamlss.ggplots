@@ -3,7 +3,6 @@
 \alias{centile_bucket_wrap}
 \alias{model_cent_bucket}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Centile bucket plot
 }
@@ -42,7 +41,6 @@ centile_bucket_wrap(x, ..., type = c("tail", "central"), weights = NULL,
       col_sim_test = gray(0.7), alpha_sim_test = 0.1, seed_test = 1234)       
        
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
  \item{x}{x should be a continuous vector of a GAMLSS fitted model. }
  \item{\dots}{for more that one continuous vectors or fitted models}
@@ -102,9 +100,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 The  bucket plot provides an additional residual diagnostic tool that can be used for fitted model checking, alongside other diagnostic tools, for example   worm plots, and Q (and Z) statistics.
 }
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{\code{\link[gamlss]{wp}, \link[gamlss]{Q.stats}}}
 
 \examples{
@@ -116,12 +111,4 @@ centile_bucket_wrap(m1, xvar=rent$A)
 
 }
 
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
 \keyword{regression}
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

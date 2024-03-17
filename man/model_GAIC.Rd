@@ -1,7 +1,7 @@
 \name{model_GAIC}
 \alias{model_GAIC}
 \alias{model_GAIC_lollipop}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{Plotting GAIC for GAMLSS models}
 \description{
 The function \code{model_GAIC()} is similar to the function \code{GAIC.scaled()} of the package \pkg{gamlss}. It  produces, [for a given set of different fitted models or for a table produced by \code{chooseDist()}], the scaled Akaike values (see Burnham and Anderson (2002) section 2.9 for a similar concept of the GAIC weights. The plot of the  GAIC's  should not be interpreted as posterior probabilities of models given the data but can be used for model selection purpose since they produce a scaled ranking of the model using their relative importance i.e. from the worst to the best model. 
@@ -21,7 +21,6 @@ model_GAIC_lollipop(object, ..., k = 2, c = FALSE, plot = TRUE,
          width = 0.9, horiz = TRUE, 
          scale = c("[0,1]", "[max,min]"), order.val = TRUE, title)  
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{
 a set of \code{gamlss} fitted model(s) or a matrix table produced by \code{chooseDist()}.
@@ -52,20 +51,14 @@ it allows several GAMLSS object to be compared using a GAIC
 
 }
 
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-It returns a bar plot using package \pkg{ggplot2}.
-%% ...
-}
+\value{It returns a bar plot using package \pkg{ggplot2}.}
+
 \references{
 Burnham K. P.  and  Anderson D. R (2002). \emph{Model Selection and Multimodel Inference
 A Practical Information-Theoretic Approach}, Second Edition, Springer-Verlag New York, Inc.
 
 Rigby, R. A. and  Stasinopoulos D. M. (2005). Generalized additive models for location, scale and shape,(with discussion), 
 \emph{Appl. Statist.}, \bold{54}, part 3, pp 507-554.
-
 
 Rigby, R. A., Stasinopoulos, D. M.,  Heller, G. Z.,  and De Bastiani, F. (2019)
 	\emph{Distributions for modeling location, scale, and shape: Using GAMLSS in R}, Chapman and Hall/CRC. An older version can be found in \url{https://www.gamlss.com/}.
@@ -77,23 +70,19 @@ Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2
 \emph{Flexible Regression and Smoothing: Using GAMLSS in R},  Chapman and Hall/CRC.  
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-
 (see also \url{https://www.gamlss.com/}).
-
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{ \code{\link[gamlss]{GAIC.scaled}} }
 
 \examples{
 data(abdom)
-m1 <-  gamlss(y~x, family=NO, data=abdom)
-m2 <-  gamlss(y~x, sigma.fo=~x, family=NO, data=abdom)
-m3 <-  gamlss(y~pb(x), sigma.fo=~x, family=NO, data=abdom)
-m4 <-  gamlss(y~pb(x), sigma.fo=~pb(x), family=NO, data=abdom)
+m1 <- gamlss(y~x, family=NO, data=abdom)
+m2 <- gamlss(y~x, sigma.fo=~x, family=NO, data=abdom)
+m3 <- gamlss(y~pb(x), sigma.fo=~x, family=NO, data=abdom)
+m4 <- gamlss(y~pb(x), sigma.fo=~pb(x), family=NO, data=abdom)
 
 model_GAIC(m1,m2, m3, m4)
 \donttest{
@@ -102,8 +91,6 @@ model_GAIC(MT)
 model_GAIC(MT, which=2)}
 model_GAIC_lollipop(m1,m2, m3, m4)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
 \concept{model selection}
-

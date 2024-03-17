@@ -21,7 +21,6 @@ boot_coef_one(x, par = 1, rug = TRUE, alpha = 0.2, hist.col = "black",
                 hist.fill = "white", line.col = "gray", 
                 dens.fill = "#FF6666", title, ...)              
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a \code{Bayesian.boot} or \code{NonParametric.boot} object}
   \item{terms}{which terms to plot (default NULL means all terms}
@@ -59,15 +58,9 @@ Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2
 
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
 
-
 (see also \url{https://www.gamlss.com/}).
 }
-\author{Mikis Stasinopoulos }
-%\note{
-%%  ~~further notes~~
-%}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\author{Mikis Stasinopoulos}
 
 \seealso{
 \code{\link[gamlss]{term.plot}}
@@ -76,19 +69,12 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \examples{
 \donttest{
 data(aids)
-a<-gamlss(y~pb(x)+qrt,data=aids,family=NBI)
+a <- gamlss(y ~ pb(x) + qrt, data = aids, family = NBI)
 registerDoParallel(cores = 2)
 B1 <- BayesianBoot(a, B=100)
 stopImplicitCluster()
 boot_coef(B1)
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

@@ -12,7 +12,6 @@ prof_term(model = NULL, criterion = c("GD", "GAIC"),
       perc = 95, start.prev = TRUE, line.col = "darkgreen", 
       dash.line.type = 3, dash.line.size = 0.8, text.size = 5, title)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{a GAMLSS fitted model}
   \item{criterion}{whether Global deviance or GAIC}
@@ -60,8 +59,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 Mikis Stasinopoulos
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss]{prof.term}}
 }
@@ -75,9 +72,3 @@ prof_term(mod, min=.06, max=0.11)
 }
 
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.

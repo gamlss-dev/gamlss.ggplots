@@ -7,7 +7,6 @@
 \alias{centile_colour_half}
 \alias{centile_colour_both}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Functions to create the background for the bucket plots}
 \description{The functions plot the moment transformed skewness and moment transformed kurtosis  of five important 4-parameter distributions in GAMLSS.
 }
@@ -30,7 +29,6 @@ centile_colour_both(type = c("tail", "central"), legend = TRUE,
 centile_gray_both(type = c("tail", "central"), legend = TRUE, 
                   line_width = 0.5)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{legend}{whether legend is required}
   \item{line_width}{line width}
@@ -69,8 +67,6 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 The functions are use by the bucket plot function \code{model_mom_bucket()} to create the background of the bucket plots.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 \code{\link[gamlss.dist]{momentSK}}, \code{\link[gamlss.dist]{centileSK}}
 }
@@ -84,12 +80,5 @@ centile_colour_both()
 centile_gray_both()
 centile_colour_half()
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
+
 \keyword{regression}
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
