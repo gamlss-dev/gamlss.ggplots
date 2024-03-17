@@ -8,7 +8,7 @@ Authors@R: c(person("Mikis", "Stasinopoulos", role = c("aut", "cre", "cph"),
            person("Fernanda", "De Bastiani", role = "aut", email = "fernandadebastiani@gmail.com", comment = c(ORCID = "0000-0001-8532-639X")),
            person("Julian", "Merder", role = "ctb")
            )
-Description: It supplements and adds to the original gamlss package, Stasinopoulos and Rigby (2007) <doi:10.18637/jss.v023.i0.> graphical methods based on the grammar of graphics of the package ggplots2. 
+Description: Functions for plotting Generalized Additive Models for Location Scale and Shape from the 'gamlss' package, Stasinopoulos and Rigby (2007) <doi:10.18637/jss.v023.i07>, using the graphical methods from 'ggplot2'.
 License: GPL-2 | GPL-3
 URL: https://www.gamlss.com/
 BugReports: https://github.com/gamlss-dev/gamlss.ggplots/issues
