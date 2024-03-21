@@ -121,13 +121,7 @@ Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani
 \examples{
 m1 <- gamlss(R~pb(Fl)+pb(A)+loc+H, data=rent, gamily=GA)
 pe_param(m1, "A")
-# equivalent to 
-# pe_1_param(m1, "A")
-
 pe_param(m1, c("Fl","A"), filled=TRUE)
-#equivalent to
-#pe_2_param(m1, c("Fl","A"), filled=TRUE)
-
 pe_param_grid(m1, list(c("Fl","A"), c("H","loc")), filled=TRUE)
 # the terms are additive no interaction
 }

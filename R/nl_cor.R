@@ -20,7 +20,7 @@ nl_cor1 <- function(x,y, plot=TRUE, robust=FALSE)
   if (plot) { po <- par(mfrow=c(1,2))
   plot(x,y); lines(fitted(m1)[order(x)]~x[order(x)], col="red")
   plot(y,x); lines(fitted(m2)[order(y)]~y[order(y)], col="red")
-  par(po)
+  on.exit(par(po))
   }
   list(cor=max(r1,r2), d1=r1, d2=r2 )
 }
@@ -142,7 +142,7 @@ nl_cor <- function(x,y, plot=FALSE)
   po <- par(mfrow=c(1,2))
   plot(x,y); lines(fitted(m1)[order(x)]~x[order(x)], col="red")
   plot(y,x); lines(fitted(m2)[order(y)]~y[order(y)], col="red")
-  par(po)
+  on.exit(par(po))
   }
   cor <- max(r1,r2)
   attr(cor, "r1") <- r1
