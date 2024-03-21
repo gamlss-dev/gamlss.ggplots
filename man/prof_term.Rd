@@ -68,7 +68,7 @@ data(aids)
 gamlss(y~x+qrt,family=NBI,data=aids)
 # testing the linear beta parameter
 mod<-quote(gamlss(y ~ offset(this * x) + qrt, data = aids, family = NBI))
-prof_term(mod, min=.01, max=0.11)
+prof_term(mod, from = .06, to=0.13)
 }
 
 \keyword{regression}
