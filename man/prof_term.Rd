@@ -7,7 +7,7 @@ Plotting the profile deviance of a fitted term in GAMLSS
 }
 \usage{
 prof_term(model = NULL, criterion = c("GD", "GAIC"), 
-      penalty = 2.5,  min = NULL, max = NULL, 
+      penalty = 2.5,  from = NULL, to = NULL, 
       step = NULL, length = 7, xlabel = NULL, plot = TRUE, 
       perc = 95, start.prev = TRUE, line.col = "darkgreen", 
       dash.line.type = 3, dash.line.size = 0.8, text.size = 5, title)
