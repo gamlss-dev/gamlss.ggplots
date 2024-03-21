@@ -8,7 +8,7 @@
 Partial Effect of a term on the parameters and predictors}
 \description{
 The function \code{pe_param()} is similar to the function \code{getPEF()} of the \pkg{gamlss} package. It plot the partial effect that a particular term has one of the parameters of the distribution or its predictor \code{eta}. 
-The function \code{pe2_param()} is build for partial effects for from two terms and it is suitable to display first order interactions.
+The function \code{pe2_param()} is build for partial effects from two terms and it is suitable to display first order interactions.
 }
 \usage{
 pe_param(obj = NULL, term = NULL, data = NULL, n.points = 100, 
