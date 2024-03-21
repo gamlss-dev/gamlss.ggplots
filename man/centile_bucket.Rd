@@ -11,9 +11,11 @@ A bucket plot is a graphical way to check the skewness and kurtosis of a continu
 
 There are two function here:
 
-i) \code{cenlile_bucket()} for a single bucket plot. Note that  \code{model_cen_bucket()}  and \code{centile_bucket()} are synonymous.
+i) \code{cenlile_bucket()} for a single bucket plot. Note that  \code{model_cent_bucket()}  and \code{centile_bucket()} are synonymous.
 
 ii) \code{centile_bucket_wrap()} for multiple bucket plots cut according to  terms in the model. 
+
+
 
 }
 \usage{
