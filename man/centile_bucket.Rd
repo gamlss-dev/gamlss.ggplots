@@ -85,13 +85,10 @@ Stasinopoulos D. M. Rigby R.A. (2007) Generalized additive models for location s
 Stasinopoulos D. M., Rigby R.A., Heller G., Voudouris V., and De Bastiani F., (2017)
 \emph{Flexible Regression and Smoothing: Using GAMLSS in R},  Chapman and Hall/CRC. \doi{10.1201/b21973}
 
-Stasinopoulos, M. D., Rigby, R. A., and De Bastiani F., (2018) GAMLSS: a distributional regression approach, \emph{Statistical Modelling}, Vol. \bold{18}, 
-pp, 248-273, SAGE Publications Sage India: New Delhi, India.
+Stasinopoulos, M. D., Rigby, R. A., and De Bastiani F., (2018) GAMLSS: a distributional regression approach, \emph{Statistical Modelling}, Vol. \bold{18}, pp, 248-273, SAGE Publications Sage India: New Delhi, India.
 
 
 Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \emph{Generalized Additive Models for Location, Scale and Shape: A Distributional Regression Approach, with Applications} (Vol. \bold{56}). Cambridge University Press.
-
-
 
 (see also  \url{https://www.gamlss.com/}).
 }
@@ -105,10 +102,9 @@ The  bucket plot provides an additional residual diagnostic tool that can be use
 \examples{
 m1 <- gamlss(R~pb(Fl)+pb(A), data=rent, family=GA)
 centile_bucket(m1)
-\dontrun{
+\donttest{
 centile_bucket_wrap(m1, xvar=rent$A)
 }
-
 }
 
 \keyword{regression}
