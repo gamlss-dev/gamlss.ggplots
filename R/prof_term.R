@@ -11,9 +11,8 @@
 prof_term <- function (model = NULL, 
                    criterion = c("GD","GAIC"), 
                      penalty = 2.5, 
-               #        other = NULL,
-                         min = NULL, 
-                         max = NULL, 
+                         from = NULL, 
+                         to = NULL, 
                         step = NULL, 
                       length = 7,
                       xlabel = NULL,
@@ -27,20 +26,19 @@ prof_term <- function (model = NULL,
                       title
                         ) 
 {
-x <- NULL  
+          x <- NULL  
 if(is.null(model)) stop("you have not defined the model")
-if(is.null(min)) stop("you have not defined the minimum")
-if(is.null(max)) stop("you have not defined the maximum")
-#if(is.null(step)) stop("you have not defined the step")
+if(is.null(from)) stop("you have not defined the minimum value")
+if(is.null(to)) stop("you have not defined the maximum value")
 criterion  <- match.arg(criterion)
-#if(!criterion%in%c("IC","GD")) stop("criterion should be IC or GD")
-  interval <- if (is.null(step)) seq(from=min, to=max, length.out=length) else seq(from=min, to=max, by=step)
-     I.C <- rep(0, length(interval)) 
-    call <- model
+  interval <- if (is.null(step)) seq(from=from, to=to, length.out=length) else  seq(from=from, to=to, by=step)
+       I.C <- rep(0, length(interval)) 
+      call <- model
 for (i in 1:length(interval))
 {
-      this <<- this <- interval[i] # mikis Thursday, March 27, 2008 
-# if (!is.null(other)) eval(other)
+      this <- interval[i] # mikis Thursday, March 27, 2008 
+      assign("that", this)
+      on.exit(rm(this, inherits=TRUE))
       mod.1 <- eval(call) 
        call <- mod.1$call
   if (start.prev)
@@ -62,18 +60,18 @@ for (i in 1:length(interval))
   if ((mx<=1)||(mx>=m)) 
     stop("increase the interval to contain the MLE of the parameter")
   prof.fun <- splinefun(interval, I.C) # the profile likelihood as a function
-       PML <- uniroot(prof.fun, c(min, max), deriv=1)$root # get the ML
+       PML <- uniroot(prof.fun, c(from, to), deriv=1)$root # get the ML
       Gmin <- prof.fun(PML) # get the deviance
        lim <- Gmin + qchisq((perc/100), 1)
-       xl <- as.vector(interval)
-       CI <- c(NA, NA)
+        xl <- as.vector(interval)
+        CI <- c(NA, NA)
 if (plot) 
    {
 #  start plotting
   txt.title <- if (missing(title))  main
                 else title  
 #  first the curve
-  gg <-ggplot2::ggplot(data.frame(x = c(min, max)), aes(x)) +
+  gg <-ggplot2::ggplot(data.frame(x = c(from, to)), aes(x)) +
     ggplot2::stat_function(fun=prof.fun, color=line.col)+
     ggplot2::xlab(xlab)+
     ggplot2::ylab(ylab)+
@@ -95,19 +93,20 @@ if(criterion=="GD")
        Y <- lim + scal
        P <- paste(perc,"%")
       gg <-  gg + 
-        ggplot2::annotate(geom = "text", x = X, y = Y, label = P, size=text.size)
+        ggplot2::annotate(geom = "text", x = X, y = Y, label = P, 
+                          size=text.size)
      }
   if (I.C[1] > lim)  #Defines the lower bound 
     {
   leftFun <- function(x)  {prof.fun(x)-lim} # 
-lcrossing <- uniroot(leftFun, c(min, PML))$root # get the ML
+lcrossing <- uniroot(leftFun, c(from, PML))$root # get the ML
    CI[1] <- lcrossing
       gg <- gg + ggplot2::geom_vline(aes(xintercept = lcrossing),  
                             lty=dash.line.type, linewidth=dash.line.size)
     }
   if (I.C[m] > lim)  #Defines the upper bound
     {
-rcrossing <- uniroot(leftFun, c(PML, max))$root # get the ML
+rcrossing <- uniroot(leftFun, c(PML, to))$root # get the ML
     CI[2] <- rcrossing
        gg <- gg + ggplot2::geom_vline(aes(xintercept = rcrossing),  
                     lty=dash.line.type, linewidth=dash.line.size)

@@ -16,8 +16,8 @@ prof_term(model = NULL, criterion = c("GD", "GAIC"),
   \item{model}{a GAMLSS fitted model}
   \item{criterion}{whether Global deviance or GAIC}
   \item{penalty}{the penalty k for GAIC}
-  \item{min}{start from}
-  \item{max}{finish at}
+  \item{from}{start from}
+  \item{to}{finish at}
   \item{step}{using step}
   \item{length}{if the \code{step} is left NULL then \code{length} is considered for evaluating the grid for the parameter. It has a default value of 11.}
   \item{xlabel}{if a x label is required}
@@ -68,7 +68,7 @@ data(aids)
 gamlss(y~x+qrt,family=NBI,data=aids)
 # testing the linear beta parameter
 mod<-quote(gamlss(y ~ offset(this * x) + qrt, data = aids, family = NBI))
-prof_term(mod, min=.06, max=0.11)
+prof_term(mod, min=.01, max=0.11)
 }
 
 \keyword{regression}
