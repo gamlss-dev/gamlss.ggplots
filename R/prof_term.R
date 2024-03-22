@@ -37,9 +37,9 @@ criterion  <- match.arg(criterion)
 for (i in 1:length(interval))
 {
       this <- interval[i] # mikis Thursday, March 27, 2008 
-      assign("that", this)
-      on.exit(rm(this, inherits=TRUE))
-      mod.1 <- eval(call) 
+      # assign("that", this)
+      # on.exit(rm(this, inherits=TRUE))
+      mod.1 <- eval(call, envir=environment()) 
        call <- mod.1$call
   if (start.prev)
   {
