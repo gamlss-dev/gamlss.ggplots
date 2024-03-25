@@ -27,7 +27,6 @@ prof_term <- function (model = NULL,
                       title
                         ) 
 {
-  browser()
           x <- NULL  
 if(is.null(model)) stop("you have not defined the model")
 if(is.null(from)) stop("you have not defined the minimum value")
@@ -39,7 +38,6 @@ criterion  <- match.arg(criterion)
 for (i in 1:length(interval))
 {
       this <- interval[i] # mikis Thursday, March 27, 2008 
-      browser()
       # assign("that", this)
       # on.exit(rm(this, inherits=TRUE))
       mod.1 <- eval(call, envir=environment()) 
