@@ -14,13 +14,20 @@ resid_xvar <- function (obj, xvar, plot = TRUE, value=2, title, annotate=TRUE)
 gamlss_prep_data <- function (obj, xvar, value=2) 
 {
     sdres <- residuals(obj)
-       fv <- obj$mu.fv
-#sdres_out <- abs(sdres) > value
+    class <- class(obj)
+  if (is(obj,"gamlss")) 
+    {fv <- obj$mu.fv
+    weights<- obj$weights
+    } else 
+    {fv <- fitted(obj, type="parameter", what="mu")
+    if (is.null(model.weights(model.frame(obj))))
+    weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(fv)) 
+               else model.weights(model.frame(obj))
+    }
       obs <- seq_len(length(sdres))
-#  outlier <- sdres[sdres_out]
-      obs <- obs[obj$weights!=0]
-    sdres <- sdres[obj$weights!=0]
-       fv <- fv[obj$weights!=0]
+      obs <- obs[weights!=0]
+    sdres <- sdres[weights!=0]
+       fv <- fv[weights!=0]
       out <- data.frame(obs = obs, sdres = sdres, fv)
 out$color <- ifelse(((out$sdres >= value) | (out$sdres <= -value)), 
                         c("outlier"), c("normal"))
@@ -33,7 +40,7 @@ if (!missing(xvar))
    # Xvar <- get_all_vars(xvar, data=DaTa)
     Xvar <- if (DataExist==TRUE)  DaTa[,Xchar] else get(Xchar)
    # if (is.factor(Xvar)) stop("this function is only for continuous xvars")
-    Xvar <- subset(Xvar,obj$weights!=0)
+    Xvar <- subset(Xvar,weights!=0)
     out  <- cbind(out, Xvar)
  # } else stop("xvar should be a formula") 
 }  
@@ -43,7 +50,8 @@ if (!missing(xvar))
 #####################################################################
   # the main function starts here  
 if (missing(obj))  stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (missing(xvar))  stop("the xvar has to be set")
+if (!(is(obj,"gamlss")||is(obj,"gamlss2"))) stop("the model is not a gamlss model")
 # we need to get the xvar here 
 DataExist <- FALSE
 if (!missing(obj)&&any(grepl("data", names(obj$call))))

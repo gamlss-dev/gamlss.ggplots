@@ -9,9 +9,15 @@ resid_density <- function(obj, resid,
   gamlss_prep_data <- function (obj) 
   {
     rqres <- residuals(obj)
+weights <- if (is(obj,"gamlss")) obj$weights else 
+             {
+    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+               else model.weights(model.frame(obj))
+             }
+   rep(1, length(rqres))
     obs <- seq_len(length(rqres))
-    obs <- obs[obj$weights!=0]
-    rqres <- rqres[obj$weights!=0]
+    obs <- obs[weights!=0]
+    rqres <- rqres[weights!=0]
     out <- data.frame(obs = obs, rqres = rqres)
     return(out)
   }  

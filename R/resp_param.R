@@ -109,19 +109,33 @@ quantile_gamlss <- function (obj,
 {
 ################################################################################
 ################################################################################
-      pdf <- obj$family[1]
-    binom <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
-     qfun <- paste("q", obj$family[[1]],sep="")
-     lpar <- eval(parse(text=pdf))()$nopar
+if (is(obj, "gamlss"))
+{
+    pdf <- obj$family[1]
+  binom <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
+   qfun <- paste("q", obj$family[[1]],sep="")
+   lpar <- eval(parse(text=pdf))()$nopar
 if (binom) {bd <- obj$bd ; Y <- obj$y}
-       pp <-  if (missing(newdata)) predictAll(obj,output="matrix")
-               else  predictAll(obj, newdata=newdata, output="matrix")
-   median <- switch(lpar, 
+    pp <-  if (missing(newdata)) predictAll(obj,output="matrix")
+           else  predictAll(obj, newdata=newdata, output="matrix")
+  median <- switch(lpar, 
                    eval(call(qfun, p= quantile, mu=pp[,"mu"])),       # 1
                    eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"])),        # 2
-                   eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
-                   eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
-median
+                   eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  
+                             nu=pp[,"nu"])),  # 3                   
+                   eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  
+                             nu=pp[,"nu"], tau=pp[,"tau"])))
+} else # if gamlss2
+{
+    pdf <- obj$family[1]
+  binom <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
+   qfun <- paste("q", obj$family[[1]],sep="")
+   lpar <- eval(parse(text=pdf))()$nopar
+if (binom) {bd <- obj$bd ; Y <- obj$y}
+     pp <-  predict(obj, type="parameter") 
+ median <- obj$family$q(p=quantile, par=pp)
+}  
+median  
 }
 #resp_fitted(m6, "sigma")+facet_wrap(~ cut_number(rent$Fl, 6))
 ################################################################################

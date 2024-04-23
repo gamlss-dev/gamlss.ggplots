@@ -13,12 +13,15 @@ gamlss_prep_data <- function (obj, value=2)
 {
     sdres <- residuals(obj)
        fv <- quantile_gamlss(obj, quantile=0.5)
-#sdres_out <- abs(sdres) > value
-      obs <- seq_len(length(sdres))
-#  outlier <- sdres[sdres_out]
-      obs <- obs[obj$weights!=0]
-    sdres <- sdres[obj$weights!=0]
-       fv <- fv[obj$weights!=0]
+       weights <- if (is(obj,"gamlss")) obj$weights else 
+                     {
+         if (is.null(model.weights(model.frame(obj)))) rep(1,length(sdres)) 
+         else model.weights(model.frame(obj)) 
+                     }     
+       obs <- seq_len(length(sdres))
+      obs <- obs[weights!=0]
+    sdres <- sdres[weights!=0]
+       fv <- fv[weights!=0]
       out <- data.frame(obs = obs, sdres = sdres, fv)
 out$color <- ifelse(((out$sdres >= value) | (out$sdres <= -value)), 
                         c("outlier"), c("normal"))
@@ -30,9 +33,7 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
   other_prep_data <- function (resid, value=2) 
   {
     sdres <- resid
-#sdres_out <- abs(sdres) > value
       obs <- seq_len(length(sdres))
-#  outlier <- sdres[sdres_out]
       obs <- obs[!is.na(resid)]
     sdres <- sdres[!is.na(resid)]
       out <- data.frame(obs = obs, sdres = sdres)
@@ -48,7 +49,7 @@ return(out)
 if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
   if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
 d <- if (missing(obj)) other_prep_data(resid, value=value) 
-     else             gamlss_prep_data(obj,   value=value) 
+     else              gamlss_prep_data(obj,   value=value) 
 txt.title <- if (missing(title))  paste("Residuals & fitted vals of model",deparse(substitute(obj)))
 else title
 #      obs <- NULL
