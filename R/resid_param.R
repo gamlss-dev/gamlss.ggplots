@@ -9,16 +9,26 @@ resid_param <- function (obj,
                     point.col = "steelblue4",
                   point.shape = 20
                          ) 
-{
+{#furTob-vixzi3-hudhyv
 ################################################################################
 # local functions 
 gamlss_prep_data <- function (obj, param) 
   {
-             FV <- fitted(obj, param)
+    if (is(obj,"gamlss")) 
+             { FV <- fitted(obj, param)
+              weights <- obj$weights 
+            }
+             else 
+             {
+              FV <- fitted(obj, type="parameter", what=param)  
+      if (is.null(model.weights(model.frame(obj))))
+            weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
+                      else model.weights(model.frame(obj))
+             }     
             obs <- obs <- seq_len(length(FV))
-             FV <- FV[obj$weights!=0]
-            obs <- obs[obj$weights!=0]
-           yVal <- resid(obj)[obj$weights!=0]
+             FV <- FV[weights!=0]
+            obs <- obs[weights!=0]
+           yVal <- resid(obj)[weights!=0]
             out <- data.frame(obs = obs, resid = yVal, fv=FV)
   return(out)
   } 
@@ -26,8 +36,13 @@ gamlss_prep_data <- function (obj, param)
 ################################################################################
 # the main function starts here  
 if (missing(obj))  stop("A GAMLSS fitted object should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
-       param <- match.arg(param)
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model")
+       param <- if (is(obj, "gamlss"))  match.arg(param)
+        else
+        {
+          param <-  match.arg(param, obj$family$names)
+        }
            d <- gamlss_prep_data(obj, param) 
            y <- NULL
         corr <- with(d,cor(resid,fv)) 
@@ -63,17 +78,22 @@ gamlss_prep_data <- function (obj, median)
   {
      FV <- median
     obs <- obs <- seq_len(length(FV))
-     FV <- FV[obj$weights!=0]
-    obs <- obs[obj$weights!=0]
-   yVal <- obj$res[obj$weights!=0]
+weights <- if (is(obj,"gamlss")) obj$weights else 
+    {
+      if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
+      else model.weights(model.frame(obj)) 
+    }     
+     FV <- FV[weights!=0]
+    obs <- obs[weights!=0]
+   yVal <- resid(obj)[weights!=0]
     out <- data.frame(obs = obs, y = yVal, fv=FV)
     return(out)
 } 
 ################################################################################
 ################################################################################
 # the main function starts here  
-if (missing(obj))  stop("A GAMLSS fitted object should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+ if (missing(obj))  stop("A GAMLSS fitted object should be used")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
 ################################################################################
 ################################################################################
     median <-  quantile_gamlss(obj, quantile, newdata)
