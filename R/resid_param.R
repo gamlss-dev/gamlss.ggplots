@@ -25,7 +25,7 @@ gamlss_prep_data <- function (obj, param)
             weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
                       else model.weights(model.frame(obj))
              }     
-            obs <- obs <- seq_len(length(FV))
+            obs <- seq_len(length(FV))
              FV <- FV[weights!=0]
             obs <- obs[weights!=0]
            yVal <- resid(obj)[weights!=0]
@@ -38,6 +38,7 @@ gamlss_prep_data <- function (obj, param)
 if (missing(obj))  stop("A GAMLSS fitted object should be used")
 if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
   stop("the model is not a gamlss model")
+if (missing(param)) param <- "mu" 
        param <- if (is(obj, "gamlss"))  match.arg(param)
         else
         {

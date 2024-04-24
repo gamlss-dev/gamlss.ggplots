@@ -17,11 +17,16 @@ resid_wp_wrap <- function(obj, resid,
 # local function 
 gamlss_prep_data <- function (obj, value=3, i) 
   {
-    rqres <- obj$residuals
+    rqres <- residuals(obj)
       obs <- seq_len(length(obj$residuals))
-      obs <- obs[obj$weights!=0]
+  weights <- if (is(obj,"gamlss")) obj$weights else 
+      {
+        if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+        else model.weights(model.frame(obj)) 
+      }   
+      obs <- obs[weights!=0]
       obs <- obs[z==i]
-    rqres <- rqres[obj$weights!=0&z==i]
+    rqres <- rqres[weights!=0&z==i]
         x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
       fit <- lm(I(rqres-x) ~ x+I(x^2)+I(x^3)) #poly(qq$x,3)) 
       # s <- splinefun(x, fitted(fit))
@@ -63,8 +68,8 @@ data.frame(high=high, low=low, z=z)
 ####################################################################### 
 #######################################################################    
 if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
-  #      N <- if (missing(obj)) length(resid) else obj$noObs
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model") 
 if (missing(xvar)) stop("moment_buckets_wrap() expects one xvar")
         z <- if (is.factor(xvar))  xvar else cut_number(xvar, n_inter)
 # loop for i lebvels z   

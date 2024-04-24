@@ -100,22 +100,26 @@ else
 ########################################################################
 gamlss_prep_data <- function (obj, value=2) 
 {
-    #  color <- NULL
-      rqres <- obj$residuals
-#rqres_out <- abs(rqres) > value
-        obs <- seq_len(length(rqres))
-    #outlier <- rqres[rqres_out]
-        obs <- obs[obj$weights!=0]
-      rqres <- rqres[obj$weights!=0]
-       fcdf <- ECDF(resid) # create a function 
-         mm <- fcdf(resid) # evaluate it 
-     zscore <- qNO(mm) # normalize it 
-    dzscore <- (zscore-resid) # detrend it
-        out <- data.frame(obs = obs[order(resid)], rqres = rqres[order(resid)], dzscores=dzscore[order(resid)])
-  out$color <- ifelse((abs(out$rqres) >= value), 
+    
+    rqres <- residuals(obj)
+      obs <- seq_len(length(rqres))
+  weights <- if (is(obj,"gamlss")) obj$weights else 
+  {
+    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+    else model.weights(model.frame(obj)) 
+  }   
+      obs <- obs[weights!=0]
+    rqres <- rqres[weights!=0]
+     fcdf <- ECDF(rqres) # create a function 
+       mm <- fcdf(rqres) # evaluate it 
+   zscore <- qNO(mm) # normalize it 
+  dzscore <- (zscore-resid) # detrend it
+      out <- data.frame(obs = obs[order(resid)], rqres = rqres[order(resid)], 
+                        dzscores=dzscore[order(resid)])
+out$color <- ifelse((abs(out$rqres) >= value), 
                         c("outlier"), c("normal"))
 out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
-     out$txt <- ifelse(out$color == "outlier", out$obs, NA)
+  out$txt <- ifelse(out$color == "outlier", out$obs, NA)
 return(out)
 }
 #####################################################################
@@ -132,7 +136,8 @@ other_prep_data <- function (resid, value=2)
           mm <- fcdf(resid) # evaluate it 
       zscore <- qNO(mm) # normalize it 
      dzscore <- (zscore-resid) # detrend it 
-         out <- data.frame(obs = obs[order(resid)], rqres = rqres[order(resid)], dzscores=dzscore[order(resid)])   
+         out <- data.frame(obs = obs[order(resid)], rqres = rqres[order(resid)], 
+                           dzscores=dzscore[order(resid)])   
    out$color <- ifelse(((out$rqres >= value) | (out$rqres <= -value)), 
                         c("outlier"), c("normal"))
 out$fct_color <- ordered(factor(out$color), levels = c("normal", 
@@ -143,12 +148,14 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal",
 #######################################################################
 #######################################################################   
 # main starts here
-if (missing(obj)&&missing(resid))   stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (missing(obj)&&missing(resid))   
+  stop("A GAMLSS fitted object or the argument resid should be used")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model") 
   conf.level <- match.arg(conf.level)
         type <- match.arg(type)
     #    args <- list(...)
-       resid <- if (missing(obj)) resid else obj$residuals
+       resid <- if (missing(obj)) resid else residuals(obj)
            d <- if (missing(obj)) other_prep_data(resid, value=value) 
                 else              gamlss_prep_data(obj, value=value)
   #N <- if (missing(obj)) length(resid) else obj$noObs
@@ -275,15 +282,17 @@ NPJagerWellner.bands <- function (x, conf.level = c("95", "99"))
 ######################################################################
 gamlss_prep_data <- function (obj, value=2) 
   {
-   #  color <- NULL
-     rqres <- obj$residuals
-# rqres_out <- abs(rqres) > value
+     rqres <- residuals(obj)
        obs <- seq_len(length(rqres))
-  # outlier <- rqres[rqres_out]
-       obs <- obs[obj$weights!=0]
-     rqres <- rqres[obj$weights!=0]
-      fcdf <- ECDF(resid) # create a function 
-        mm <- fcdf(resid) # evaluate it 
+  weights <- if (is(obj,"gamlss")) obj$weights else 
+       {
+         if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+         else model.weights(model.frame(obj)) 
+       }   
+       obs <- obs[weights!=0]
+     rqres <- rqres[weights!=0]
+      fcdf <- ECDF(rqres) # create a function 
+        mm <- fcdf(rqres) # evaluate it 
        out <- data.frame(obs = obs, rqres = rqres, scores=mm)
      out$color <- ifelse((abs(out$rqres) >= value), 
                     c("outlier"), c("normal"))
@@ -315,14 +324,14 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal",
 #######################################################################   
   # main starts here
 if (missing(obj)&&missing(resid))   stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+    stop("the model is not a gamlss model") 
   conf.level <- match.arg(conf.level)
         type <- match.arg(type)
  # args <- list(...)
-      resid <- if (missing(obj)) resid else obj$residuals
+      resid <- if (missing(obj)) resid else residuals(obj)
           d <- if (missing(obj)) other_prep_data(resid, value=value) 
-  else              gamlss_prep_data(obj, value=value)
-  #N <- if (missing(obj)) length(resid) else obj$noObs
+               else              gamlss_prep_data(obj, value=value)
           x <- rqres <- lower <- upper <- scores <- txt <- NULL
   txt.title <- if (missing(title))  paste("ECDF of residuals from model", deparse(substitute(obj)))
   else title  

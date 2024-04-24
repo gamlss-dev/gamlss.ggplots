@@ -16,13 +16,21 @@ resid_mu <- function (obj, resid, plot = TRUE, value=2, title, annotate=TRUE)
 gamlss_prep_data <- function (obj, value=2) 
 {
     sdres <- residuals(obj)
-       fv <- obj$mu.fv
-#sdres_out <- abs(sdres) > value
-      obs <- seq_len(length(sdres))
-#  outlier <- sdres[sdres_out]
-      obs <- obs[obj$weights!=0]
-    sdres <- sdres[obj$weights!=0]
-       fv <- fv[obj$weights!=0]
+if (is(obj,"gamlss")) 
+    { FV <- fitted(obj, "mu")
+      weights <- obj$weights 
+    }
+    else 
+    {
+      FV <- fitted(obj, type="parameter", what="mu")  
+      if (is.null(model.weights(model.frame(obj))))
+        weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
+      else model.weights(model.frame(obj))
+    }     
+    obs <- seq_len(length(FV))
+     obs <- obs[weights!=0]
+    sdres <- sdres[weights!=0]
+       fv <- FV[weights!=0]
       out <- data.frame(obs = obs, sdres = sdres, fv)
 out$color <- ifelse(((out$sdres >= value) | (out$sdres <= -value)), 
                         c("outlier"), c("normal"))

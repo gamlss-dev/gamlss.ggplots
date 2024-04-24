@@ -15,7 +15,7 @@ resp_param <- function (obj,
 gamlss_prep_data <- function (obj, param) 
   {
              FV <- fitted(obj, param)
-            obs <- obs <- seq_len(length(FV))
+            obs <- seq_len(length(FV))
              FV <- FV[obj$weights!=0]
             obs <- obs[obj$weights!=0]
            yVal <- obj$y[obj$weights!=0]

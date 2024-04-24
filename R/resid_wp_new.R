@@ -14,17 +14,18 @@ resid_wp <- function(obj, resid,
 # local function 
 gamlss_prep_data <- function (obj, value=3) 
   {
-  #  color <- NULL
-    rqres <- obj$residuals
-#rqres_out <- abs(rqres) > value
+    rqres <- residuals(obj)
       obs <- seq_len(length(rqres))
-  #outlier <- rqres[rqres_out]
-      obs <- obs[obj$weights!=0]
-    rqres <- rqres[obj$weights!=0]
+  weights <- if (is(obj,"gamlss")) obj$weights else 
+      {
+        if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+        else model.weights(model.frame(obj)) 
+      }   
+      obs <- obs[weights!=0]
+    rqres <- rqres[weights!=0]
         x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
-      fit <- lm(I(rqres-x) ~ x+I(x^2)+I(x^3)) #poly(qq$x,3)) 
-      # s <- splinefun(x, fitted(fit))
-      out <- data.frame(obs = obs, rqres = rqres-x, x=x, fv=fitted(fit))
+      Fit <- lm(I(rqres-x) ~ x+I(x^2)+I(x^3)) 
+      out <- data.frame(obs = obs, rqres = rqres-x, x=x, fv=fitted(Fit))
 out$color <- ifelse((abs(rqres) >= value), 
                         c("outlier"), c("normal"))
 out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
@@ -66,10 +67,11 @@ data.frame(high=high, low=low, z=z)
 }
 ################################################################################    
 if (missing(obj)&&missing(resid))   stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
-        N <- if (missing(obj)) length(resid) else obj$noObs
-        d <- if (missing(obj)) other_prep_data(resid, value=value) 
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model")
+        d <- if (missing(obj))  other_prep_data(resid, value=value) 
              else               gamlss_prep_data(obj, value=value)
+        N <- dim(d)[1]
         x <- rqres <- z <- low <- high <- txt <- NULL
 txt.title <- if (missing(title))  paste("Worm-plot for model", deparse(substitute(obj)))
              else title  

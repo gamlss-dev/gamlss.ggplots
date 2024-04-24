@@ -14,11 +14,14 @@ resid_qqplot <- function(obj, resid,
   gamlss_prep_data <- function (obj, value=3) 
   {
       rqres <- residuals(obj)
-#  rqres_out <- abs(rqres) > value
         obs <- seq_len(length(rqres))
-   #outlier <- rqres[rqres_out]
-        obs <- obs[obj$weights!=0]
-      rqres <- rqres[obj$weights!=0]
+    weights <- if (is(obj,"gamlss")) obj$weights else 
+        {
+          if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+          else model.weights(model.frame(obj)) 
+        }   
+        obs <- obs[weights!=0]
+      rqres <- rqres[weights!=0]
           x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
         out <- data.frame(obs = obs, rqres = rqres, x=x)
   out$color <- ifelse((abs(out$rqres) >= value), 
@@ -47,7 +50,8 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal",
   }    
 ################################################################################
 if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model")
             d <- if (missing(obj)) other_prep_data(resid, value=value) 
                 else               gamlss_prep_data(obj,   value=value) 
     txt.title <- if (missing(title))  
