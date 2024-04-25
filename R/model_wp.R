@@ -10,17 +10,27 @@ model_wp <- function(obj,...,
 gamlss_prep_data <- function (obj, ... ) 
   {
          rqres <- residuals(obj)
-           obs <- seq_len(length(rqres))
-         rqres <- rqres[!is.na(rqres)]  
-           obs <- obs[!is.na(rqres)]
-             x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
-           out <- data.frame(obs = obs, rqres = rqres-x, x=x, model=rep(names[[1]], length(rqres))) 
+       weights <- if (is(obj,"gamlss")) obj$weights else 
+         {
+           if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+           else model.weights(model.frame(obj)) 
+         }   
+         obs <- seq_len(length(rqres))
+       rqres <- rqres[weights!=0]
+         obs <- obs[weights!=0]
+       rqres <- rqres[!is.na(rqres)]  
+         obs <- obs[!is.na(rqres)]
+           x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
+        out <- data.frame(obs = obs, rqres = rqres-x, x=x, model=rep(names[[1]], 
+                                                          length(rqres))) 
     if (length(list(...)) > 0) 
     {
        i= 1
-      for (resp in list(...)) 
-      {
+  for (resp in list(...)) 
+    {
         i= i+1
+        if ((is(resp,"gamlss")))
+        {
           res <- resp[["residuals"]] 
           obs <- seq_len(length(res))
           wei <- resp[["weights"]] 
@@ -30,8 +40,22 @@ gamlss_prep_data <- function (obj, ... )
           obs <- obs[!is.na(res)]
             x <- qnorm(ppoints(length(res)))[order(order(res))]
          resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], length(rqres))) 
+        } else
+        {
+          res <- residuals(resp) 
+          obs <- seq_len(length(res))
+          wei <- if (is.null(model.weights(model.frame(resp)))) rep(1,length(res)) 
+                 else model.weights(model.frame(resp)) 
+          res <- res[wei!=0]
+          obs <- obs[wei!=0]
+          res <- res[!is.na(res)]
+          obs <- obs[!is.na(res)]
+            x <- qnorm(ppoints(length(res)))[order(order(res))] 
+            resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], 
+                                                          length(res)))  
+        } 
+  }    
          out <- rbind(out, resa)
-      }
     }
     return(out)    
 }  
