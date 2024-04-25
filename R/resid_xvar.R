@@ -14,7 +14,6 @@ resid_xvar <- function (obj, xvar, plot = TRUE, value=2, title, annotate=TRUE)
 gamlss_prep_data <- function (obj, xvar, value=2) 
 {
     sdres <- residuals(obj)
-    class <- class(obj)
   if (is(obj,"gamlss")) 
     {fv <- obj$mu.fv
     weights<- obj$weights

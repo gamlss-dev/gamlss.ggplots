@@ -9,7 +9,7 @@ model_wp <- function(obj,...,
 # local function
 gamlss_prep_data <- function (obj, ... ) 
   {
-         rqres <- obj$residuals
+         rqres <- residuals(obj)
            obs <- seq_len(length(rqres))
          rqres <- rqres[!is.na(rqres)]  
            obs <- obs[!is.na(rqres)]
@@ -17,7 +17,7 @@ gamlss_prep_data <- function (obj, ... )
            out <- data.frame(obs = obs, rqres = rqres-x, x=x, model=rep(names[[1]], length(rqres))) 
     if (length(list(...)) > 0) 
     {
-      i=1
+       i= 1
       for (resp in list(...)) 
       {
         i= i+1
@@ -52,10 +52,13 @@ getSE <- function(xlim, level=0.95)
 ################################################################################
 x <- rqres  <- model <-  low <- high <- z <- NULL   
    names <- as.character(match.call()[-1])[1:(length(list(...))+1)]
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+     stop("the model is not a gamlss model")  
+   
 if (length(names)<=1) stop("you need more than two models")
-       N <-  obj$noObs
        d <- gamlss_prep_data(obj, ...)
+       N <-  dim(d)[1]
+     
        table(d$model)
 txt.title <- if (missing(title))  "worm-plots of residuals from different models" else title   
    se <- getSE(max(abs(d$x))+.5)
