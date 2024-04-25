@@ -16,7 +16,7 @@ model_wp_wrap <- function(obj,...,
 # local function
 gamlss_prep_data <- function (obj, value=3, i, ...) 
   {
-         rqres <- obj$residuals
+         rqres <- get_residuals(obj)
            obs <- seq_len(length(obj$residuals))
            obs <- obs[obj$weights!=0]
            obs <- obs[z==i]

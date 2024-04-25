@@ -11,13 +11,9 @@ resid_median <- function (obj, resid, plot = TRUE, value=3, title,
 # local functions 
 gamlss_prep_data <- function (obj, value=2) 
 {
-    sdres <- residuals(obj)
-       fv <- quantile_gamlss(obj, quantile=0.5)
-       weights <- if (is(obj,"gamlss")) obj$weights else 
-                     {
-         if (is.null(model.weights(model.frame(obj)))) rep(1,length(sdres)) 
-         else model.weights(model.frame(obj)) 
-                     }     
+    sdres <- get_residuals(obj)
+       fv <- get_quantile(obj, quantile=0.5)
+  weights <- get_weights(obj)
        obs <- seq_len(length(sdres))
       obs <- obs[weights!=0]
     sdres <- sdres[weights!=0]
@@ -30,26 +26,10 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
   return(out)
   } 
 ################################################################################
-  other_prep_data <- function (resid, value=2) 
-  {
-    sdres <- resid
-      obs <- seq_len(length(sdres))
-      obs <- obs[!is.na(resid)]
-    sdres <- sdres[!is.na(resid)]
-      out <- data.frame(obs = obs, sdres = sdres)
-out$color <- ifelse(((out$sdres >= value) | (out$sdres <= -value)), 
-                        c("outlier"), c("normal"))
-out$fct_color <- ordered(factor(out$color), levels = c("normal", 
-                                                           "outlier"))
- out$txt <- ifelse(out$color == "outlier", out$obs, NA)
-return(out)
-}  
-################################################################################
   # the main function starts here  
-if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
+if (missing(obj))  stop("A GAMLSS fitted object should be used")
   if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
-d <- if (missing(obj)) other_prep_data(resid, value=value) 
-     else              gamlss_prep_data(obj,   value=value) 
+        d <- gamlss_prep_data(obj,   value=value) 
 txt.title <- if (missing(title))  paste("Residuals & fitted vals of model",deparse(substitute(obj)))
 else title
 #      obs <- NULL

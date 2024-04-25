@@ -1,13 +1,13 @@
-######################################################################
-###################################################################### 
+################################################################################
+################################################################################ 
 #TODO:  Create a plot_ECDF() function
 #ggplot version of dtop()
 # i)  resid_dtop()
 # ii) and resid_ecdf()
 #  It uses the NPL.bands() function of Ross Darnell from package SMIR
 # detrented Owen's plot 
-#######################################################################
-#######################################################################
+################################################################################
+################################################################################
 resid_dtop <- function(obj, resid,
                     type = c("Owen", "JW"), 
               conf.level = c("95", "99"),
@@ -16,9 +16,9 @@ resid_dtop <- function(obj, resid,
            check_overlap = TRUE,
             title, ylim, ...)
 {
-########################################################################
+################################################################################
 # local functions
-########################################################################  
+################################################################################  
 ##----------------------------------------------------------------------
 ## this is the NPL.bands() function of  Ross Darnell from package SMIR
 ##----------------------------------------------------------------------	
@@ -58,7 +58,7 @@ else
         pl <- qbeta(phil, 1/3, 1/3)
     list(x = yi, lower = pl, upper = pu)
 }
-#######################################################################  
+################################################################################  
 NPJagerWellner.bands <- function (x, conf.level = c("95", "99")) 
 {
 if (!is.numeric(x)) 
@@ -96,18 +96,14 @@ else
       pl <- qbeta(phil, 1/3, 1/3)
     list(x = yi, lower = pl, upper = pu)
 }
-########################################################################
-########################################################################
+################################################################################
+################################################################################
 gamlss_prep_data <- function (obj, value=2) 
 {
     
-    rqres <- residuals(obj)
+    rqres <- get_residuals(obj)
       obs <- seq_len(length(rqres))
-  weights <- if (is(obj,"gamlss")) obj$weights else 
-  {
-    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-    else model.weights(model.frame(obj)) 
-  }   
+  weights <- get_weights(obj)
       obs <- obs[weights!=0]
     rqres <- rqres[weights!=0]
      fcdf <- ECDF(rqres) # create a function 
@@ -122,7 +118,7 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
   out$txt <- ifelse(out$color == "outlier", out$obs, NA)
 return(out)
 }
-#####################################################################
+################################################################################
 other_prep_data <- function (resid, value=2) 
 {
     #   color <- NULL
@@ -145,8 +141,8 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal",
      out$txt <- ifelse(out$color == "outlier", out$obs, NA)
     return(out)
 }    
-#######################################################################
-#######################################################################   
+################################################################################
+################################################################################   
 # main starts here
 if (missing(obj)&&missing(resid))   
   stop("A GAMLSS fitted object or the argument resid should be used")
@@ -282,13 +278,9 @@ NPJagerWellner.bands <- function (x, conf.level = c("95", "99"))
 ######################################################################
 gamlss_prep_data <- function (obj, value=2) 
   {
-     rqres <- residuals(obj)
+     rqres <- get_residuals(obj)
        obs <- seq_len(length(rqres))
-  weights <- if (is(obj,"gamlss")) obj$weights else 
-       {
-         if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-         else model.weights(model.frame(obj)) 
-       }   
+   weights <- get_weights(obj)
        obs <- obs[weights!=0]
      rqres <- rqres[weights!=0]
       fcdf <- ECDF(rqres) # create a function 

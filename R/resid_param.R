@@ -14,21 +14,13 @@ resid_param <- function (obj,
 # local functions 
 gamlss_prep_data <- function (obj, param) 
   {
-    if (is(obj,"gamlss")) 
-             { FV <- fitted(obj, param)
-              weights <- obj$weights 
-            }
-             else 
-             {
-              FV <- fitted(obj, type="parameter", what=param)  
-      if (is.null(model.weights(model.frame(obj))))
-            weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
-                      else model.weights(model.frame(obj))
-             }     
+             FV <- get_fitted_param(obj, param)
+        weights <- get_weights(obj) 
+           yVal <- get_residuals(obj)
             obs <- seq_len(length(FV))
              FV <- FV[weights!=0]
             obs <- obs[weights!=0]
-           yVal <- resid(obj)[weights!=0]
+           yVal <- yVal[weights!=0]
             out <- data.frame(obs = obs, resid = yVal, fv=FV)
   return(out)
   } 
@@ -38,7 +30,8 @@ gamlss_prep_data <- function (obj, param)
 if (missing(obj))  stop("A GAMLSS fitted object should be used")
 if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
   stop("the model is not a gamlss model")
-if (missing(param)) param <- "mu" 
+if (missing(param)) 
+       param <- "mu" 
        param <- if (is(obj, "gamlss"))  match.arg(param)
         else
         {
@@ -64,6 +57,7 @@ if (missing(param)) param <- "mu"
 ################################################################################
 ################################################################################
 ################################################################################
+################################################################################
 resid_quantile <- function (obj, 
                          quantile = 0.5,  
                          title, 
@@ -78,15 +72,11 @@ resid_quantile <- function (obj,
 gamlss_prep_data <- function (obj, median) 
   {
      FV <- median
-    obs <- obs <- seq_len(length(FV))
-weights <- if (is(obj,"gamlss")) obj$weights else 
-    {
-      if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
-      else model.weights(model.frame(obj)) 
-    }     
+    obs <- seq_len(length(FV))
+weights <- get_weights(obj) 
      FV <- FV[weights!=0]
     obs <- obs[weights!=0]
-   yVal <- resid(obj)[weights!=0]
+   yVal <- get_residuals(obj)[weights!=0]
     out <- data.frame(obs = obs, y = yVal, fv=FV)
     return(out)
 } 
@@ -97,7 +87,7 @@ weights <- if (is(obj,"gamlss")) obj$weights else
 if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
 ################################################################################
 ################################################################################
-    median <-  quantile_gamlss(obj, quantile, newdata)
+    median <-  get_quantile(obj, quantile, newdata)
          d <- gamlss_prep_data(obj, median) 
 #color <- obs <-  hat <- 
          y <- NULL

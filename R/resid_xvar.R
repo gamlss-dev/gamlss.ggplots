@@ -1,28 +1,24 @@
-########################################################################
-########################################################################
-#   first function
-########################################################################
-########################################################################
-########################################################################
-########################################################################   
-resid_xvar <- function (obj, xvar, plot = TRUE, value=2, title, annotate=TRUE) 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+resid_xvar <- function (obj, 
+                        xvar, 
+                       plot = TRUE, 
+                      value = 2,
+                      title, 
+                   annotate = TRUE) 
 {
-# Note that I am taking the 
+# Note that originaly I was taking the 
 # obj$resid rather resid(obj) so I can preserve the no of the observations
-########################################################################
+################################################################################
 # local functions 
 gamlss_prep_data <- function (obj, xvar, value=2) 
 {
-    sdres <- residuals(obj)
-  if (is(obj,"gamlss")) 
-    {fv <- obj$mu.fv
-    weights<- obj$weights
-    } else 
-    {fv <- fitted(obj, type="parameter", what="mu")
-    if (is.null(model.weights(model.frame(obj))))
-    weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(fv)) 
-               else model.weights(model.frame(obj))
-    }
+    sdres <- get_residuals(obj)
+  weights <- get_weights(obj)
+       fv <- get_fitted_mu(obj)
       obs <- seq_len(length(sdres))
       obs <- obs[weights!=0]
     sdres <- sdres[weights!=0]

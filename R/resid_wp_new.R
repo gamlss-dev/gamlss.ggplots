@@ -14,13 +14,9 @@ resid_wp <- function(obj, resid,
 # local function 
 gamlss_prep_data <- function (obj, value=3) 
   {
-    rqres <- residuals(obj)
+    rqres <- get_residuals(obj)
+  weights <- get_weights(obj)
       obs <- seq_len(length(rqres))
-  weights <- if (is(obj,"gamlss")) obj$weights else 
-      {
-        if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-        else model.weights(model.frame(obj)) 
-      }   
       obs <- obs[weights!=0]
     rqres <- rqres[weights!=0]
         x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
@@ -35,11 +31,8 @@ out$fct_color <- ordered(factor(out$color), levels = c("normal", "outlier"))
 ################################################################################
 other_prep_data <- function (resid, value=2) 
 {
-   # color <- NULL
     rqres <- resid
-#rqres_out <- abs(rqres) > value
       obs <- seq_len(length(rqres))
-#  outlier <- rqres[rqres_out]
       obs <- obs[!is.na(resid)]
     rqres <- rqres[!is.na(resid)]
         x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]

@@ -15,18 +15,9 @@ resid_mu <- function (obj, resid, plot = TRUE, value=2, title, annotate=TRUE)
 # local functions 
 gamlss_prep_data <- function (obj, value=2) 
 {
-    sdres <- residuals(obj)
-if (is(obj,"gamlss")) 
-    { FV <- fitted(obj, "mu")
-      weights <- obj$weights 
-    }
-    else 
-    {
-      FV <- fitted(obj, type="parameter", what="mu")  
-      if (is.null(model.weights(model.frame(obj))))
-        weights <- if (is.null(model.weights(model.frame(obj)))) rep(1,length(FV)) 
-      else model.weights(model.frame(obj))
-    }     
+    sdres <- get_residuals(obj)
+       FV <- get_fitted_mu(obj)
+  weights <- get_weights(obj)
     obs <- seq_len(length(FV))
      obs <- obs[weights!=0]
     sdres <- sdres[weights!=0]

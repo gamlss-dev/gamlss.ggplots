@@ -104,4 +104,17 @@ gg <- ggplot2::ggplot() +
 ################################################################################
 ################################################################################
 ################################################################################
+get_weights <- function(obj)
+{
+  rqres <- residuals(obj)
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+    stop("the model is not a gamlss model")  
+  weights <- if (is(obj,"gamlss")) obj$weights else 
+  {
+    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+    else model.weights(model.frame(obj)) 
+  }   
+weights  
+}
+  
 

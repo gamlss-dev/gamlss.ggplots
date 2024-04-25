@@ -1,27 +1,21 @@
-########################################################################
-########################################################################
-#   first function
-########################################################################
-########################################################################
-########################################################################
-########################################################################   
-resid_index <- function (obj, resid, plot = TRUE, value=2, title, annotate=TRUE, no.lines=FALSE) 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+resid_index <- function (obj, 
+                         resid, 
+                         plot = TRUE, 
+                        value = 2, title, 
+                     annotate = TRUE, 
+                     no.lines = FALSE) 
 {
-  # Note that I am taking the 
-  # obj$resid rather resid(obj) so I can preserve the no of the observations
-  ########################################################################
+########################################################################
   # local functions 
 gamlss_prep_data <- function (obj, value=2) 
   {
-  #  color <- NULL
-    sdres <- residuals(obj)
-    weights <- if (is(obj,"gamlss")) obj$weights else 
-      {
-        if (is.null(model.weights(model.frame(obj)))) rep(1,length(sdres)) 
-        else model.weights(model.frame(obj)) 
-      }
+    sdres <- get_residuals(obj)
+  weights <- get_weights(obj)
       obs <- seq_len(length(sdres))
- # outlier <- sdres[sdres_out]
       obs <- obs[weights!=0]
     sdres <- sdres[weights!=0]
       out <- data.frame(obs = obs, sdres = sdres)
