@@ -131,6 +131,7 @@ if (type=="Discrete")
 {
   if (lobs==1) 
   {
+    
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
       ggplot2::geom_segment(mapping =  ggplot2::aes(x=y.var, y=pdfArr, xend = y.var, 
                                                   yend = 0), 

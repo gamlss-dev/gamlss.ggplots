@@ -36,3 +36,10 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 
 -   the package was withdraw from CRAN, but now version 2.1.12
     reintroduce it.
+
+# Version 2.1-13
+
+- all `resid_` functions are now compatible with the objecrs creates with the 
+`gamlss2()` function
+
+- `family_cdf` a bug was corrected when plotting only one curve

@@ -32,8 +32,9 @@ family_cdf<- function (family = NO(),
                    lower.tail = TRUE,
                             ...)
 {
-################################################################
-################################################################ 
+################################################################################
+################################################################################
+################################################################################
 gamlss.bi.list <- .binom
         fname <- if (is.name(family)) as.character(family)
                  else if (is.character(family)) family
@@ -47,19 +48,19 @@ gamlss.bi.list <- .binom
        nopar <- fam$nopar                 # or fam1$nopar
         type <- fam$type
    par.names <- names(fam$parameters)
-#################################################################
+################################################################################
    txt.title <- if (missing(title))  
      { if (lower.tail) paste(fname,"cdf") else paste(fname,"survival function") }
      else title   
    if (fname%in%gamlss.bi.list) bd = to
-##    whether discrete distribution or not
+########################################### whether discrete distribution or not
       y.var <- if(type=="Discrete")  seq(from, to, by=1)
               else seq(from, to, length=no.points)
-## whether binomial type
+########################################################## whether binomial type
   if(any(fname%in%.gamlss.bi.list)) bd <- to   
-## the number of plots  
+############################################################ the number of plots  
       lobs <- max(c(length(mu),length(sigma),length(nu),length(tau)))
-#################################################################     
+################################################################################     
 # get the parameters
 if ("mu"%in%par.names)
    { if (is.null(mu)) stop("At least one value of mu has to be set")
@@ -84,26 +85,30 @@ if ("tau"%in%par.names)
    }
 if (!fam$y.valid(y.var))  stop( "response variable out of range")
      cdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
-     
-# loop over         
+################################################################################     
+# loop over number of parameters        
 for (j in 1:lobs)
-  {
-if (fname%in%gamlss.bi.list)
 {
+if (fname%in%gamlss.bi.list)
+ {
   cdf11 <-  switch(nopar,
-    paste0("p",fname,"(y.var,mu.var[j], bd=bd, lower.tail=",lower.tail,")"),
-    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], bd=bd, lower.tail=",lower.tail,")"),
-    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], bd=bd, lower.tail=",lower.tail,")"),
-    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j],  bd=bd, lower.tail=",lower.tail,")")) 
-} else
-{  
+   paste0("p",fname,"(y.var,mu.var[j], bd=bd, lower.tail=",lower.tail,")"),
+   paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], bd=bd, lower.tail=",lower.tail,")"),
+    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], bd=bd, lower.tail=",
+           lower.tail,")"),
+    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j], 
+           bd=bd, lower.tail=",lower.tail,")")) 
+ } else
+ {  
   cdf11 <-  switch (nopar,
     paste0("p",fname,"(y.var,mu.var[j], lower.tail=",lower.tail,")"),
     paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], lower.tail=",lower.tail,")"),
-    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], lower.tail=",lower.tail,")"),
-    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j], lower.tail=",lower.tail,")")
+    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], lower.tail=",
+           lower.tail,")"),
+    paste0("p",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j], 
+           lower.tail=",lower.tail,")")
       )
-}
+ }
             fy11 <- eval(parse(text=cdf11))
       cdfArr[,j] <- fy11
       if (!is.null(fam$parameters$mu)){ 
@@ -111,21 +116,21 @@ if (fname%in%gamlss.bi.list)
       if (!is.null(fam$parameters$sigma)) {
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ",  .(mu.var[j]),  
                                                     sep=","), 
-                                 paste(sigma," = ",.(sigma.var[j])         ),")"))}
+                                 paste(sigma," = ",.(sigma.var[j])),")"))}
       if (!is.null(fam$parameters$nu)) {
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ", .(mu.var[j]),  
                                                     sep=","), 
                                  paste(sigma," = ",.(sigma.var[j]), sep=","),
-                                 paste(   nu," = ",.(   nu.var[j]))        ,")"))}
+                                 paste(   nu," = ",.(   nu.var[j])),")"))}
       if (!is.null(fam$parameters$tau)){
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ", .(mu.var[j]),  
                                                     sep=","), 
                                  paste(sigma," = ",.(sigma.var[j]), sep=","),
                                  paste(   nu," = ",.(   nu.var[j]), sep=","),
                                  paste(  tau," = ",.(  tau.var[j]))       ,')'))}
-}# end loop
+}###################################################################### end loop
 y.title <- if(type=="Discrete")  "P(Y=y)" else  "f(y)"
-############################################################
+################################################################################
 da <- data.frame(y.var,  cdfArr)
     p11 <- ggplot2::ggplot(data=da) 
 if (type=="Discrete")
@@ -133,28 +138,18 @@ if (type=="Discrete")
   if (lobs==1) 
   {
     
-    p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
+    p11 <- p11 +  
       ggplot2::geom_step(direction = "hv", 
-              ggplot2::aes(x = .data[[y.var]], y = .data[[cdfArr]]),  
+              ggplot2::aes(x = y.var, y = cdfArr),  
                 size = size.point, color = col.fill[1])
-      #geom_segment(mapping = aes(x=y.var, y=cdfArr, xend = y.var, yend = 0), 
-       #            color=col.fill[1],  size=size.seqment)
   }
   else
   {
     for (i in 1:lobs)
     {
-     # p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
         p11 <- p11 + ggplot2::geom_step(direction = "hv", 
-                               aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
+                ggplot2::aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
                                size= size.point, color=col.fill[i])
-          #    geom_segment(mapping =  aes_string(x="y.var", y=paste0("X",i),
-           #          xend = "y.var", yend = 0), 
-            #         color=col.fill[i], alpha=alpha, size=size.seqment)
-     # if (plot.point) p11 <- p11+geom_point( aes_string(x="y.var", y=paste0("X",i)),  
-      #                  size= size.point, color=col.fill[i])
-      #if (plot.line)  p11 <- p11 + geom_line( aes_string(x="y.var", y=paste0("X",i)),  
-      #                  size= size.line.disc , color=col.fill[i])
     } 
   }
 } else
