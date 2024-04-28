@@ -30,7 +30,8 @@ family_pdf<- function (family = NO(),
                size.line = 0.2, #    ''
                            ...)
 {
-################################################################ 
+################################################################################  
+################################################################################ 
 gamlss.bi.list <- .binom
         fname <- if (is.name(family)) as.character(family)
                  else if (is.character(family)) family
@@ -44,7 +45,7 @@ gamlss.bi.list <- .binom
        nopar <- fam$nopar                 # or fam1$nopar
         type <- fam$type
    par.names <- names(fam$parameters)
-#################################################################
+################################################################################
    txt.title <- if (missing(title))  paste("pdf from ",fname)
    else title   
    if (fname%in%gamlss.bi.list) bd=to
@@ -55,7 +56,7 @@ gamlss.bi.list <- .binom
   if(any(fname%in%.gamlss.bi.list)) bd <- to   
 ## the number of plots  
       lobs <- max(c(length(mu),length(sigma),length(nu),length(tau)))
-#################################################################     
+################################################################################     
 # get the parameters
 if ("mu"%in%par.names)
    { if (is.null(mu)) stop("At least one value of mu has to be set")
@@ -80,7 +81,7 @@ if ("tau"%in%par.names)
    }
 if (!fam$y.valid(y.var))  stop( "response variable out of range")
      pdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
-     
+################################################################################     
 # loop over         
 for (j in 1:lobs)
   {
@@ -90,15 +91,19 @@ if (fname%in%gamlss.bi.list)
   pdf11 <-  switch(nopar,
                     paste0("d",fname,"(y.var,mu.var[j], bd=bd)"),
                     paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], bd=bd)"),
-                    paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j],  bd=bd)"),
-                    paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j],  bd=bd)"))  
+                    paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j],
+                           bd=bd)"),
+                    paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], 
+                           tau.var[j],  bd=bd)"))  
 } else
 {  
       pdf11 <-  switch (nopar,
                         paste0("d",fname,"(y.var,mu.var[j])"),
                         paste0("d",fname,"(y.var,mu.var[j],sigma.var[j])"),
-                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j])"),
-                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], nu.var[j], tau.var[j])")
+                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], 
+                               nu.var[j])"),
+                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], 
+                               nu.var[j], tau.var[j])")
       )
 }
             fy11 <- eval(parse(text=pdf11))
@@ -108,23 +113,24 @@ if (fname%in%gamlss.bi.list)
       if (!is.null(fam$parameters$sigma)) {
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ",  .(mu.var[j]),  
                                                     sep=","), 
-                                 paste(sigma," = ",.(sigma.var[j])         ),")"))}
+                                 paste(sigma," = ",.(sigma.var[j])),")"))}
       if (!is.null(fam$parameters$nu)) {
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ", .(mu.var[j]),  
                                                     sep=","), 
                                  paste(sigma," = ",.(sigma.var[j]), sep=","),
-                                 paste(   nu," = ",.(   nu.var[j]))        ,")"))}
+                                 paste(   nu," = ",.(   nu.var[j])),")"))}
       if (!is.null(fam$parameters$tau)){
         m.title <-  bquote(paste(.(fname),"(",paste(mu," = ", .(mu.var[j]),  
                                                     sep=","), 
                                  paste(sigma," = ",.(sigma.var[j]), sep=","),
                                  paste(   nu," = ",.(   nu.var[j]), sep=","),
-                                 paste(  tau," = ",.(  tau.var[j]))       ,')'))}
+                                 paste(  tau," = ",.(  tau.var[j])),')'))}
 
      
 }# end loop
 y.title <- if(type=="Discrete")  "P(Y=y)" else  "f(y)"
-############################################################
+################################################################################
+################################################################################
      da <- data.frame(y.var,  pdfArr)
     p11 <- ggplot2::ggplot(data=da) 
 if (type=="Discrete")
@@ -133,8 +139,8 @@ if (type=="Discrete")
   {
     
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
-      ggplot2::geom_segment(mapping =  ggplot2::aes(x=y.var, y=pdfArr, xend = y.var, 
-                                                  yend = 0), 
+      ggplot2::geom_segment(mapping =  ggplot2::aes(x=y.var, y=pdfArr, 
+                              xend = y.var, yend = 0), 
                    color=col.fill[1],  size=size.seqment)
   }
   else
@@ -142,27 +148,30 @@ if (type=="Discrete")
     for (i in 1:lobs)
     {
       p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
-             ggplot2::geom_segment(mapping =   ggplot2::aes_string(x="y.var", 
-                        y=paste0("X",i), xend = "y.var", yend = 0), 
+             ggplot2::geom_segment(mapping = ggplot2::aes_string(x="y.var", 
+                     y=paste0("X",i), xend = "y.var", yend = 0), 
                      color=col.fill[i], alpha=alpha, size=size.seqment)
-      if (plot.point) p11 <- p11+ ggplot2::geom_point(  
+      if (plot.point) p11 <- p11+ 
+            ggplot2::geom_point(  
             ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
-                        size= size.point, color=col.fill[i])
-      if (plot.line)  p11 <- p11 +  ggplot2::geom_line(  
-        ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
+                  size = size.point, color=col.fill[i])
+      if (plot.line)  p11 <- p11 +  
+          ggplot2::geom_line(  
+          ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
                         size= size.line, color=col.fill[i])
     } 
   }
 } else
 {
-  if (lobs==1) p11 = p11 +  ggplot2::geom_area(fill=col.fill[1], alpha=alpha, 
-                                               ggplot2::aes(x=y.var, y=pdfArr))
+  if (lobs==1) p11 = p11 +  
+      ggplot2::geom_area(fill=col.fill[1], alpha=alpha, 
+                      ggplot2::aes(x=y.var, y=pdfArr))
   else
   {# more than one
     for (i in 1:lobs)
     {
       p11 <-p11 +  ggplot2::geom_area(fill=col.fill[i], alpha=alpha,  
-                  ggplot2::aes_string(x="y.var", y=paste0("X",i)))
+                   ggplot2::aes_string(x="y.var", y=paste0("X",i)))
     } 
   }
 }  

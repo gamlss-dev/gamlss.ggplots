@@ -33,7 +33,8 @@ resid_density <- function(obj, resid,
 ################################################################################ 
    rqres <- NULL 
 if (missing(obj)&&missing(resid))  stop("A GAMLSS fitted object or the argument resid should be used")
-if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) stop("the model is not a gamlss model")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model")
         d <- if (missing(obj)) other_prep_data(resid) 
              else             gamlss_prep_data(obj) 
 txt.title <- if (missing(title))   

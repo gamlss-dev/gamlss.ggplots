@@ -16,8 +16,9 @@ model_density <- function(obj,...,
 # local function
 gamlss_prep_data <- function (obj, ... ) 
 {
-    rqres <- obj$residuals
-    rqres <- rqres[obj$weights!=0]
+    rqres <- get_residuals(obj)
+  weights <- get_weights(obj)
+    rqres <- rqres[weights!=0]
       out <- data.frame(rqres = rqres, model=rep(names[[1]], length(rqres)))
     if (length(list(...)) > 0) 
     {
@@ -25,9 +26,10 @@ gamlss_prep_data <- function (obj, ... )
       for (resp in list(...)) 
       {
         i= i+1
-        res  <- resp[["residuals"]] 
-        res  <- res[obj$weights!=0]
-        resa <- data.frame(rqres=res, model=rep(names[[i]], length(rqres))) 
+        res  <- get_residuals(resp) #resp[["residuals"]] 
+    weights  <- get_weights(resp) #res[obj$weights!=0]
+         res <- res[weights!=0]
+        resa <- data.frame(rqres=res, model=rep(names[[i]], length(res))) 
         out <- rbind(out, resa)
       }
     }
@@ -37,7 +39,8 @@ gamlss_prep_data <- function (obj, ... )
 ################################################################################
   rqres <- model <- NULL
 names <- as.character(match.call()[-1])[1:(length(list(...))+1)]
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  stop("the model is not a gamlss model")
 if (length(names)<=1) stop("you need more than two models")
 d <- gamlss_prep_data(obj, ...)
 txt.title <- if (missing(title))   paste("Residual densities from different models")  else title
