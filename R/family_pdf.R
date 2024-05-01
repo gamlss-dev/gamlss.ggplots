@@ -147,17 +147,20 @@ if (type=="Discrete")
   {
     for (i in 1:lobs)
     {
-      p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
-             ggplot2::geom_segment(mapping = ggplot2::aes_string(x="y.var", 
-                     y=paste0("X",i), xend = "y.var", yend = 0), 
-                     color=col.fill[i], alpha=alpha, size=size.seqment)
+      p11 <- p11 +
+             ggplot2::geom_segment(mapping = 
+                    ggplot2::aes(x=.data[["y.var"]], 
+                    y=.data[[paste0("X",i)]], xend = .data[["y.var"]], yend = 0), 
+                    color=col.fill[i], alpha=alpha, size=size.seqment)
       if (plot.point) p11 <- p11+ 
             ggplot2::geom_point(  
-            ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
+            ggplot2::aes(x=.data[["y.var"]], 
+                         y=.data[[paste0("X",i)]]),  
                   size = size.point, color=col.fill[i])
       if (plot.line)  p11 <- p11 +  
           ggplot2::geom_line(  
-          ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
+          ggplot2::aes(x=.data[["y.var"]], 
+                       y=.data[[paste0("X",i)]]),   
                         size= size.line, color=col.fill[i])
     } 
   }
@@ -171,7 +174,8 @@ if (type=="Discrete")
     for (i in 1:lobs)
     {
       p11 <-p11 +  ggplot2::geom_area(fill=col.fill[i], alpha=alpha,  
-                   ggplot2::aes_string(x="y.var", y=paste0("X",i)))
+                   ggplot2::aes(x=.data[["y.var"]], 
+                                y=.data[[paste0("X",i)]]))
     } 
   }
 }  

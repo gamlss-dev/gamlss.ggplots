@@ -43,3 +43,5 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 `gamlss2()` function
 
 - `family_cdf` a bug was corrected when plotting only one curve
+
+- `family.pdf` the `aes_string()` was removed (it is depreciated from `ggplot2`)
