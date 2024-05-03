@@ -29,17 +29,18 @@ predict_cdf <- function (model,
                            ...)
 {
 gamlss.bi.list <- .binom  
-if (!is.gamlss(model)) stop("the model should be an gamlss object")  
-     family <-  if(is.null(model$call$family)) as.gamlss.family(NO) 
-                 else as.gamlss.family(model$call$family)
-      fname <- model$family[1]  
-       type <- family$type
-      nopar <- family$nopar
-       pfun <- paste("p",fname,sep="")
-        cdf <- eval(parse(text=pfun))
-  par.names <- names(family$parameters)
-  txt.title <- if (missing(title))  paste("Predicted cdf's from model",deparse(substitute(model)))
-  else title  
+if (!(is.gamlss(model)||is(model,"gamlss2"))) stop("the model should be an gamlss object")
+      obj <- get_family(model)
+    fname <- obj$fname  
+     type <- obj$type
+    nopar <- obj$nopar
+    param <- obj$param
+     pfun <- obj$pfun
+      cdf <- obj$c_d_f
+par.names <- param
+  txt.title <- if (missing(title))  
+                  paste("Predicted cdf's from model",deparse(substitute(model)))
+                else title  
   if (missing(newdata)) stop("the argument newdata is required")
 ## the number of plots  
 ## whether binomial type
@@ -105,19 +106,23 @@ return(p11)
 } # end binomial
 ################################################################################
 ################################################################################      
-        MM <- predictAll(model, newdata=newdata, output="matrix")
-      lobs <- dim(newdata)[1]
-  if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 ) 
+   MM <-  if (is.gamlss(model)) {predictAll(model, newdata=newdata, output="data.frame")}
+          else                  {predict(model, newdata=newdata, type="parameter")}
+  lobs <- dim(newdata)[1]
 # everything else not binomial type
 ##    whether discrete distribution or not
-      y.var <- if(type=="Discrete")  seq(from, to, by=1)
-                else seq(from, to, length=no.points)
+  y.var <- if ((type=="Discrete")||(type=="discrete"))  
+             seq(from, to, by=1)
+           else seq(from, to, length=no.points)
   #if(any(fname%in%.gamlss.bi.list)) bd <- to   
 #if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 )  
 # the matrix to hold the results
      cdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
 # loop over observations
-for (j in 1:lobs)
+
+if (is(model,"gamlss"))
+ {  
+     for (j in 1:lobs)
       {
   switch(nopar,
          {
@@ -131,38 +136,41 @@ for (j in 1:lobs)
          },
          {
            cdfArr[,j] <- cdf(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"], tau=MM[j,"tau"], lower.tail = lower.tail) 
-         })  
+         }) 
+     }
+} else
+{
+  for (j in 1:lobs)
+  {
+    cdfArr[,j] <-  cdf(y.var,  par=MM[j,])  
+  }        
 }  # end of look over observations
 ################################################################################ 
      da <- data.frame(y.var,  cdfArr)
-    p11 <- ggplot(data=da) 
-if (type=="Discrete")
+    p11 <-ggplot2::ggplot(data=da) 
+if (type=="Discrete"||type=="discrete")
 {
   if (lobs==1) 
   {
-    p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
-      ggplot2::geom_step(direction = "hv", 
-            ggplot2::aes_string(x="y.var", y=cdfArr),  
-                size= size.line.disc, color=col.fill[1])
+    p11 <- p11 + 
+             ggplot2::geom_step(direction = "hv", 
+             ggplot2::aes(x=y.var, y=cdfArr),  
+              size= size.line.disc, color=col.fill[1])
   }
   else   
   {  
     for (i in 1:lobs)
     {
-      p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
+      p11 <- p11 + 
         ggplot2::geom_step(direction = "hv", 
-        ggplot2::aes_string(x = "y.var", y = paste0("X",i)),  
+        ggplot2::aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
                   size = size.line, color = col.fill[i])
-      #if (plot.point) p11 <- p11+geom_point( aes_string(x="y.var", y=paste0("X",i)),  
-      #                                       size= size.point, color=col.fill[i])
-      #if (plot.line)  p11 <- p11 + geom_line( aes_string(x="y.var", y=paste0("X",i)),  
-                                       #       size= size.line.disc, color=col.fill[i])
     } 
   }
 } else # continuous 
 {# one plot 
   if (lobs==1) p11 = p11 + ggplot2::geom_line(color=col.fill[1], alpha=alpha, 
-                          size=size.line, aes(x=y.var, y=cdfArr))
+                            size=size.line, aes(x=y.var, y=cdfArr))
   else
   {# more than one plot
     for (i in 1:lobs)

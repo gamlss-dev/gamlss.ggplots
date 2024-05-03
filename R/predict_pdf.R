@@ -25,27 +25,28 @@ predict_pdf <- function (model,
                            ...)
 {
 gamlss.bi.list <- .binom  
-if (!is.gamlss(model)) stop("the model should be an gamlss object")  
-     family <-  if(is.null(model$call$family)) as.gamlss.family(NO) 
-                 else as.gamlss.family(model$call$family)
-      fname <- model$family[1]  
-       type <- family$type
-      nopar <- family$nopar
-       dfun <- paste("d",fname,sep="")
-        p_d_f <- eval(parse(text=dfun))
-  par.names <- names(family$parameters)
-  txt.title <- if (missing(title))  paste("Fitted pdf's from model",deparse(substitute(model)))
-  else title  
+if (!(is.gamlss(model)||is(model,"gamlss2"))) stop("the model should be an gamlss object")
+           obj <- get_family(model)
+         fname <- obj$fname  
+          type <- obj$type
+         nopar <- obj$nopar
+         param <- obj$param
+          dfun <- obj$dfun
+         p_d_f <- obj$p_d_f
+     par.names <- param
+  txt.title <- if (missing(title))  
+                    paste("Fitted pdf's from model",deparse(substitute(model)))
+               else title  
   if (missing(newdata)) stop("the argument newdata is required")
 ## the number of plots  
-      
 ## whether binomial type
-######################################################################
-######################################################################          
+################################################################################
+################################################################################
 if (fname%in%gamlss.bi.list)  
 {
-         MM <- predictAll(model, newdata=newdata, output = "matrix")
-         bd <- MM[,"bd"]
+          MM <- if (is.gamlss(model)) {predictAll(model, newdata=newdata, output="data.frame")}
+                else                   {predict(model, type="parameter") }
+          bd <- MM[,"bd"]
         lobs <- dim(newdata)[1] 
   lastcolMM <- dim(MM)[2]
          to <- max(bd)
@@ -99,22 +100,26 @@ for (i in 1:lobs)
        ggtitle( txt.title)     
 return(p11)     
 } # end binomial
-#######################################################################      
-#######################################################################
-        MM <- predictAll(model, newdata=newdata, output="matrix")
-      lobs <- dim(newdata)[1]
-  if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 ) 
+################################################################################      
+################################################################################
+     MM <- if (is.gamlss(model)) {predictAll(model, newdata=newdata, output="data.frame")}
+           else                  {predict(model, newdata=newdata, type="parameter")}
+    lobs <- dim(newdata)[1]
+#  if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 ) 
 # everything else not binomial type
 ##    whether discrete distribution or not
-      y.var <- if(type=="Discrete")  seq(from, to, by=1)
-                else seq(from, to, length=no.points)
+    y.var <- if ((type=="Discrete")||(type=="discrete"))  
+                 seq(from, to, by=1)
+             else seq(from, to, length=no.points)
   #if(any(fname%in%.gamlss.bi.list)) bd <- to   
 #if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 )  
 # the matrix to hold the results
      pdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
 # loop over observations
-# 
-for (j in 1:lobs)
+
+if (is(model,"gamlss"))
+{     
+  for (j in 1:lobs)
       {
   switch(nopar,
          {
@@ -128,31 +133,42 @@ for (j in 1:lobs)
          },
          {
            pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"], tau=MM[j,"tau"])  
-         })  
-}  # end of look over observations
+         }) 
+  }
+} else
+{
+      for (j in 1:lobs)
+        {
+          pdfArr[,j] <-  p_d_f(y.var,  par=MM[j,])  
+        }  
+}  # end of look over observations  
 ################################################################ 
      da <- data.frame(y.var,  pdfArr)
-    p11 <- ggplot(data=da) 
+    p11 <- ggplot2::ggplot(data=da) 
 if (type=="Discrete")
 {
   if (lobs==1) 
   {
-    p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
-      geom_segment(mapping = aes(x=y.var, y=pdfArr, xend = y.var, yend = 0), 
-                   color=col.fill[1],  size=size.seqment)
+    p11 <- p11 +  
+      ggplot2:::geom_segment(mapping = ggplot2::aes(x=y.var, y=pdfArr, xend = y.var, 
+                yend = 0), color=col.fill[1],  size=size.seqment)
   }
   else   
   {  
     for (i in 1:lobs)
     {
-      p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
-        geom_segment(mapping =  aes_string(x="y.var", y=paste0("X",i),
-                                           xend = "y.var", yend = 0), 
-                     color=col.fill[i], alpha=alpha, size=size.seqment)
-      if (plot.point) p11 <- p11+geom_point( aes_string(x="y.var", y=paste0("X",i)),  
-                                             size= size.point, color=col.fill[i])
-      if (plot.line)  p11 <- p11 + geom_line( aes_string(x="y.var", y=paste0("X",i)),  
-                                              size= size.line, color=col.fill[i])
+      p11 <- p11 + 
+        ggplot2::geom_segment(mapping =  
+        ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]],
+                                xend =.data[["y.var"]],, yend = 0), 
+                              color=col.fill[i], alpha=alpha, size=size.seqment)
+      
+      if (plot.point) p11 <- p11+ ggplot2::geom_point( 
+        ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]]),  
+                     size= size.point, color=col.fill[i])
+      if (plot.line)  p11 <- p11 + ggplot2::geom_line( 
+        ggplot2::aes(x=.data[["y.var"]], y=.data[[paste0("X",i)]]),  
+                     size= size.line, color=col.fill[i])
     } 
   }
 } else # continuous 
@@ -171,3 +187,4 @@ if (type=="Discrete")
               ggtitle( txt.title)
 p11
 }
+

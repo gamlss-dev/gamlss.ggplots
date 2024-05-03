@@ -157,12 +157,13 @@ if ((type=="Discrete")||(type=="discrete"))
         ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]],
                  xend =.data[["y.var"]],, yend = 0), 
                     color=col.fill[i], alpha=alpha, size=size.seqment)
-      if (plot.point) p11 <- p11+ggplot2::geom_point( 
-        ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
-                                             size= size.point, color=col.fill[i])
+      if (plot.point) p11 <- p11 + ggplot2::geom_point( 
+        ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]]),  
+        size= size.point, color=col.fill[i])
+      
       if (plot.line)  p11 <- p11 + ggplot2::geom_line( 
-        ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
-                                              size= size.line, color=col.fill[i])
+        ggplot2::aes(x=.data[["y.var"]], y=.data[[paste0("X",i)]]),  
+                                size= size.line, color=col.fill[i])
     } 
   }
 } else # continuous 
