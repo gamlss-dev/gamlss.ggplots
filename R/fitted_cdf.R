@@ -27,31 +27,32 @@ fitted_cdf <- function (model,
                            ...)
 {
 gamlss.bi.list <- .binom  
-if (!is.gamlss(model)) stop("the model should be an gamlss object")  
-     family <-  if(is.null(model$call$family)) as.gamlss.family(NO) 
-                 else as.gamlss.family(model$call$family)
-      fname <- model$family[1]  
-       type <- family$type
-      nopar <- family$nopar
-       pfun <- paste("p",fname,sep = "")
-        cdf <- eval(parse(text = pfun))
-  par.names <- names(family$parameters)
-  txt.title <- if (missing(title))  paste("Fitted cdf's from model",deparse(substitute(model)))
-  else title  
-        MM <- predictAll(model, output="matrix")[obs,]
+if (!(is.gamlss(model)||is(model,"gamlss2"))) stop("the model should be an gamlss object")
+          obj <- get_family(model)
+        fname <- obj$fname  
+         type <- obj$type
+        nopar <- obj$nopar
+        param <- obj$param
+         pfun <- obj$pfun
+          cdf <- obj$c_d_f
+    txt.title <- if (missing(title))  
+                     paste("Fitted cdf's from model",deparse(substitute(model)))
+                 else title  
+        MM <- if (is.gamlss(model)) {predictAll(model, output="data.frame")[obs,]}
+              else                  {predict(model, type="parameter")[obs,] }
       lobs <- length(obs)
-if (lobs==1) MM <- matrix(MM, nrow=1 , dimnames = list("1", names(MM))) 
+#if (lobs==1) MM <- matrix(MM, nrow=1 , dimnames = list("1", names(MM))) 
 ## the number of plots  
 ## whether binomial type
-######################################################################
-######################################################################          
+################################################################################
+################################################################################
 if (fname%in%gamlss.bi.list)  {
-         bd <- model$bd[obs]
-         MM <- cbind(MM, bd)
-  lastcolMM <- dim(MM)[2]
-         to <- max(bd)
-     y.var  <-  cdfArr <- da <- list()  
-     y.var..i.. <- cdfArr..i.. <- NULL 
+          bd <- model$bd[obs]
+          MM <- cbind(MM, bd)
+   lastcolMM <- dim(MM)[2]
+          to <- max(bd)
+      y.var  <-  cdfArr <- da <- list()  
+  y.var..i.. <- cdfArr..i.. <- NULL 
 for (i in 1:lobs)
 {
     y.var[[i]] <- 0:MM[i,lastcolMM]
@@ -100,15 +101,19 @@ for (i in 1:lobs)
        ggplot2::ggtitle( txt.title)     
 return(p11)     
 } # end binomial
-#######################################################################
-#######################################################################
+################################################################################
+################################################################################
 # everything else not binomial type
 ##    whether discrete distribution or not
-      y.var <- if(type=="Discrete")  seq(from, to, by=1)
+      y.var <- if ((type=="Discrete")||(type=="discrete"))  
+                     seq(from, to, by=1)
                 else seq(from, to, length=no.points)
      cdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
 # loop over observations
-for (j in 1:lobs)
+if (is(model,"gamlss"))
+     {
+     
+     for (j in 1:lobs)
       {
   switch(nopar,
          {
@@ -127,17 +132,24 @@ for (j in 1:lobs)
                              nu = MM[j,4], tau = MM[j,5], 
                              lower.tail = lower.tail)  
          })  
-}  # end of look over observations
+     }  
+} else 
+{
+  for (j in 1:lobs)
+  {
+         cdfArr[,j] <-  cdf(y.var,  par=predict(model, type="parameter")[obs[j],])  
+  }  
+}  # end of look over observations       
 ################################################################
         da <- data.frame(y.var,  cdfArr)
        p11 <- ggplot2::ggplot(data=da) 
-if (type=="Discrete")
+if ((type=="Discrete")||(type=="discrete"))
 {
   if (lobs==1) 
   {
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
       ggplot2::geom_step(direction = "hv", 
-      ggplot2::aes_string(x = "y.var", y = cdfArr),  
+      ggplot2::aes(x = y.var, y = cdfArr),  
       size = size.point, color = col.fill[1])
   }
   else   
@@ -145,8 +157,8 @@ if (type=="Discrete")
     for (i in 1:lobs)
     {
         p11 <- p11 + ggplot2::geom_step(direction = "hv", 
-                     ggplot2::aes_string(x = "y.var", y = paste0("X",i)),  
-                    size= size.point, color=col.fill[i])
+                     ggplot2::aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
+                     size= size.point, color=col.fill[i])
     } 
   }
 } else # continuous 
@@ -165,8 +177,8 @@ if (type=="Discrete")
   }
 }  
   p11 = p11 + ggplot2::labs(x = "y", y =  paste0(fname,"(y)")) +
-    ggplot2::xlim(from,to) +
-    ggplot2::ggtitle( txt.title)
+              ggplot2::xlim(from,to) +
+              ggplot2::ggtitle( txt.title)
 p11
 }
 ##############################################################################

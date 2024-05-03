@@ -131,7 +131,7 @@ if (fname%in%gamlss.bi.list)
 }###################################################################### end loop
 y.title <- if(type=="Discrete")  "P(Y=y)" else  "f(y)"
 ################################################################################
-da <- data.frame(y.var,  cdfArr)
+     da <- data.frame(y.var,  cdfArr)
     p11 <- ggplot2::ggplot(data=da) 
 if (type=="Discrete")
 {

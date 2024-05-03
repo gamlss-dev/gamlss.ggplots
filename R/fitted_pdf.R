@@ -27,24 +27,25 @@ fitted_pdf <- function (model,
                            ...)
 {
 gamlss.bi.list <- .binom  
-if (!is.gamlss(model)) stop("the model should be an gamlss object")  
-     family <-  if(is.null(model$call$family)) as.gamlss.family(NO) 
-                 else as.gamlss.family(model$call$family)
-      fname <- model$family[1]  
-       type <- family$type
-      nopar <- family$nopar
-       dfun <- paste("d",fname,sep="")
-      p_d_f <- eval(parse(text=dfun))
-  par.names <- names(family$parameters)
-  txt.title <- if (missing(title))  paste("Fitted pdf's from model",deparse(substitute(model)))
-  else title  
-         MM <- predictAll(model, output="matrix")[obs,]
+if (!(is.gamlss(model)||is(model,"gamlss2"))) stop("the model should be an gamlss object") 
+        obj <- get_family(model)
+      fname <- obj$fname  
+       type <- obj$type
+      nopar <- obj$nopar
+      param <- obj$param
+       dfun <- obj$dfun
+      p_d_f <- obj$p_d_f
+  par.names <- param
+  txt.title <- if (missing(title))  
+                   paste("Fitted pdf's from model",deparse(substitute(model)))
+               else title  
+MM <- if (is.gamlss(model)) {predictAll(model, output="data.frame")[obs,]}
+      else                   {predict(model, type="parameter")[obs,] }
        lobs <- length(obs)
-if (lobs==1) MM <- matrix(MM, nrow=1 , dimnames = list("1", names(MM))) 
+#if (lobs==1) MM <- if(is(model,"gamlss")) matrix(MM, nrow=1 , dimnames = list("1", names(MM)))       else MM 
 ## the number of plots  
-      
 ## whether binomial type
-######################################################################          
+################################################################################          
 if (fname%in%gamlss.bi.list)  {
          bd <- model$bd[obs]
          MM <- cbind(MM, bd)
@@ -55,19 +56,18 @@ if (fname%in%gamlss.bi.list)  {
 for (i in 1:lobs)
 {
     y.var[[i]] <- 0:MM[i,lastcolMM]
-
 switch(nopar,
             {
-            pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[i,"mu"],  bd=MM[i,"bd"])
+  pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[i,"mu"],  bd=MM[i,"bd"])
             },  
             {
-            pdfArr[[i]] <- p_d_f(y.var[[i]], mu=MM[i,"mu"],  sigma=MM[i,"sigma"], bd=MM[i,"bd"])
+  pdfArr[[i]] <- p_d_f(y.var[[i]], mu=MM[i,"mu"],  sigma=MM[i,"sigma"], bd=MM[i,"bd"])
             },
             {
-            pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[i,"mu"], sigma=MM[i,"sigma"], nu=MM[i,"nu"], bd=MM[i,"bd"])
+  pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[i,"mu"], sigma=MM[i,"sigma"], nu=MM[i,"nu"], bd=MM[i,"bd"])
             },
             {
-            pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[j,"mu"], sigma=MM[i,"sigma"], nu=MM[i,"nu"], tau=MM[i,"tau"],  bd=MM[i,"bd"])  
+  pdfArr[[i]] <- p_d_f(y.var[[i]],  mu=MM[j,"mu"], sigma=MM[i,"sigma"], nu=MM[i,"nu"], tau=MM[i,"tau"],  bd=MM[i,"bd"])  
             })  
     da[[i]] <- data.frame(y.var[[i]],  pdfArr[[i]])
 }
@@ -75,9 +75,9 @@ switch(nopar,
      p11 <- ggplot2::ggplot(data=da0) 
 if (lobs==1) 
     {
-         p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
+         p11 <- p11 + 
            ggplot2::geom_segment(data=da[[1]], mapping = 
-                                   ggplot2::aes(x=y.var..i.., y=pdfArr..i.., 
+           ggplot2::aes(x=y.var..i.., y=pdfArr..i.., 
                                       xend = y.var..i.., yend = 0), 
                         color=col.fill[1],  size=size.seqment)
     }
@@ -103,37 +103,44 @@ for (i in 1:lobs)
        ggplot2::ggtitle( txt.title)     
 return(p11)     
 } # end binomial
-#######################################################################
-# evrything else not binomial type
+################################################################################
+# everything else not binomial type
 ##    whether discrete distribution or not
-      y.var <- if(type=="Discrete")  seq(from, to, by=1)
-                else seq(from, to, length=no.points)
-  #if(any(fname%in%.gamlss.bi.list)) bd <- to   
-#if (lobs==1) MM <- matrix(MM, nrow=1, ncol=nopar+1 )  
-# the matrix to hold the results
+      y.var <- if ((type=="Discrete")||(type=="discrete"))  
+                    seq(from, to, by=1)
+               else seq(from, to, length=no.points)
      pdfArr <- matrix(0, nrow=length(y.var), ncol=lobs)
 # loop over observations
 # 
-for (j in 1:lobs)
-      {
-  switch(nopar,
-         {
-           pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"])
-         },  
-         {
-           pdfArr[,j] <- p_d_f(y.var, mu=MM[j,"mu"],  sigma=MM[j,"sigma"])
-         },
-         {
-           pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"])
-         },
-         {
-           pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"], tau=MM[j,"tau"])  
-         })  
+if (is(model,"gamlss"))
+{
+  for (j in 1:lobs)
+  {
+    switch(nopar,
+           {
+      pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"])
+           },  
+           {
+      pdfArr[,j] <- p_d_f(y.var, mu=MM[j,"mu"],  sigma=MM[j,"sigma"])
+           },
+           {
+      pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"])
+           },
+           {
+      pdfArr[,j] <- p_d_f(y.var,  mu=MM[j,"mu"], sigma=MM[j,"sigma"], nu=MM[j,"nu"], tau=MM[j,"tau"])  
+           })  
+  }  
+} else 
+{
+  for (j in 1:lobs)
+  {
+    pdfArr[,j] <-  p_d_f(y.var,  par=predict(model, type="parameter")[obs[j],])  
+  }  
 }  # end of look over observations
 ################################################################ 
      da <- data.frame(y.var,  pdfArr)
-    p11 <- ggplot(data=da) 
-if (type=="Discrete")
+    p11 <- ggplot2::ggplot(data=da) 
+if ((type=="Discrete")||(type=="discrete"))
 {
   if (lobs==1) 
   {
@@ -145,11 +152,11 @@ if (type=="Discrete")
   {  
     for (i in 1:lobs)
     {
-      p11 <- p11 + # geom_hline( aes(yintercept = 0)) +
+      p11 <- p11 + 
         ggplot2::geom_segment(mapping =  
-        ggplot2::aes_string(x="y.var", y=paste0("X",i),
-                                           xend = "y.var", yend = 0), 
-                     color=col.fill[i], alpha=alpha, size=size.seqment)
+        ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]],
+                 xend =.data[["y.var"]],, yend = 0), 
+                    color=col.fill[i], alpha=alpha, size=size.seqment)
       if (plot.point) p11 <- p11+ggplot2::geom_point( 
         ggplot2::aes_string(x="y.var", y=paste0("X",i)),  
                                              size= size.point, color=col.fill[i])

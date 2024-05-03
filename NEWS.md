@@ -45,3 +45,7 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 - `family_cdf` a bug was corrected when plotting only one curve
 
 - `family.pdf` the `aes_string()` was removed (it is depreciated from `ggplot2`)
+
+# Version 2.1-14
+
+- `fitted_pdf` and `fitted_cdf` are working with gamlss2 object but the binimial responses needed checking (not fixed yet)
