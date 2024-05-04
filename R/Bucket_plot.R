@@ -1204,15 +1204,17 @@ y <- Y <- X <- NULL
   Call$colour_bucket <- NULL
   the.names <- if (is.null(text_to_show)) as.character(Call[2:(length(object) + 1)])
              else text_to_show
-         n <- if(isvector) length(object[[1]]) else object[[1]]$N
+         n <- if(isvector) length(object[[1]]) else length(get_residuals(object[[1]]))
 length.obj <- length(object)
-    lresid <- if (is(object[[1]],"gamlss")) length(resid(object[[1]]))
+    lresid <- if (inherits(object[[1]],c("gamlss", "gamlss2"))) 
+                   length(get_residuals(object[[1]]))
               else length(object[[1]])
        DA0 <- matrix(0, nrow = lresid, ncol = length.obj )
 for (j in 1:length(object))
   {
-    DA0[,j] <-  if (is(object[[j]],"gamlss")) resid(object[[j]])
-    else object[[j]]
+    DA0[,j] <-  if (inherits(object[[j]],c("gamlss", "gamlss2")))
+                   get_residuals(object[[j]])
+                else object[[j]]
   }
        DA0 <- as.data.frame(DA0)
 colnames(DA0) <- the.names
@@ -1307,18 +1309,20 @@ centile_bucket <- function(x,...,
   Call$weights <- Call$bootstrap <- Call$no_bootstrap <- Call$col_bootstrap <- NULL
   Call$text_to_show <- Call$cex_text <- Call$col_text <- Call$show.legend <- NULL
   Call$colour_bucket <- NULL
- the.names <- if (is.null(text_to_show)) as.character(Call[2:(length(object)+1)])
+   the.names <- if (is.null(text_to_show)) as.character(Call[2:(length(object)+1)])
                 else text_to_show
-         n <- if(isvector) length(object[[1]]) else object[[1]]$N
-length.obj <- length(object)
-    lresid <- if (is(object[[1]],"gamlss")) length(resid(object[[1]]))
-              else length(object[[1]])
-       DA0 <- matrix(0, nrow=lresid, ncol= length.obj )
+          n <- if(isvector) length(object[[1]]) else length(get_residuals(object[[1]]))
+ length.obj <- length(object)
+     lresid <- if (inherits(object[[1]],c("gamlss", "gamlss2"))) 
+                length(get_residuals(object[[1]]))
+               else length(object[[1]])
+       DA0 <- matrix(0, nrow = lresid, ncol = length.obj )
 for (j in 1:length(object))
  {
-    DA0[,j] <-  if (is(object[[j]],"gamlss")) resid(object[[j]])
-    else object[[j]]
- }
+   DA0[,j] <-  if (inherits(object[[j]],c("gamlss", "gamlss2")))
+     get_residuals(object[[j]])
+   else object[[j]]
+ } 
       DA0 <- as.data.frame(DA0)
 colnames(DA0) <- the.names
      DA1 <- da2 <- NULL
