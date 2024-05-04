@@ -71,25 +71,25 @@ if  (plot) # if we need to plot
   val <- val[,]
 return(val)
  }
- # end if a matrix ----------- -----------------------------------
-############  if model ----------------------------------------------
+ # end if a matrix ----------- -------------------------------------------------
+############  if model ---------------------------------------------------------
 # if a list plot
 if (length(list(...))) # if a list of model 
  {
-      object <- list(object, ...)
-    isgamlss <- unlist(lapply(object, is.gamlss))
+      objects <- list(object, ...)
+    isgamlss <- unlist(lapply(objects, inherits, what=c("gamlss","gamlss2")))
   if (!any(isgamlss)) stop("some of the objects are not gamlss")
-          df <- as.numeric(lapply(object, function(x) x$df.fit))
-           N <- as.numeric(lapply(object, function(x) x$N))
-         Cor <- if ((k == 2)&&(c==TRUE)) (2*df*(df+1))/(N-df-1) else rep(0, length(object)) 
-         AIC <- as.numeric(lapply(object, function(x) x$G.dev+x$df.fit*k ))+Cor  
-        dAIC <- max(AIC, na.rm = TRUE)-AIC #(AIC-AIC[which.min(AIC)]) 
-        oAIC <- dAIC/(max(AIC, na.rm = TRUE)-min(AIC,  na.rm = TRUE))
-         val <- as.data.frame(cbind(df,AIC, delta=round(dAIC,3), scaled=round(oAIC,4)))
-        Call <- match.call()## trying to get the names
-      Call$k <- Call$c <- Call$plot <- Call$text.cex <- Call$which <- Call$diff.dev <- Call$horiz <- Call$scale <- NULL 
-row.names(val) <- if (is.null(text.to.show)) as.character(Call[-1][1:length(object)])
-                  else text.to.show
+        gaic <- gamlss2::GAIC(object,..., corrected=c, k=k)
+       #    N <- as.numeric(lapply(object, function(x) x$N))
+        # Cor <- if ((k == 2)&&(c==TRUE)) (2*df*(df+1))/(N-df-1) else rep(0, length(object)) 
+        # AIC <- as.numeric(lapply(object, function(x) x$G.dev+x$df.fit*k ))+Cor  
+        dAIC <- max(gaic$AIC, na.rm = TRUE)-gaic$AIC #(AIC-AIC[which.min(AIC)]) 
+        oAIC <- dAIC/(max(gaic$AIC, na.rm = TRUE)-min(gaic$AIC,  na.rm = TRUE))
+        val <- cbind(gaic, delta=round(dAIC,3), scaled=round(oAIC,4))
+     #   Call <- match.call()## trying to get the names
+    #  Call$k <- Call$c <- Call$plot <- Call$text.cex <- Call$which <- Call$diff.dev <- Call$horiz <- Call$scale <- NULL 
+#row.names(val) <- if (is.null(text.to.show)) as.character(Call[-1][1:length(object)])
+ #                 else text.to.show
 #-----------------------------------------------
   if  (plot) # if we need to plot
       {
@@ -114,7 +114,7 @@ row.names(val) <- if (is.null(text.to.show)) as.character(Call[-1][1:length(obje
                          #     axis.ticks.y = element_blank()
                          #   )    
                          ggplot2::ggplot(val, ggplot2::aes(x=models, y=scaled))+
-                           ggplot2::geom_segment( aes(x=models, xend=models, y=0, 
+                           ggplot2::geom_segment( ggplot2::aes(x=models, xend=models, y=0, 
                                                       yend=scaled), color=col)+
                            ggplot2::geom_point( color=col.point, size=4, alpha=0.6, 
                                                 pch=pch.point) +# + 
@@ -124,7 +124,7 @@ row.names(val) <- if (is.null(text.to.show)) as.character(Call[-1][1:length(obje
                             },
                      "[max,min]"={ 
                        ggplot2::ggplot(val, ggplot2::aes(models, delta))+
-                         ggplot2::geom_segment( aes(x=models, xend=models, y=0, 
+                         ggplot2::geom_segment( ggplot2::aes(x=models, xend=models, y=0, 
                                                     yend=delta), color=col)+
                          ggplot2::geom_point( color=col.point, size=4, alpha=0.6,  
                                               pch=pch.point)  #+ 
