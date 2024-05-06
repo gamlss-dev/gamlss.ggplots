@@ -135,5 +135,5 @@ importFrom("stats", "model.weights")
 importFrom("foreach", "%dopar%", "foreach", "%do%")
 ################################################################################
 importFrom("graphics", "axis", "contour", "image", "rect")
-importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit")
+importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit", "model.response")
 importFrom("yaImpute", "ann")  

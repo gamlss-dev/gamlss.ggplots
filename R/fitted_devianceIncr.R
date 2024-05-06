@@ -13,16 +13,20 @@ fitted_devianceIncr <- function (obj,
                     newdata = NULL ) 
 {
 ################################################################################
+################################################################################
 # local functions 
+################################################################################ 
 gamlss_prep_data <- function (obj, quan.val, newdata) 
   {
   if (is.null(newdata))
   {
-    DIncr <- devianceIncr(obj)
+    DIncr <- if (inherits(obj, "gamlss")) gamlss::devianceIncr(obj) 
+             else  deviance_Incr(obj)
+    weights <- get_weights(obj)
     value <- quantile(DIncr, quan.val)
       obs <- seq_len(length(DIncr))
-      obs <- obs[obj$weights!=0]
-    DIncr <- DIncr[obj$weights!=0]
+      obs <- obs[weights!=0]
+    DIncr <- DIncr[weights!=0]
       out <- data.frame(obs = obs, DIncr = DIncr)
 out$color <- ifelse((out$DIncr >= value), 
                         c("outlier"), c("normal"))
@@ -32,15 +36,16 @@ out$fct_color <- ordered(factor(out$color), levels =
   return(out)  
   } else
   {
-    DIncr <- devianceIncr(obj, newdata=newdata)
-    value <- quantile(DIncr, quan.val)
-    obs <- seq_len(length(DIncr))
-    out <- data.frame(obs = obs, DIncr = DIncr)
-    out$color <- ifelse((out$DIncr >= value), 
+     DIncr <- if (inherits(obj, "gamlss")) gamlss::devianceIncr(obj,newdata=newdata)
+               else                        deviance_Incr(obj, newdata=newdata) 
+     value <- quantile(DIncr, quan.val)
+       obs <- seq_len(length(DIncr))
+       out <- data.frame(obs = obs, DIncr = DIncr)
+ out$color <- ifelse((out$DIncr >= value), 
                         c("outlier"), c("normal"))
-    out$fct_color <- ordered(factor(out$color), levels = 
+out$fct_color <- ordered(factor(out$color), levels = 
                                c("normal", "outlier"))
-    out$txt <- ifelse(out$color == "outlier", out$obs, NA)
+  out$txt <- ifelse(out$color == "outlier", out$obs, NA)
     return(out)    
   }  
      
@@ -49,8 +54,8 @@ out$fct_color <- ordered(factor(out$color), levels =
 #####################################################################
 # the main function starts here  
   if (missing(obj))  stop("A GAMLSS fitted object should be used")
-  if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
-          # N <- obj$N
+  if (!missing(obj)&&!inherits(obj, c("gamlss", "gamlss2"))) 
+    stop("the model is not a gamlss or gamlss2 fitted model")
            d <- gamlss_prep_data(obj, quan.val=quan.val, newdata=newdata) 
            value <- quantile(d$DIncr, quan.val)
   txt.title <- if (missing(title))  paste("Deviance increment of model",deparse(substitute(obj)))
@@ -134,9 +139,30 @@ if (is.null(newdata))
          ggplot2::xlab(term)
   gg
 }
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+deviance_Incr <- function(object, newdata = NULL, ...)
+{
+  if (!inherits(object, "gamlss2")) stop("the model should be an gamlss2 object")
+  par <- predict(object, type = "parameter", newdata = newdata)
+  y <- if (!is.null(newdata)) 
+  {
+    model.response(model.frame(object, data = newdata, keepresponse = TRUE))
+  } else 
+  {
+    model.response(model.frame(object))
+  }
+  dI <- -2*family(object)$d(y, par, log=TRUE)
+  nobs <- length(dI)
+  attr(dI, "nobs") <- nobs
+  attr(dI, "df") <- object$df
+  class(dI) <- "devianceIncr"
+  return(dI)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+

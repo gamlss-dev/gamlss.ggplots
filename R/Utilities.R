@@ -12,13 +12,13 @@
 # is needs the weigjhts to weighted out obsrvation with zero weights
 get_weights <- function(obj)
 {
-  rqres <- residuals(obj)
-  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
-    stop("the model is not a gamlss model")  
+  if (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
+         stop("the model is not a gamlss model")  
   weights <- if (is(obj,"gamlss")) obj$weights else 
   {
-    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-    else model.weights(model.frame(obj)) 
+    rqres <- residuals(obj)
+  if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+  else model.weights(model.frame(obj)) 
   }   
   weights  
 }
@@ -31,7 +31,7 @@ get_weights <- function(obj)
 # are thesame length   
 get_residuals <- function(obj)
 {
-  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
   residuals <- if (is(obj,"gamlss")) obj$residuals else residuals(obj)
   residuals
@@ -42,10 +42,10 @@ get_residuals <- function(obj)
 ################################################################################
 get_fitted_mu <- function(obj)
 {
-  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+  if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
   fv <- if (is(obj,"gamlss")) obj$mu.fv 
-  else fitted(obj, type="parameter", what="mu")
+        else fitted(obj, type="parameter", what="mu")
   fv
 }
 ################################################################################
@@ -54,10 +54,10 @@ get_fitted_mu <- function(obj)
 ################################################################################
 get_fitted_param <- function(obj, parameter="mu")
 {
-  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
-    stop("the model is not a gamlss model")  
+  if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
+     stop("the model is not a gamlss model")  
   fv <- if (is(obj,"gamlss")) fitted(obj, parameter=parameter) 
-  else fitted(obj, type="parameter", what=parameter)
+        else fitted(obj, type="parameter", what=parameter)
   fv
 }
 ################################################################################
@@ -68,9 +68,13 @@ get_quantile <- function (obj,
                           quantile = 0.5,
                           newdata) 
 {
-  ################################################################################
-  ################################################################################
-  if (is(obj, "gamlss"))
+################################################################################
+################################################################################
+  if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model") 
+################################################################################
+################################################################################
+  if (inherits(obj, "gamlss"))
   {
       pdf <- obj$family[1]
     binom <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
@@ -104,8 +108,9 @@ if (binom) {bd <- obj$bd ; Y <- obj$y}
 ################################################################################
 get_family <- function (model)
 {
-  if (!(is.gamlss(model)||is(model,"gamlss2"))) stop("the model should be an gamlss object")  
-  if (is.gamlss(model))
+  if  (!missing(model)&&(!inherits(model, c("gamlss", "gamlss2")))) 
+       stop("the model should be an gamlss object")  
+  if (inherits(model, "gamlss"))
   {
     family <-  if(is.null(model$call$family)) as.gamlss.family(NO) 
                else as.gamlss.family(model$call$family)
@@ -124,8 +129,8 @@ get_family <- function (model)
      type <- family$type
     param <- family$names
     nopar <- length(param)
-    dfun <- paste("d",fname,sep="")
-    pfun <- paste("p",fname,sep="")
+     dfun <- paste("d",fname,sep="")
+     pfun <- paste("p",fname,sep="")
     p_d_f <- eval(family$d) 
     c_d_f <- eval(family$p) 
   } 
@@ -136,7 +141,25 @@ list(fname=fname, type=type, nopar=nopar, param=param, dfun=dfun, pfun=pfun,
 ################################################################################
 ################################################################################
 ################################################################################
-
+# get_devianceIncr <- function(obj, newdata=NULL)
+# {
+# if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
+#     stop("the model is not a gamlss model") 
+# if (inherits(obj, c("gamlss")))
+# {
+# devianceIncr <- devianceIncr(obj, newdata=newdata)  
+# } else 
+# {
+#   fam <- get_family(obj)
+#   browser()
+# }  
+#   
+# devianceIncr  
+# }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 
 
 
