@@ -21,28 +21,41 @@ fitted_centiles <-function (obj,
                      ylab = NULL,
                     title, ...)        
 {
-if (!is.gamlss(obj))  stop(paste("This is not an gamlss object", "\n", ""))
+################################################################################
+if (missing(obj)) stop("the model is  missing")
+if (!inherits(obj, c("gamlss", "gamlss2"))) stop("the model is not a gamlss model")  
 if (missing(xvar))
 {
-  xvarCh <-  all.vars(obj$call$formula)[[2]]
-  if (any(grepl("data", names(obj$call))))
+ if (inherits(obj, "gamlss"))
+  {
+   xvarCh <-  all.vars(obj$call$formula)[[2]]   
+    if (any(grepl("data", names(obj$call))))
     {
     DaTa <- eval(obj$call[["data"]]) #get(as.character(obj$call["data"])) get(as.character(obj$call["data"]))
     xvar <- get(xvarCh, envir=as.environment(DaTa))
-    }
-} else
-{
+    } else
+    {
   xvarCh <-   deparse(substitute(xvar))
     DaTa <- eval(obj$call[["data"]])#get(as.character(obj$call["data"]))
-}
+    }
+ } else
+ {
+    DaTa <- eval(obj$call[["data"]])# model.frame(obj) 
+  xvarCh <- all.vars(obj$call$formula)
+  xvarCh <- xvarCh[xvarCh!= gamlss2::response.name(obj)] 
+    xvar <- get(xvarCh, envir=as.environment(DaTa))
+     par <- predict(obj, type="parameter")
+ }
+}###############################################################################
   x <- y <-   NULL
    xvar <- try(xvar, silent = TRUE)    # get the vector
-if  (any(class(xvar)%in%"try-error"))# if vector in DaTa not in the global Env
-{ # will fail therefore get it from DaTa
-   xvar <- get(xvarCh, envir=as.environment(DaTa))
-}
-       fname <- obj$family[1]
-        qfun <- paste("q",fname,sep="")
+ if  (any(class(xvar)%in%"try-error"))# if vector in DaTa not in the global Env
+ { # will fail therefore get it from DaTa
+    xvar <- get(xvarCh, envir=as.environment(DaTa))
+ }
+       fam <-  get_family(obj)
+       fname <- fam$fname
+       qfun <- paste0("q", fname)
    txt.title <- if (missing(title)) 
                 paste("Centile curves using", fname, sep = " ")
                 else title
@@ -55,13 +68,16 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
     yleg <- max(obj$y[,1])
   }
      col <- 3 # set this to 1 if you do not want colour 
-    lpar <- length(obj$parameters)
+    lpar <- fam$nopar #length(obj$parameters)
       ii <- 0
      per <- rep(0,length(cent))
    centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
 colnames(centM) <- cent 
+############## get the centiles ################################################ 
 for(var in cent) 
-{ 
+{ # centile loop 
+  if (inherits(obj, "gamlss"))
+  {  
     if(lpar==1) 
     {
       newcall <-call(qfun,var/100, mu=fitted(obj,"mu")[order(xvar)]) 
@@ -83,16 +99,17 @@ for(var in cent)
                      sigma=fitted(obj,"sigma")[order(xvar)],
                      nu=fitted(obj,"nu")[order(xvar)],
                      tau=fitted(obj,"tau")[order(xvar)]) 
-    }   
+    } 
+  } 
             ii <- ii+1
-    centM[,ii] <- eval(newcall)
-} 
+if (inherits(obj, "gamlss"))    centM[,ii] <- eval(newcall)
+    else            centM[,ii] <- fam$q_fun(p=var/100, par=par)
   yvarCh <- paste(obj$call$formula[[2]])
-#       N <- length(xvar) 
       lc <- length(cent)
+}###############################################################################
    DataC <-  data.frame(c = centM, 
-                       x = oxvar, 
-                       y = oyvar)
+                        x = oxvar, 
+                        y = oyvar)
   Cnames <- colnames(DataC)
      ggc <- ggplot(DataC)
 if (points) 
@@ -131,30 +148,36 @@ fitted_centiles_legend <-function (obj,
                               ylab = NULL,
                        ...)        
 {
-if (!is.gamlss(obj))  stop(paste("This is not an gamlss object", "\n", ""))
+  x <- y <-   NULL
+if (missing(obj)) stop("the model is  missing")
+if (!inherits(obj, c("gamlss", "gamlss2"))) stop("the model is not a gamlss model")  
      ncent <- length(cent)
 if (missing(xvar))
-  { 
-    xvarCh <-  all.vars(obj$call$formula)[[2]]
-  if (any(grepl("data", names(obj$call))))
-    {
-      DaTa <- eval(obj$call[["data"]]) #get(as.character(obj$call["data"])) get(as.character(obj$call["data"])) 
-      xvar <- get(xvarCh, envir=as.environment(DaTa))
-    } 
-  } else
-  {
-   xvarCh <- deparse(substitute(xvar))
-     xvar <- try(xvar, silent = TRUE) 
-  }  
-     xvar <- try(xvar, silent = TRUE)    # get the vector
-if  (any(class(xvar)%in%"try-error"))# if vector in DaTa not in the global Env 
-  { # will fail therefore get it from DaTa
-     DaTa <- eval(obj$call[["data"]])#get(as.character(obj$call["data"])) 
-     x <- y <- NULL
-     xvar <- get(xvarCh, envir=as.environment(DaTa))
-  }
+{
+       if (inherits(obj, "gamlss"))
+       {
+         xvarCh <-  all.vars(obj$call$formula)[[2]]   
+         if (any(grepl("data", names(obj$call))))
+         {
+           DaTa <- eval(obj$call[["data"]]) 
+           xvar <- get(xvarCh, envir=as.environment(DaTa))
+         } else
+         {
+         xvarCh <-   deparse(substitute(xvar))
+           DaTa <- eval(obj$call[["data"]])
+         }
+       } else
+       {
+           DaTa <- eval(obj$call[["data"]])# model.frame(obj) 
+         xvarCh <- all.vars(obj$call$formula)
+         xvarCh <- xvarCh[xvarCh!= gamlss2::response.name(obj)] 
+           xvar <- get(xvarCh, envir=as.environment(DaTa))
+           par <- predict(obj, type="parameter")
+       }
+}###############################################################################
 # end of new 
-   fname <- obj$family[1]
+     fam <- get_family(obj)
+   fname <- fam$fname
     qfun <- paste("q",fname,sep="")
 txt.title <- if (missing(title)) 
              paste("Centile curves using", fname, sep = " ")
@@ -173,38 +196,41 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 # per <- cent/100 
    centM <- matrix(0, ncol=length(cent), nrow= length(obj$y))
 colnames(centM) <- cent 
+############## get the centiles ################################################ 
 for(var in cent) 
-  { 
-  if(lpar==1) 
+{ # centile loop 
+  if (inherits(obj, "gamlss"))
+  {  
+    if(lpar==1) 
     {
-newcall <-call(qfun,var/100,
-                     mu=fitted(obj,"mu")[order(xvar)]) 
+      newcall <-call(qfun,var/100, mu=fitted(obj,"mu")[order(xvar)]) 
     }
-  else if(lpar==2)
+    else if(lpar==2)
     {
-newcall <-call(qfun,var/100,
-              mu=fitted(obj,"mu")[order(xvar)],
-              sigma=fitted(obj,"sigma")[order(xvar)]) 
+      newcall <-call(qfun,var/100, mu=fitted(obj,"mu")[order(xvar)],
+                     sigma=fitted(obj,"sigma")[order(xvar)]) 
     }
-  else if(lpar==3)
+    else if(lpar==3)
     {
-newcall <- call(qfun,var/100,
-              mu = fitted(obj,"mu")[order(xvar)],
-              sigma = fitted(obj,"sigma")[order(xvar)],
-              nu = fitted(obj,"nu")[order(xvar)])
+      newcall <-call(qfun,var/100, mu=fitted(obj,"mu")[order(xvar)],
+                     sigma=fitted(obj,"sigma")[order(xvar)],
+                     nu=fitted(obj,"nu")[order(xvar)])
     }
-  else 
+    else 
     {
-newcall <- call(qfun,var/100,
-              mu = fitted(obj,"mu")[order(xvar)],
-              sigma = fitted(obj,"sigma")[order(xvar)],
-              nu = fitted(obj,"nu")[order(xvar)],
-              tau = fitted(obj,"tau")[order(xvar)]) 
-    }   
-    ii <- ii+1
-centM[,ii] <- eval(newcall)
+      newcall <-call(qfun,var/100, mu=fitted(obj,"mu")[order(xvar)],
+                     sigma=fitted(obj,"sigma")[order(xvar)],
+                     nu=fitted(obj,"nu")[order(xvar)],
+                     tau=fitted(obj,"tau")[order(xvar)]) 
+    } 
   } 
+  ii <- ii+1
+  if (inherits(obj, "gamlss"))    centM[,ii] <- eval(newcall)
+  else            centM[,ii] <- fam$q_fun(p=var/100, par=par)
 yvarCh <- paste(obj$call$formula[[2]])
+    lc <- length(cent)
+}###############################################################################
+#yvarCh <- paste(obj$call$formula[[2]])
      N <- length(xvar) 
     lc <- length(cent)
  DataM <- data.frame(c = as.vector(centM),

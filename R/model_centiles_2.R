@@ -46,7 +46,8 @@ if (length(list(...)) > 0)
   nnames <- length(names)
 #x_trans <- if (is.null(x_trans)) rep(1, length(names)) else x_trans
 #  if (length(x_trans) != length(names)) stop("the x-transformations should be equal to the number ofmodel")
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+if (missing(obj)) stop("the model is  missing")
+if (!inherits(obj, c("gamlss", "gamlss2"))) stop("the model is not a gamlss model")
 #if (length(names)<=1) stop("you need more than two models")
        d <- gamlss_prep_data(obj, xvar=xvar, ...)
 if (missing(title))  show.title = FALSE 
@@ -56,7 +57,7 @@ if(in.one==FALSE)
   gg <- ggplot(data = d, mapping=aes(x, c, colour = centiles), 
                line.col = line.col)+
     {if(points) geom_point(aes(x=x, y=y), colour = point.col, size = point.size)} +
-    geom_path(size = line.size)  + ylab("centiles")+ xlab(xlab)+
+    geom_path(linewidth = line.size)  + ylab("centiles")+ xlab(xlab)+
     facet_wrap(~Y, scales = 'free_y', ncol=ncol, nrow=nrow)
 } else
 {

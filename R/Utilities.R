@@ -120,8 +120,10 @@ get_family <- function (model)
      nopar <- family$nopar
       dfun <- paste("d",fname,sep="")
       pfun <- paste("p",fname,sep="")
+      qfun <- paste("q",fname,sep="")
      p_d_f <- eval(parse(text=dfun)) 
-     c_d_f <- eval(parse(text=pfun)) 
+     c_d_f <- eval(parse(text=pfun))
+     q_fun <- eval(parse(text=qfun))
   } else 
   {
    family <- model$family
@@ -133,9 +135,10 @@ get_family <- function (model)
      pfun <- paste("p",fname,sep="")
     p_d_f <- eval(family$d) 
     c_d_f <- eval(family$p) 
+    q_fun <- eval(family$q) 
   } 
 list(fname=fname, type=type, nopar=nopar, param=param, dfun=dfun, pfun=pfun,
-     p_d_f=p_d_f, c_d_f=c_d_f)  
+     p_d_f=p_d_f, c_d_f=c_d_f, q_fun=q_fun)  
 }
 ################################################################################
 ################################################################################
@@ -160,7 +163,45 @@ list(fname=fname, type=type, nopar=nopar, param=param, dfun=dfun, pfun=pfun,
 ################################################################################
 ################################################################################
 ################################################################################
+find_power <- function(y, x, data = NULL,  profile=FALSE, k=2,  
+                       from = 0, to=1.5, step=0.1)  
+{
+  cat("*** Checking for transformation for x ***", "\n") 
+  ptrans<- function(x, p) if (abs(p)<=0.0001) log(x) else I(x^p)
+  
+  fn1 <- function(p, data=data)
+  {
+    m1 <- gamlss2(y~s(ptrans(x,p)), data=data, trace=FALSE)
+    gamlss2::GAIC(m1, k=k)
+  }
 
+  if (profile) # profile dev
+  {
+    pp <- seq(from,to, step) 
+    pdev <- rep(0, length(pp)) 
+    for (i in 1:length(pp)) 
+    {
+      pdev[i] <- fn1(pp[i], data=data)  
+    }
+    plot(pdev~pp, type="l")
+    points(pdev~pp,col="blue")
+    par <- pp[which.min(pdev)]
+    cat('*** power parameters ', par,"***"," \n") 
+  } else
+  {
+    fn <- function(p, data=data)
+      { m1 <- gamlss2(y~s(ptrans(x,p)), data=data, trace=FALSE)
+        gamlss2::GAIC(m1, k=k)
+      }
+    par <- with(data, optimise(fn, lower=from, upper=to))
+    cat('*** power parameters ', par[[1]],"***"," \n") 
+  }  
+  par
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 
 
 

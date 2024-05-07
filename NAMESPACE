@@ -90,6 +90,7 @@ S3method(residuals, Psplines)
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "str")
 importFrom("utils", "head")
 importFrom("utils", "tail")
+importFrom("gamlss2", "gamlss2")
 ################################################################################
 importFrom("grDevices", "hcl.colors", "colors")
 importFrom("graphics", "lines", "par", "points")
