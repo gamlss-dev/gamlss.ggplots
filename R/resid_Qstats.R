@@ -32,16 +32,16 @@ resid_Qstats <- function(model,
 ################################################################################
 ################################################################################
   # local function 
-  meltit <- function(mat)
-  {
-    rna <- rownames(mat)
-    lrna <- length(rna)
-    value <- as.vector(mat)
-    Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
-    Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
-    daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
-    daf
-  }
+  # meltit <- function(mat)
+  # {
+  #   rna <- rownames(mat)
+  #   lrna <- length(rna)
+  #   value <- as.vector(mat)
+  #   Var1 <- gl(length(rna), 1, length = lrna*lrna, labels=rna)
+  #   Var2 <- gl(length(rna), lrna, length = lrna*lrna, labels=rna)
+  #   daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
+  #   daf
+  # }
 ################################################################################
 ################################################################################
              CC <- Q.stats(model, xvar=xvar, plot=FALSE, ...)[, 1:4]
@@ -54,7 +54,7 @@ paste("Z-statistics from model",deparse(substitute(model)))
               else title  
 if (plot==FALSE) return(CC)
           method <- match.arg(method)
-            corr <- meltit(CC, na.rm = TRUE)
+            corr <- reshape2::melt(CC, na.rm = TRUE)
   colnames(corr) <- c("x_range", "z_scores", "value")
    corr$abs_corr <- abs(corr$value) * 10
                p <- ggplot2::ggplot(data = corr, 
