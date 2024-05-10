@@ -10,17 +10,18 @@ model_pca <- function(obj,..., scale = TRUE, arrow_size = 1.5)
   # local function
   gamlss_prep_data <- function (obj, ... ) 
   {
-    rqres <- obj$residuals
-    #  obs <- seq_len(length(rqres))
-    #  obs <- obs[obj$weights!=0]
-    rqres <- rqres[obj$weights!=0]
-    out <- data.frame(rqres = rqres)
+      rqres <- get_residuals(obj)
+    weights <- get_weights(obj)
+      rqres <- rqres[weights!=0]
+        out <- data.frame(rqres = rqres)
     if (length(list(...)) > 0) 
     {
       for (resp in list(...)) 
       {
-        res  <- resp[["residuals"]] 
-        res  <- res[obj$weights!=0]
+        
+        res  <- get_residuals(resp) #resp[["residuals"]] 
+    weights  <- get_weights(resp) #res[obj$weights!=0]
+         res <- res[weights!=0]
         out <- cbind(out, res)
       }
     }
@@ -36,7 +37,8 @@ model_pca <- function(obj,..., scale = TRUE, arrow_size = 1.5)
   #  f1
   #  names <- c(deparse(substitute(obj)), deparse(substitute(...)))
   # names <- paste0("R", names)
-  if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+  if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+    stop("the model is not a gamlss model") 
   if (length(names)<=1) stop("you need more than two models")
   dfram <- gamlss_prep_data(obj, ...)
   pca_object <- prcomp(dfram, scale = scale)

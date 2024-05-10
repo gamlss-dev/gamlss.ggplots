@@ -26,6 +26,22 @@ get_weights <- function(obj)
 ################################################################################
 ################################################################################
 ################################################################################
+get_response <- function(obj)# getResponse(object, form = formula(object))
+{
+  if (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model")  
+  response <- if (is(obj,"gamlss")) obj$y else 
+  {
+    rqres <- residuals(obj)
+    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+    else model.weights(model.frame(obj)) 
+  }   
+  response 
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 # the function residuals(obj) produce different sizes if there are weights 
 # equal to zero  get_residual() meke sure that both gamlss and gamlss2 residual 
 # are thesame length   

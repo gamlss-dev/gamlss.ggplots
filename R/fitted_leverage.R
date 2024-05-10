@@ -27,7 +27,7 @@ gamlss_prep_data <- function (obj, quan.val)
   {
       hat <- hatvalues(obj)
     value <-  quantile(hat, quan.val)
- # hat_out <- abs(hat) > value
+ #hat_out <- abs(hat) > value
       obs <- seq_len(length(hat))
       obs <- obs[obj$weights!=0]
       hat <- hat[obj$weights!=0]
