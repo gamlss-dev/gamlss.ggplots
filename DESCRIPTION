@@ -15,4 +15,5 @@ BugReports: https://github.com/gamlss-dev/gamlss.ggplots/issues
 Depends:  R (>= 3.5.0), gamlss.dist, gamlss (>= 4.3.3),  gamlss.foreach
 Imports: methods,  ggridges, ellipse, gamlss.inf, foreach, mgcv, ggplot2, yaImpute, gamlss2
 Suggests: glmnet, reshape2, igraph, networkD3, grid, gridExtra
+Additional_repositories: https://gamlss-dev.R-universe.dev
 LazyLoad: yes
