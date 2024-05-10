@@ -9,12 +9,8 @@ model_wp <- function(obj,...,
 # local function
 gamlss_prep_data <- function (obj, ... ) 
   {
-         rqres <- residuals(obj)
-       weights <- if (is(obj,"gamlss")) obj$weights else 
-         {
-           if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-           else model.weights(model.frame(obj)) 
-         }   
+       rqres <- residuals(obj)
+     weights <- get_weights(obj)
          obs <- seq_len(length(rqres))
        rqres <- rqres[weights!=0]
          obs <- obs[weights!=0]
@@ -51,7 +47,7 @@ gamlss_prep_data <- function (obj, ... )
           res <- res[!is.na(res)]
           obs <- obs[!is.na(res)]
             x <- qnorm(ppoints(length(res)))[order(order(res))] 
-            resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], 
+         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], 
                                                           length(res)))  
         } 
   }    
@@ -76,9 +72,10 @@ getSE <- function(xlim, level=0.95)
 ################################################################################
 x <- rqres  <- model <-  low <- high <- z <- NULL   
    names <- as.character(match.call()[-1])[1:(length(list(...))+1)]
-if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
-     stop("the model is not a gamlss model")  
-   
+if (missing(obj)) 
+     stop("the model is missing")
+if (!inherits(obj, c("gamlss", "gamlss2")))
+     stop("the model is not GAMLSS object")
 if (length(names)<=1) stop("you need more than two models")
        d <- gamlss_prep_data(obj, ...)
        N <-  dim(d)[1]
@@ -104,17 +101,17 @@ gg <- ggplot2::ggplot() +
 ################################################################################
 ################################################################################
 ################################################################################
-get_weights <- function(obj)
-{
-  rqres <- residuals(obj)
-if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
-    stop("the model is not a gamlss model")  
-  weights <- if (is(obj,"gamlss")) obj$weights else 
-  {
-    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-    else model.weights(model.frame(obj)) 
-  }   
-weights  
-}
+# get_weights <- function(obj)
+# {
+#   rqres <- residuals(obj)
+# if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+#     stop("the model is not a gamlss model")  
+#   weights <- if (is(obj,"gamlss")) obj$weights else 
+#   {
+#     if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
+#     else model.weights(model.frame(obj)) 
+#   }   
+# weights  
+# }
   
 

@@ -17,30 +17,33 @@ model_wp_wrap <- function(obj,...,
 gamlss_prep_data <- function (obj, value=3, i, ...) 
   {
          rqres <- get_residuals(obj)
-           obs <- seq_len(length(obj$residuals))
-           obs <- obs[obj$weights!=0]
+       weights <- get_weights(obj)  
+           obs <- seq_len(length(rqres))
+           obs <- obs[weights!=0]
            obs <- obs[z==i]
-         rqres <- rqres[obj$weights!=0&z==i] 
+         rqres <- rqres[weights!=0&z==i] 
              x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
-           out <- data.frame(obs = obs, rqres = rqres-x, x=x, model=rep(names[[1]], length(rqres))) 
+           out <- data.frame(obs = obs, rqres = rqres-x, x=x, 
+                             model=rep(names[[1]], length(rqres))) 
     if (length(list(...)) > 0) 
     {
       JJ=1
       for (resp in list(...)) 
       {
         JJ= JJ+1
-          res <- resp[["residuals"]] 
-          obs <- seq_len(length(res))
-          wei <- resp[["weights"]] 
-         # res <- res[wei!=0]
-          obs <- obs[wei!=0]
-          obs <- obs[z==i]
-          res <- res[wei!=0]
-          res <- res[z==i]
-        # res <- res[!is.na(res)]
-         #obs <- obs[!is.na(res)]
-            x <- qnorm(ppoints(length(res)))[order(order(res))]
-         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[JJ]], length(res))) 
+        res <- residuals(resp) 
+        obs <- seq_len(length(res))
+        wei <- get_weights(resp)
+        res <- res[wei!=0]
+        obs <- obs[wei!=0]
+        res <- res[!is.na(res)]
+        obs <- obs[!is.na(res)]
+          x <- qnorm(ppoints(length(res)))[order(order(res))] 
+       resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[JJ]], 
+                                                                  length(res)))       
+       #   res <- res[z==i]
+         #    x <- qnorm(ppoints(length(res)))[order(order(res))]
+         # resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[JJ]], length(res))) 
          out <- rbind(out, resa)
       }
     }
@@ -61,12 +64,15 @@ getSE <- function(xlim, level=0.95, N=NULL)
 }
 ################################################################################
 ################################################################################
-x <- rqres  <- model <-  low <- high <- z <- NULL   
+x <- rqres  <- model <-  low <- high <- z <- NULL 
    names <- as.character(match.call()[-1])[1:(length(list(...))+1)]
-if (!missing(obj)&&!is.gamlss(obj)) stop("the model is not a gamlss model")
+   if (missing(obj)) 
+     stop("the model is missing")
+   if (!inherits(obj, c("gamlss", "gamlss2")))
+     stop("the model is not GAMLSS object")
 if (length(names)<=1) stop("you need more than two models")
 if (missing(xvar)) stop("moment_buckets_wrap() expects one xvar")
-       z <- if (is.factor(xvar))  xvar else cut_number(xvar, n_inter) 
+       z <- if (is.factor(xvar))  xvar else ggplot2::cut_number(xvar, n=n_inter) 
 # loop for i levels   
      DA1 <- DA2 <- NULL
 for (i in levels(z))# get the right subset
