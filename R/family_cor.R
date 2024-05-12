@@ -34,9 +34,8 @@ family_cor <- function(family = NO(),
                 lab_col = "black", 
                lab_size = 3) 
 {
-####################################################################
-####################################################################
-####################################################################
+################################################################################
+################################################################################
   # local function 
   meltit <- function(mat)
   {
@@ -48,8 +47,8 @@ family_cor <- function(family = NO(),
     daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
     daf
   }
-#################################################################### 
-####################################################################  
+################################################################################
+################################################################################ 
 gamlss.bi.list <- .binom
         fname <- if (is.name(family)) as.character(family)
                  else if (is.character(family)) family
@@ -57,20 +56,13 @@ gamlss.bi.list <- .binom
                  else if (is.function(family)) deparse(substitute(family))
                  else if (is(family, "gamlss.family"))  family$family[1]
                  else stop("the family must be a character or a gamlss.family name")
- #       fam1 <- eval(parse(text=fname))   # the family to output
          fam <- as.gamlss.family(family)  # this is created so I can get things
-   #   dorfun <- paste("d",fname,sep="")   # say dNO
       rorfun <- paste("r",fname,sep="") 
-    #   nopar <- fam$nopar                 # or fam1$nopar
-   #     type <- fam$type
    par.names <- names(fam$parameters)
 #################################################################
    txt.title <- if (missing(title))  paste("information matrix from ",fname)
    else title   
    if (fname%in%gamlss.bi.list) bd=bd
-##    whether discrete distribution or not
-      # y.var <- if(type=="Discrete")  seq(from, to, by=1)
-      #         else seq(from, to, length=no.points)
 ## whether binomial type
   if(any(fname%in%.gamlss.bi.list)) bd <- bd   
 ## the number of plots  
@@ -102,6 +94,7 @@ if ("tau"%in%par.names)
       if (!fam$tau.valid(tau.var))  stop( "`tau' parameter out of range")
       samp <- eval(call(rorfun, no.sim, mu=mu.var, sigma=sigma.var, nu=nu.var, tau=tau.var))
 }
+    
      model0 <- gamlssML(samp, family=fname) 
          CC <- vcov(model0, type="cor")
          CC <- base::round(x = CC, digits = digits)
@@ -111,7 +104,6 @@ txt.title <- if (missing(title))  paste("Correlations from family",fname)
              else title  
 if (plot==FALSE) return(CC)
 # end loop
-#y.title <- if(type=="Discrete")  "P(Y=y)" else  "f(y)"
 ############################################################
         method <- match.arg(method)
           corr <- meltit(CC)
@@ -151,3 +143,7 @@ if (lab) {
 }
 p
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################
