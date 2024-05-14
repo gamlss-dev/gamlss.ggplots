@@ -33,9 +33,9 @@ coef_cor <- function(model,
                       lab_size = 3,
                          ...) 
 {
-  ####################################################################
-  ####################################################################
-  # local function 
+################################################################################
+################################################################################
+# local function 
   meltit <- function(mat)
   {
     rna <- rownames(mat)
@@ -46,16 +46,16 @@ coef_cor <- function(model,
     daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
     daf
   }
-  #################################################################### 
-  ####################################################################  
- suppressWarnings( CC <- vcov(model, type="cor"))
+################################################################################ 
+################################################################################ 
+suppressWarnings( CC <- vcov(model, type="cor"))
   tt <- dim(CC)[1]
+if (inherits(model, "gamlss"))
+{
   colnames(CC) <- names(unlist(coefAll(model)))
   rownames(CC) <- names(unlist(coefAll(model)))
- # mm <- match("TOTAL Q stats", rownames(CC))
-#  CC <-  CC[-(mm:tt), ]
- # xlab  <- if(is.null(xvar)) "index" else deparse(substitute(xvar))
-  txt.title <- if (missing(title))  
+}
+    txt.title <- if (missing(title))  
     paste("Correlation of parameters for model",deparse(substitute(model)))
   else title  
   if (plot==FALSE) return(CC)
@@ -97,3 +97,7 @@ coef_cor <- function(model,
   }
   p
 }
+################################################################################
+################################################################################
+################################################################################
+################################################################################

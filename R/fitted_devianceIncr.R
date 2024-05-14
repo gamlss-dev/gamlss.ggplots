@@ -50,8 +50,8 @@ out$fct_color <- ordered(factor(out$color), levels =
   }  
      
   } 
-#####################################################################
-#####################################################################
+################################################################################
+################################################################################
 # the main function starts here  
   if (missing(obj))  stop("A GAMLSS fitted object should be used")
   if (!missing(obj)&&!inherits(obj, c("gamlss", "gamlss2"))) 
@@ -90,21 +90,23 @@ colnames(f) <- c("observation", "quan_resid")
   }
 }
 #resid_plot(r1, no.lines=T)+facet_wrap(~ cut_number(rent$A, 6))
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
-##############################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 model_devianceIncr_diff <-  function(model1, model2, 
                                      against = "index", 
                                          tol = 20, 
                                         data, newdata=NULL)
 {
-     dd <- devianceIncr(model1, newdata=newdata)-devianceIncr(model2, newdata=newdata)   
+    dd1 <-  if (inherits(model1, "gamlss")) gamlss::devianceIncr(model1,newdata=newdata) else                        deviance_Incr(model1, newdata=newdata) 
+    dd2 <-  if (inherits(model2, "gamlss")) gamlss::devianceIncr(model2,newdata=newdata) else                        deviance_Incr(model2, newdata=newdata) 
+     dd <-  dd1 - dd2   
   color <- ifelse((abs(dd) >= tol), c("outlier"), c("normal"))  
-     N1 <- model1$N
-     N2 <- model2$N
+     N1 <- if (inherits(model1, "gamlss"))  model1$N else model1$nobs
+     N2 <- if (inherits(model2, "gamlss"))  model2$N else model2$nobs
 if (N1!=N2) stop("The two models should have the same no of obsrvations")
 # get the data   
 if (is.null(newdata))
