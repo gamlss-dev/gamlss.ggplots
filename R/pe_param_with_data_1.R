@@ -242,7 +242,7 @@ if (it.is.factor)
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                  linewidth = data.size, alpha = data.alpha, colour = data.col)
+                  size = data.size, alpha = data.alpha, colour = data.col)
      }
     } else 
     {
@@ -255,7 +255,8 @@ if (it.is.factor)
       {
         if (parameter!="mu")  stop("data.plot=TRUE can be used only with parameter=\"mu\"") 
         if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
-       pp <- pp +  ggplot2::geom_point(data=DaTa,aes(y =DaTa[,y_name]- aver.fittted.star,  x = DaTa[,term]),
+       pp <- pp +  ggplot2::geom_point(data=DaTa,aes(y =DaTa[,y_name]- aver.fittted.star,  
+                                                     x = DaTa[,term]),
                    linewidth = data.size, alpha = data.alpha, colour = data.col)#
       }
       if ( rug.plot)
@@ -422,7 +423,7 @@ if (data.plot)
     {
      pp <- ggplot2::ggplot(da, ggplot2::aes_string(x=terms[pv], y=da[,1], 
                                                    color=terms[pf]))+
-       ggplot2::geom_line(size=size)+
+       ggplot2::geom_line(linewidth=linewidth)+
        ggplot2::ggtitle(txt.title)
    if (data.plot)
     {
@@ -438,13 +439,13 @@ if (data.plot)
     pp <- ggplot2::ggplot(data=da, 
           ggplot2::aes_string(x=terms[1], y=da[,1], group=terms[2], color=terms[2]))+
       ggplot2::geom_line()+
-      ggplot2::geom_point(size=size+2)
+      ggplot2::geom_point(linewidth=linewidth+2)
     if (data.plot)  
       {
       if (type=="link") warning("it is not a good idea to plot the data with type=\"eta\"") 
      pp <-  pp +ggplot2:: geom_jitter(data = DaTa, 
                 ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,y_name]),
-                    size=data.size, alpha=data.alpha, colour=data.col)
+                    linewidth=data.size, alpha=data.alpha, colour=data.col)
       }
     pp <- pp +  ggplot2::ggtitle(txt.title)
     

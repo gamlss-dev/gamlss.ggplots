@@ -15,7 +15,7 @@ pe_param(obj = NULL, term = NULL, data = NULL, n.points = 100,
                parameter = c("mu", "sigma", "nu", "tau"), 
                type = c("parameter", "eta"), scenario = list(),  
                how = c("median", "last", "fixed"),
-               col = "darkblue", size = 1.3, name.obj = NULL,
+               col = "darkblue", linewidth = 1.3, name.obj = NULL,
                rug.plot = TRUE, rug.col = "gray", rug.size = 0.5,  
                data.plot = FALSE, data.col = "lightblue", 
                data.size = 0.1, factor.size = 15,
@@ -28,7 +28,7 @@ pe_1_param(obj = NULL, term = NULL, data = NULL, n.points = 100,
                 type = c("parameter", "eta"),
                 how = c("median", "last", "fixed"),
                 scale.from = c("mean", "median", "none"),
-                scenario = list(), col = "darkblue", size = 1.3,
+                scenario = list(), col = "darkblue", linewidth = 1.3,
                 name.obj = NULL, data.plot = FALSE, 
                 data.col = "lightblue",data.size = 0.1,
                 data.alpha = 0.9, rug.plot = TRUE, rug.col = "gray",
@@ -40,7 +40,7 @@ pe_2_param(obj = NULL, terms = NULL, data = NULL, n.points = 100,
                 type = c("parameter", "eta"),
                 how = c("median", "last", "fixed"),
                 scenario = list(), col = "darkblue",
-                size = 1.3, data.plot = TRUE,
+                linewidth = 1.3, data.plot = TRUE,
                 data.col = "lightblue", data.size = 0.1,
                 data.alpha = 0.9,bins = 30, 
                 filled = FALSE, name.obj = NULL, title) 
@@ -62,7 +62,7 @@ pe_param_grid(model, terms, maxcol = 2, maxrow = 3, ylim=NULL, ...)
   \item{scenario}{this can be a list of values for the rest of the terms in the model for the distribution parameter}
   \item{plot}{whether to plot the result}
   \item{col}{the colour of the partial effect of the term}
-  \item{size}{the size of the line of partial effect of the term}
+  \item{linewidth}{the size of the line of partial effect of the term}
   \item{bins}{the number of binds for the contour plot}
   \item{filled}{whether to display the values  in the contour}
   \item{title}{the title if different from the default}
