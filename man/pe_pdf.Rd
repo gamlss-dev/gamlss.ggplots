@@ -11,7 +11,7 @@ The function \code{pe_pdf_grid()} plot multiple plots on the same page.
 pe_pdf(obj = NULL, term = NULL,  from = NULL, to = NULL,
           y.grid.points = 100, x.grid.points = 10, x.values,
           data = NULL, scale = NULL, how = c("median", "last"), 
-          scenario = list(), size = 0.1, horizontal = TRUE, 
+          scenario = list(), linewidth = 0.1, horizontal = TRUE, 
           col.fill = hcl.colors(lqq, palette = "viridis"), 
           alpha = 0.6, xlim = NULL, title)
       
@@ -30,7 +30,7 @@ pe_pdf_grid(model, terms, maxcol = 2, maxrow = 3, ...)
   \item{scale}{This is a very importnat value for plotting correctly the fitted distrutions. If the defaul values it is  not working please try different values}
   \item{how}{How to fixed the rest of the variables. For continuous oit takes the median fot factor the level with the highest frequency.}
   \item{scenario}{Alternatively scenatio for fixing the values.}
-  \item{size}{the size of the pdf line}
+  \item{linewidth}{the size of the pdf line}
   \item{horizontal}{whether to plot the partial pdf on the x-axis and the x on the y-axix or opposite}
   \item{col.fill}{how to fill the pdf body}
   \item{alpha}{the transparency factor}
