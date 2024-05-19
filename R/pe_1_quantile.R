@@ -31,14 +31,30 @@ pe_1_quantile <- function (obj = NULL,
 if (is.null(obj) || !class(obj)[1] == "gamlss") stop("Supply a standard GAMLSS model in obj")
        how <- match.arg(how)
  quantiles <- x <-  y <- NULL
-if (any(grepl("data", names(obj$call)))) {
-      DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit")) 
-                   eval(parse(text = as.character(obj$call["data"])))
-              else get(as.character(obj$call["data"]))
-  }
-else if (is.null(data)) 
-    stop("The data argument is needed in obj")
-   v.names <- names(DaTa)
+# if (any(grepl("data", names(obj$call)))) {
+#       DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit")) 
+#                    eval(parse(text = as.character(obj$call["data"])))
+#               else get(as.character(obj$call["data"]))
+#   }
+# else if (is.null(data)) 
+#     stop("The data argument is needed in obj")
+ if (inherits(obj, "gamlss"))
+ {
+   if (any(grepl("data", names(obj$call)))) 
+   {
+     DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+       eval(parse(text=as.character(obj$call["data"]))) 
+     else get(as.character(obj$call["data"]))	
+     v.names <- names(DaTa)
+   }
+   else if (missing(data)) stop("The data argument is needed in obj")   
+   
+ } else
+ {
+   DaTa <-model.frame(obj)
+   v.names <-  all.vars(obj$formula) # names(DaTa)
+ }  
+#   v.names <- names(DaTa)
        pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
 if (is.factor(DaTa[,pos])) 

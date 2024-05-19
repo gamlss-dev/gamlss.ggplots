@@ -97,14 +97,30 @@ if (is.null(data)) {data<-get(as.character(obj$call["data"]))}
 # translate any character vectors as factors 
 data[sapply(data, is.character)] <- lapply(data[sapply(data, is.character)],as.factor) 
 # data 
-if (any(grepl("data", names(obj$call)))) 
+# if (any(grepl("data", names(obj$call)))) 
+# {
+#    DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+#              eval(parse(text=as.character(obj$call["data"]))) else 
+#              get(as.character(obj$call["data"]))	
+# } 
+# else if (is.null(data)) stop("The data argument is needed in obj")
+if (inherits(obj, "gamlss"))
 {
-   DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
-             eval(parse(text=as.character(obj$call["data"]))) else 
-             get(as.character(obj$call["data"]))	
-} 
-else if (is.null(data)) stop("The data argument is needed in obj")
- v.names <- names(DaTa)
+  if (any(grepl("data", names(obj$call)))) 
+  {
+    DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+      eval(parse(text=as.character(obj$call["data"]))) 
+    else get(as.character(obj$call["data"]))	
+    v.names <- names(DaTa)
+  }
+  else if (missing(data)) stop("The data argument is needed in obj")   
+  
+} else
+{
+  DaTa <-model.frame(obj)
+  v.names <-  all.vars(obj$formula) # names(DaTa)
+}  
+# v.names <- names(DaTa)
      pos <- match(terms, v.names)
     lpos <- length(pos)        
 name.obj <- if (is.null(name.obj)) deparse(substitute(obj))

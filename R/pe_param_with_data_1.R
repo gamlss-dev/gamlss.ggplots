@@ -10,7 +10,7 @@
 ################################################################################
 ################################################################################
 ################################################################################
-pe_param <- function(obj = NULL, # the gamlss object
+pe_param <- function(obj = NULL, #  gamlss or gamlss2 object
                     term = NULL, # which terms to get the derivative
                     data = NULL, # which data is needed here
                 n.points = 100,  # number of points needed for evaluating the function
@@ -36,27 +36,28 @@ pe_param <- function(obj = NULL, # the gamlss object
 {
      lterm <- length(term)
   name.obj <-  if (is.null(name.obj)) deparse(substitute(obj))
-if (lterm==1) {gg <-  pe_1_param(obj = obj, 
-                                term = term, 
-                                data = data, 
-                            n.points = n.points, 
-                           parameter = parameter, 
-                                type = type, 
-                                 how = how,
-                            scenario = scenario,  
-                                 col = col,
-                           data.plot = data.plot,
-                            data.col = data.col,
-                           data.size = data.size,
-                          data.alpha = data.alpha,
-                            rug.plot = rug.plot, 
-                             rug.col = rug.col,
-                            rug.size = rug.size,
-                         factor.size = factor.size,
-                                size = size, 
-                            name.obj = name.obj, 
-                                ylim = ylim,
-                               title = title)}
+if (lterm==1) {
+      gg <-  pe_1_param(obj = obj, 
+                       term = term, 
+                       data = data, 
+                   n.points = n.points, 
+                  parameter = parameter, 
+                       type = type, 
+                        how = how,
+                   scenario = scenario,  
+                        col = col,
+                  data.plot = data.plot,
+                   data.col = data.col,
+                  data.size = data.size,
+                 data.alpha = data.alpha,
+                   rug.plot = rug.plot, 
+                    rug.col = rug.col,
+                   rug.size = rug.size,
+                factor.size = factor.size,
+                       size = size, 
+                   name.obj = name.obj, 
+                       ylim = ylim,
+                      title = title)}
 else if (lterm==2) {
       gg <-  pe_2_param(obj = obj, 
                       terms = term,
@@ -91,7 +92,7 @@ else if (lterm==2) {
 ################################################################################
 ################################################################################
 ################################################################################
-pe_1_param <- function(obj = NULL, # the gamlss object
+ pe_1_param <- function(obj = NULL, # a gamlss object
                        term = NULL, # which term to get the derivative
                        data = NULL, # which data is needed here
                    n.points = 100,  # number of points needed for evaluating the function
@@ -119,7 +120,9 @@ pe_1_param <- function(obj = NULL, # the gamlss object
 #  for continuous variables and 
 #  the most commonly occuring level for factors 
 #  or the last observation
-if (is.null(obj)||!class(obj)[1]=="gamlss") stop("Supply a standard GAMLSS model in obj")
+#if (is.null(obj)||!class(obj)[1]=="gamlss") stop("Supply a standard GAMLSS model in obj")
+if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+    stop("the model is not a gamlss model")  
 if (is.null(term))  stop("The model term is not set")
          x <-  y <- NULL
        how <- match.arg(how)
@@ -134,17 +137,8 @@ if (any(grepl("data", names(obj$call))))
              else get(as.character(obj$call["data"]))	
 }
 else if (missing(data)) stop("The data argument is needed in obj")
-#browser()
-# here I may call the function which only pick the right variables not all
-     # DaTa <- switch(parameter, 
-     #                "mu" = Formulae2DF(list(obj$mu.formula), data=DaTa),
-     #             "sigma"=Formulae2DF(list(obj$sigma.formula), data=DaTa),
-     #                "nu"=Formulae2DF(list(obj$nu.formula), data=DaTa),
-     #               "tau"=Formulae2DF(list(obj$tau.formula), data=DaTa)
-      #           )
   v.names <- names(DaTa)
       pos <- which(v.names==term)
-   #   paste(obj$call$formula[[2]])
 if (pos<1) stop("supply a  term")
 if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) 
 {
@@ -224,7 +218,7 @@ aver.fittted.star <- switch(scale.from,
         y_name <- paste(obj$call$formula[[2]])
 if (it.is.factor)
     {
-      pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
+        pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
         ggplot2::geom_point(color=col, size=factor.size, shape="-")+
         ggplot2::ylab(yaxislabel)+ 
         ggplot2::xlab(term)+ 
@@ -240,7 +234,7 @@ if (it.is.factor)
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                     size = data.size, alpha = data.alpha, colour = data.col)
+                  size = data.size, alpha = data.alpha, colour = data.col)
      }
     } else 
     {

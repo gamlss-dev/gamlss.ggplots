@@ -19,7 +19,7 @@ pe_pdf <- function (     obj = NULL,
                        scale = NULL, 
                          how = c("median", "last"), 
                     scenario = list(), 
-                        size = 0.1, # the size of the line
+                        linewidth = 0.1, # the linewidth of the line
                   horizontal = TRUE, 
                     col.fill = hcl.colors(lqq, palette="viridis"),
                        alpha = 0.6,
@@ -34,15 +34,31 @@ if (is.null(term)) stop("The model term is not set")
   x <-  y <- width <- NULL
 # get the response
   resp <- paste(obj$mu.formula[[2]])
-if (any(grepl("data", names(obj$call)))) 
+# if (any(grepl("data", names(obj$call)))) 
+#   {
+#       DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit")) 
+#                    eval(parse(text = as.character(obj$call["data"])))
+#               else get(as.character(obj$call["data"]))
+#   }
+# else if (is.null(data)) 
+#     stop("The data argument is needed in obj")
+#    v.names <- names(DaTa)
+  if (inherits(obj, "gamlss"))
   {
-      DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit")) 
-                   eval(parse(text = as.character(obj$call["data"])))
-              else get(as.character(obj$call["data"]))
-  }
-else if (is.null(data)) 
-    stop("The data argument is needed in obj")
-   v.names <- names(DaTa)
+    if (any(grepl("data", names(obj$call)))) 
+    {
+      DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+        eval(parse(text=as.character(obj$call["data"]))) 
+      else get(as.character(obj$call["data"]))	
+      v.names <- names(DaTa)
+    }
+    else if (missing(data)) stop("The data argument is needed in obj")   
+    
+  } else
+  {
+    DaTa <-model.frame(obj)
+    v.names <-  all.vars(obj$formula) # names(DaTa)
+  }  
        pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
 if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) 
@@ -176,7 +192,7 @@ xaxislabel <- resp
    } else scale
       pp <- ggplot(da, aes(x, y, height = height, group = y)) + 
             geom_ridgeline(scale=scale, fill= col.fill[as.factor(da$y)],
-                       alpha = alpha, size = size)+
+                       alpha = alpha, linewidth = linewidth)+
             ggtitle(txt.title) + xlab(xaxislabel)+ ylab(term)
 
   } else 
@@ -185,7 +201,7 @@ xaxislabel <- resp
    scale <- if (is.null(scale)) diff(da$y)[1]/max(da$width) else scale
       pp <- ggplot(da, aes(x, y, width = width, group = x)) + 
              geom_vridgeline(scale=scale, 
-                fill = col.fill[as.factor(da$x)], alpha = alpha, size = size) +
+                fill = col.fill[as.factor(da$x)], alpha = alpha, linewidth = linewidth) +
       ggtitle(txt.title) + xlab(term ) + ylab(xaxislabel)
   }
 if (!is.null(xlim))  pp <- pp + xlim(xlim)
