@@ -19,7 +19,7 @@ pe_param <- function(obj = NULL, #  gamlss or gamlss2 object
                 scenario = list(), # see below (1)
                      how = c("median", "last", "fixed"),
                      col = "darkblue",
-                    size = 1.3,
+               linewidth = 1.3,
                 name.obj = NULL,
                 rug.plot = TRUE,
                  rug.col = "gray",
@@ -54,7 +54,7 @@ if (lterm==1) {
                     rug.col = rug.col,
                    rug.size = rug.size,
                 factor.size = factor.size,
-                       size = size, 
+                  linewidth = linewidth, 
                    name.obj = name.obj, 
                        ylim = ylim,
                       title = title)}
@@ -67,7 +67,7 @@ else if (lterm==2) {
                        type = type,  
                         how = how,
                    scenario = scenario,
-                       size = size, 
+                  linewidth = linewidth, 
                        bins = bins,
                      filled = filled,
                    name.obj = name.obj, 
@@ -102,7 +102,7 @@ else if (lterm==2) {
                  scale.from = c("mean", "median", "none"),
                    scenario = list(), # see below (1)
                         col = "darkblue",
-                       size = 1.3,
+                  linewidth = 1.3,
                    name.obj = NULL,
                   data.plot = FALSE,
                    data.col = "lightblue",
@@ -130,14 +130,22 @@ if (is.null(term))  stop("The model term is not set")
       type <- if (type=="parameter") "response" else "link"
  parameter <- match.arg(parameter)
 scale.from <- match.arg(scale.from)
-if (any(grepl("data", names(obj$call)))) 
+if (inherits(obj, "gamlss"))
   {
-    DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
-                eval(parse(text=as.character(obj$call["data"]))) 
-             else get(as.character(obj$call["data"]))	
-}
-else if (missing(data)) stop("The data argument is needed in obj")
-  v.names <- names(DaTa)
+    if (any(grepl("data", names(obj$call)))) 
+      {
+                  DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+                              eval(parse(text=as.character(obj$call["data"]))) 
+                           else get(as.character(obj$call["data"]))	
+                  v.names <- names(DaTa)
+                }
+              else if (missing(data)) stop("The data argument is needed in obj")   
+    
+  } else
+  {
+     DaTa <-model.frame(obj)
+    v.names <-  all.vars(obj$formula) # names(DaTa)
+  }  
       pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
 if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) 
@@ -219,7 +227,7 @@ aver.fittted.star <- switch(scale.from,
 if (it.is.factor)
     {
         pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
-        ggplot2::geom_point(color=col, size=factor.size, shape="-")+
+        ggplot2::geom_point(color=col, linewidth=factor.size, shape="-")+
         ggplot2::ylab(yaxislabel)+ 
         ggplot2::xlab(term)+ 
         ggplot2::ggtitle(txt.title)
@@ -234,12 +242,12 @@ if (it.is.factor)
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                  size = data.size, alpha = data.alpha, colour = data.col)
+                  linewidth = data.size, alpha = data.alpha, colour = data.col)
      }
     } else 
     {
       pp <- ggplot2::ggplot(data=da) +
-        ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, size=size) +
+        ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
         ggplot2::ylab(yaxislabel)+ 
         ggplot2::xlab(term)+ 
         ggplot2::ggtitle(txt.title)
@@ -248,7 +256,7 @@ if (it.is.factor)
         if (parameter!="mu")  stop("data.plot=TRUE can be used only with parameter=\"mu\"") 
         if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
        pp <- pp +  ggplot2::geom_point(data=DaTa,aes(y =DaTa[,y_name]- aver.fittted.star,  x = DaTa[,term]),
-                   size = data.size, alpha = data.alpha, colour = data.col)#
+                   linewidth = data.size, alpha = data.alpha, colour = data.col)#
       }
       if ( rug.plot)
       {
@@ -275,7 +283,7 @@ pe_2_param <- function(obj = NULL, # the gamlss object
                       how = c("median", "last", "fixed"),
                  scenario = list(), # see below (1)
                       col = "darkblue",
-                     size = 1.3,
+                linewidth = 1.3,
                 data.plot = TRUE,
                  data.col = "lightblue",
                 data.size = 0.1,
@@ -296,14 +304,23 @@ if (is.null(terms))  stop("The model terms are not set")
            type <- match.arg(type)
            type <- if (type=="parameter") "response" else "link"
       parameter <- match.arg(parameter)
-if (any(grepl("data", names(obj$call)))) 
-      {
-        DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
-          eval(parse(text=as.character(obj$call["data"]))) else 
-            get(as.character(obj$call["data"]))	
-      }
-      else if (is.null(data)) stop("The data argument is needed in obj")
-        v.names <- names(DaTa)
+
+
+if (inherits(obj, "gamlss"))
+{
+    if (any(grepl("data", names(obj$call)))) 
+        {
+             DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+                         eval(parse(text=as.character(obj$call["data"]))) 
+          else get(as.character(obj$call["data"]))	
+         v.names <- names(DaTa)
+        }
+     else if (missing(data)) stop("The data argument is needed in obj")   
+} else
+{
+           DaTa < -model.frame(obj)
+        v.names <-  all.vars(obj$formula) # names(DaTa)
+}              
             pos <- match(terms, v.names)
            lpos <- length(pos)                    
 if (lpos<=1) stop("supply 2 terms")
@@ -393,11 +410,11 @@ if (case==1)
 if (data.plot)  
   pp <- pp + ggplot2::geom_point(data=DaTa, 
              ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,terms[[2]]]), 
-                                size=data.size, alpha=data.alpha, colour=data.col)
+                                size = data.size, alpha=data.alpha, colour=data.col)
       pp <-  if (filled)  pp + ggplot2::geom_contour_filled(
         ggplot2::aes(z = da[,1]), bins=bins/3 )
               else        pp + ggplot2::geom_contour(
-                ggplot2::aes(z = da[,1]), bins=bins, size=size,  colour=col)
+                ggplot2::aes(z = da[,1]), bins=bins, linewidth=linewidth,  colour=col)
       pp 
       pp <- pp + ggplot2::ggtitle(txt.title)
     } 
