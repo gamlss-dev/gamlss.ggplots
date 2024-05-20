@@ -144,7 +144,7 @@ if (inherits(obj, "gamlss"))
   } else
   {
      DaTa <-model.frame(obj)
-    v.names <-  all.vars(obj$formula) # names(DaTa)
+    v.names <-  colnames(DaTa) # names(DaTa)
   }  
       pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
@@ -203,7 +203,8 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
 } # end going thought the variables
 ## predict  
 # pp = attr(predict(obj,  type = "term", parameter = parameter),"constant")
-fittted.star  <- predict(obj, newdata=tail(dat.temp, n.points), type = type, parameter = parameter)
+fittted.star  <- predict(obj,model = parameter, newdata=tail(dat.temp, n.points), type = type, 
+                         )
 if (it.is.factor) {
    value1stlevel <- fittted.star[1] 
    fittted.orig  <- fittted.star-value1stlevel
@@ -242,7 +243,7 @@ if (it.is.factor)
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                  size = data.size, alpha = data.alpha, colour = data.col)
+                  linewidth = data.size, alpha = data.alpha, colour = data.col)
      }
     } else 
     {
@@ -262,7 +263,7 @@ if (it.is.factor)
       if ( rug.plot)
       {
        pp <- pp +
-         ggplot2::geom_rug(data=DaTa, ggplot2::aes(x=DaTa[,pos]), col=rug.col, size=rug.size)
+         ggplot2::geom_rug(data=DaTa, ggplot2::aes(x=DaTa[,pos]), col=rug.col, linewidth=rug.size)
       }
       if ( !is.null(ylim))
       {
@@ -397,8 +398,9 @@ for (i in 1:dim(dat.temp)[2])
 
     }
 } # end going thought the variables
-## predict     
-fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type, parameter = parameter)
+## predict   
+fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type, 
+                        parameter = parameter)
    name.obj  <-  if (is.null(name.obj))  deparse(substitute(obj)) else name.obj
    txt.title <- if (missing(title))  
       paste("Partial effect of", terms[1], "and", terms[2], "for", parameter, "for model", name.obj)
@@ -411,7 +413,7 @@ if (case==1)
 if (data.plot)  
   pp <- pp + ggplot2::geom_point(data=DaTa, 
              ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,terms[[2]]]), 
-                                size = data.size, alpha=data.alpha, colour=data.col)
+                                linewidth = data.size, alpha=data.alpha, colour=data.col)
       pp <-  if (filled)  pp + ggplot2::geom_contour_filled(
         ggplot2::aes(z = da[,1]), bins=bins/3 )
               else        pp + ggplot2::geom_contour(
@@ -430,7 +432,7 @@ if (data.plot)
      if (type=="link") warning("it is not a good idea to plot the data with type=\"eta\"") 
      pp <- pp +   ggplot2::geom_point(data = DaTa,
                   ggplot2::aes(x=DaTa[,terms[pv]], y=DaTa[,y_name]), 
-                             size = data.size, alpha=data.alpha, colour=data.col)  
+                             linewidth = data.size, alpha=data.alpha, colour=data.col)  
     }
        
     }  

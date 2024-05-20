@@ -30,12 +30,7 @@ get_response <- function(obj)# getResponse(object, form = formula(object))
 {
   if (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
-  response <- if (is(obj,"gamlss")) obj$y else 
-  {
-    rqres <- residuals(obj)
-    if (is.null(model.weights(model.frame(obj)))) rep(1,length(rqres)) 
-    else model.weights(model.frame(obj)) 
-  }   
+  response <- obj$y  
   response 
 }
 ################################################################################
