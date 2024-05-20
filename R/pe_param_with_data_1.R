@@ -121,7 +121,7 @@ else if (lterm==2) {
 #  the most commonly occuring level for factors 
 #  or the last observation
 #if (is.null(obj)||!class(obj)[1]=="gamlss") stop("Supply a standard GAMLSS model in obj")
-if (!missing(obj)&&!(is.gamlss(obj)|is(obj, "gamlss2"))) 
+if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
 if (is.null(term))  stop("The model term is not set")
          x <-  y <- NULL
@@ -224,7 +224,7 @@ aver.fittted.star <- switch(scale.from,
     yaxislabel <- if (type=="response") paste0("PE_param(", term, ")")
                   else                  paste0("PE_eta](", term, ")")
             da <- data.frame(y=fittted.orig,x=xvar )
-        y_name <- paste(obj$call$formula[[2]])
+        y_name <- paste(eval(obj$call$formula)[[2]])
 if (it.is.factor)
     {
         pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
@@ -299,15 +299,14 @@ pe_2_param <- function(obj = NULL, # the gamlss object
 #  Variables omitted from this list will have values set to the median 
 #  for continuous variables and the most commonly occuring level for factors 
 #  or the last observation
-if (is.null(obj)||!class(obj)[1]=="gamlss") stop("Supply a standard GAMLSS model in obj")
+if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model")  
 if (is.null(terms))  stop("The model terms are not set")
               x <- y <- NULL
             how <- match.arg(how)
            type <- match.arg(type)
            type <- if (type=="parameter") "response" else "link"
       parameter <- match.arg(parameter)
-
-
 if (inherits(obj, "gamlss"))
 {
     if (any(grepl("data", names(obj$call)))) 
@@ -320,9 +319,9 @@ if (inherits(obj, "gamlss"))
      else if (missing(data)) stop("The data argument is needed in obj")   
 } else
 {
-           DaTa < -model.frame(obj)
+           DaTa <- model.frame(obj)
         v.names <-  all.vars(obj$formula) # names(DaTa)
-}              
+}      
             pos <- match(terms, v.names)
            lpos <- length(pos)                    
 if (lpos<=1) stop("supply 2 terms")
@@ -406,7 +405,7 @@ fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type,
       paste("Partial effect of", terms[1], "and", terms[2], "for", parameter, "for model", name.obj)
              else title
          da <- data.frame(z=fittted.orig, d1)
-     y_name <- paste(obj$call$formula[[2]])
+     y_name <- paste(eval(obj$call$formula)[[2]])
 if (case==1)
     {
       pp  <-  ggplot2::ggplot(da, ggplot2::aes_string(terms[1], terms[2]))
