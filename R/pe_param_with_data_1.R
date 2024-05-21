@@ -228,7 +228,7 @@ aver.fittted.star <- switch(scale.from,
 if (it.is.factor)
     {
         pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
-        ggplot2::geom_point(color=col, linewidth=factor.size, shape="-")+
+        ggplot2::geom_point(color=col, size=factor.size, shape="-")+
         ggplot2::ylab(yaxislabel)+ 
         ggplot2::xlab(term)+ 
         ggplot2::ggtitle(txt.title)
@@ -243,7 +243,7 @@ if (it.is.factor)
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                  linewidth = data.size, alpha = data.alpha, colour = data.col)
+                  size = data.size, alpha = data.alpha, colour = data.col)
      }
     } else 
     {
@@ -320,7 +320,7 @@ if (inherits(obj, "gamlss"))
 } else
 {
            DaTa <- model.frame(obj)
-        v.names <-  all.vars(obj$formula) # names(DaTa)
+        v.names <- colnames(DaTa) # names(DaTa)
 }      
             pos <- match(terms, v.names)
            lpos <- length(pos)                    
@@ -412,7 +412,7 @@ if (case==1)
 if (data.plot)  
   pp <- pp + ggplot2::geom_point(data=DaTa, 
              ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,terms[[2]]]), 
-                                linewidth = data.size, alpha=data.alpha, colour=data.col)
+                                size = data.size, alpha=data.alpha, colour=data.col)
       pp <-  if (filled)  pp + ggplot2::geom_contour_filled(
         ggplot2::aes(z = da[,1]), bins=bins/3 )
               else        pp + ggplot2::geom_contour(
@@ -431,7 +431,7 @@ if (data.plot)
      if (type=="link") warning("it is not a good idea to plot the data with type=\"eta\"") 
      pp <- pp +   ggplot2::geom_point(data = DaTa,
                   ggplot2::aes(x=DaTa[,terms[pv]], y=DaTa[,y_name]), 
-                             linewidth = data.size, alpha=data.alpha, colour=data.col)  
+                             size = data.size, alpha=data.alpha, colour=data.col)  
     }
        
     }  
@@ -440,13 +440,13 @@ if (data.plot)
     pp <- ggplot2::ggplot(data=da, 
           ggplot2::aes_string(x=terms[1], y=da[,1], group=terms[2], color=terms[2]))+
       ggplot2::geom_line()+
-      ggplot2::geom_point(linewidth=linewidth+2)
+      ggplot2::geom_point(size=linewidth+2)
     if (data.plot)  
       {
       if (type=="link") warning("it is not a good idea to plot the data with type=\"eta\"") 
      pp <-  pp +ggplot2:: geom_jitter(data = DaTa, 
                 ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,y_name]),
-                    linewidth=data.size, alpha=data.alpha, colour=data.col)
+                    size=data.size, alpha=data.alpha, colour=data.col)
       }
     pp <- pp +  ggplot2::ggtitle(txt.title)
     
