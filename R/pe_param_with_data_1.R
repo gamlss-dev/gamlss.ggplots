@@ -203,8 +203,15 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
 } # end going thought the variables
 ## predict  
 # pp = attr(predict(obj,  type = "term", parameter = parameter),"constant")
-fittted.star  <- predict(obj,model = parameter, newdata=tail(dat.temp, n.points), type = type, 
-                         )
+if (inherits(obj, "gamlss"))
+{
+  fittted.star  <- predict(obj,parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
+}  else 
+{
+  fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type = type)   
+}  
+  
+
 if (it.is.factor) {
    value1stlevel <- fittted.star[1] 
    fittted.orig  <- fittted.star-value1stlevel
@@ -258,12 +265,13 @@ if (it.is.factor)
         if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
        pp <- pp +  ggplot2::geom_point(data=DaTa,aes(y =DaTa[,y_name]- aver.fittted.star,  
                                                      x = DaTa[,term]),
-                   linewidth = data.size, alpha = data.alpha, colour = data.col)#
+                   size = data.size, alpha = data.alpha, colour = data.col)#
       }
       if ( rug.plot)
       {
        pp <- pp +
-         ggplot2::geom_rug(data=DaTa, ggplot2::aes(x=DaTa[,pos]), col=rug.col, linewidth=rug.size)
+         ggplot2::geom_rug(data=DaTa, ggplot2::aes(x=DaTa[,pos]), col=rug.col, 
+                           size=rug.size)
       }
       if ( !is.null(ylim))
       {
@@ -408,7 +416,7 @@ fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type,
      y_name <- paste(eval(obj$call$formula)[[2]])
 if (case==1)
     {
-      pp  <-  ggplot2::ggplot(da, ggplot2::aes_string(terms[1], terms[2]))
+      pp  <-  ggplot2::ggplot(da, ggplot2::aes(.data[[terms[1]]], .data[[terms[2]]]))
 if (data.plot)  
   pp <- pp + ggplot2::geom_point(data=DaTa, 
              ggplot2::aes(x=DaTa[,terms[[1]]], y=DaTa[,terms[[2]]]), 
