@@ -88,8 +88,8 @@ pe_2_quantile <- function(obj,
 #require(gamlss)
 ################################################################################  
 # checking things
-if (is.null(obj)||!class(obj)[1]=="gamlss") 
-  stop("Supply a standard GAMLSS model in obj")
+  if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model")  
 if (is.null(terms))  stop("The model terms are not set")
   cdf <- x <- y <- NULL  
 if (is.null(data)) {data<-get(as.character(obj$call["data"]))}
@@ -114,20 +114,18 @@ if (inherits(obj, "gamlss"))
     v.names <- names(DaTa)
   }
   else if (missing(data)) stop("The data argument is needed in obj")   
-  
 } else
 {
   DaTa <-model.frame(obj)
-  v.names <-  all.vars(obj$formula) # names(DaTa)
+  v.names <-   colnames(DaTa)
 }  
-# v.names <- names(DaTa)
      pos <- match(terms, v.names)
     lpos <- length(pos)        
 name.obj <- if (is.null(name.obj)) deparse(substitute(obj))
 if (lpos<=1) stop("supply 2 terms")
 if (lpos>3) stop("only up to two terms are allowed")   
 WhichFactor <- sapply(DaTa[,pos], is.factor)
-  if (any(WhichFactor)) # if any is factor 
+if (any(WhichFactor)) # if any is factor 
   {
    # pf <- pv <- 0
     pf <- which(WhichFactor)
@@ -198,17 +196,20 @@ for (i in 1:dim(dat.temp)[2])
       dat.temp[,i] <-   c(DaTa[,i],rep(ma,dim(d1)[1]))       
     }
   } # end going thought the variables  
-## get the pdf and q function
+
+if (inherits(obj,"gamlss"))
+{
+  ## get the pdf and q function
     pdf <- obj$family[1]
   binom <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
    qfun <- paste("q", obj$family[[1]],sep="")
    lpar <- eval(parse(text=pdf))()$nopar
 if (binom) {bd <- obj$bd ; Y <- obj$y}
-# predict    
-   daPred <-  tail(dat.temp,  dim(d1)[1])
+  # predict    
+daPred <-  tail(dat.temp,  dim(d1)[1])
     pp <-  predictAll(obj, newdata = daPred, output="matrix")
-    qq <- list()
-   lqq <- length(quantile) 
+   qq <- list()
+  lqq <- length(quantile)  
 # evalualte the q-function  
 if (lqq==1)
  {
@@ -227,7 +228,19 @@ if (lqq==1)
                 eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
                 eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
     }
-  } 
+  }
+} else
+{
+  daPred <-  tail(dat.temp,  dim(d1)[1])
+  pp <-  predict(obj, newdata = daPred, type="parameter")
+  qq <- list()
+  lqq <- length(quantile) 
+  for(q in quantile)
+  {
+    qq <- cbind(qq, family(obj)$q(q, pp))
+  }
+  colnames(qq) <- quantile
+}
 # this is the data frame to use in the plots   
    txt.title <- if (missing(title))  
      paste("Partial quantile effect for model", name.obj) else title
@@ -235,9 +248,12 @@ if (lqq==1)
 # case 1 continuous versus continuous
 if (case==1)
 {
-      da <- data.frame(cdf=unlist(qq), x1 = rep(x,lqq), 
+      da <- if (inherits(obj,"gamlss")) data.frame(cdf=unlist(qq), x1 = rep(x,lqq), 
                        y2=as.vector(t(replicate(n.points,y))), 
                        quantile=gl(lqq,length(qq[[1]]), labels = quantile))
+            else  data.frame(cdf=unlist(qq), x1 = rep(x,lqq), 
+                  y2 =as.vector(t(replicate(n.points,y))), 
+                  quantile=gl(lqq, dim(qq)[1], labels = quantile))
 names(da)[c(2,3)] <- terms
   yname <-  paste(obj$call$formula[[2]])
      gg <- ggplot2::ggplot(da, ggplot2::aes_string(terms[1], terms[2], 
@@ -268,9 +284,14 @@ names(da)[c(2,3)] <- terms
 # case 2 continuous versus factor
 if (case==2)
 {
-  da <- data.frame(cdf=unlist(qq), x1 = rep(daPred[, terms[1]], lqq) , 
+  da <- if (inherits(obj,"gamlss"))  data.frame(cdf=unlist(qq), 
+                   x1 = rep(daPred[, terms[1]], lqq) , 
                    y2 = rep(daPred[, terms[2]], lqq), 
-                   quantile=gl(lqq,length(qq[[1]]), labels = quantile))
+             quantile = gl(lqq,length(qq[[1]]), labels = quantile))
+  else  data.frame(cdf=unlist(qq), 
+                   rep(daPred[, terms[1]], lqq) , 
+                   y2 = rep(daPred[, terms[2]], lqq), 
+                   quantile = gl(lqq,dim(qq)[1], labels = quantile))
   names(da)[c(2,3)] <- terms
  gg= ggplot2::ggplot(data=da, ggplot2::aes_string(x=terms[pv], y="cdf", 
                         group="quantile", col="quantile"))+
@@ -282,9 +303,15 @@ if (case==2)
 # case 3 factor versus factor
 if (case==3)
 {
-  da <- data.frame(cdf=unlist(qq), x1 = rep(daPred[, terms[1]], lqq) , 
+  da <- if (inherits(obj,"gamlss"))  data.frame(cdf=unlist(qq), 
+                   x1 = rep(daPred[, terms[1]], lqq) , 
                    y2 = rep(daPred[, terms[2]], lqq), 
-                   quantile=gl(lqq,length(qq[[1]]), labels = quantile))
+             quantile = gl(lqq,length(qq[[1]]), labels = quantile))
+  else  data.frame(cdf=unlist(qq), 
+                   x1 = rep(daPred[, terms[1]], lqq) , 
+                   y2 = rep(daPred[, terms[2]], lqq), 
+                  quantile=gl(lqq,dim(qq)[1], labels = quantile)) 
+  
   names(da)[c(2,3)] <- terms
   gg <- ggplot2::ggplot(data=da, ggplot2::aes_string(x=terms[1], y="cdf",
                           group="quantile", color="quantile"))+

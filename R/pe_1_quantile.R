@@ -28,7 +28,8 @@ pe_1_quantile <- function (obj = NULL,
                         xlab = NULL,
                     title, ...) 
 {
-if (is.null(obj) || !class(obj)[1] == "gamlss") stop("Supply a standard GAMLSS model in obj")
+  if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model")  
        how <- match.arg(how)
  quantiles <- x <-  y <- NULL
 # if (any(grepl("data", names(obj$call)))) {
@@ -48,11 +49,10 @@ if (is.null(obj) || !class(obj)[1] == "gamlss") stop("Supply a standard GAMLSS m
      v.names <- names(DaTa)
    }
    else if (missing(data)) stop("The data argument is needed in obj")   
-   
  } else
  {
    DaTa <-model.frame(obj)
-   v.names <-  all.vars(obj$formula) # names(DaTa)
+   v.names <- colnames(DaTa) 
  }  
 #   v.names <- names(DaTa)
        pos <- which(v.names==term)
@@ -103,27 +103,42 @@ names(dat.temp) <- v.names
      qfun <- paste("q", obj$family[[1]],sep="")
      lpar <- eval(parse(text=pdf))()$nopar
   if (binom) {bd <- obj$bd ; Y <- obj$y}
-       pp <-  predictAll(obj, newdata = tail(dat.temp, n.points), output="matrix")
-       qq <- list()
-      lqq <- length(quantile) 
-if (lqq==1)
+     
+if (inherits(obj, "gamlss"))
 {
-   qq[[1]] <- switch(lpar, 
-                     eval(call(qfun, p= quantile, mu=pp[,"mu"])),       # 1
-                     eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"])),        # 2
-                     eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
-                     eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
- } else
- {
-  for (i in 1:lqq)
+  pp <-  predictAll(obj, newdata = tail(dat.temp, n.points), output="matrix")
+  qq <- list()
+  lqq <- length(quantile) 
+  if (lqq==1)
   {
-   qq[[i]] <- switch(lpar, 
-                eval(call(qfun, p= quantile[i], mu=pp[,"mu"])),       # 1
-                eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"])),        # 2
-                eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
-                eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
+    qq[[1]] <- switch(lpar, 
+                      eval(call(qfun, p= quantile, mu=pp[,"mu"])),       # 1
+                      eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"])),        # 2
+                      eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
+                      eval(call(qfun, p= quantile, mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
+  } else
+  {
+    for (i in 1:lqq)
+    {
+      qq[[i]] <- switch(lpar, 
+                        eval(call(qfun, p= quantile[i], mu=pp[,"mu"])),       # 1
+                        eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"])),        # 2
+                        eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"])),  # 3                   
+                        eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
+    }
+  }    
+} else 
+{
+  pp <-  predict(obj,  newdata=tail(dat.temp, n.points), type="parameter") 
+  qq <- list()
+  lqq <- length(quantile)  
+  for(q in quantile)
+  {
+    qq <- cbind(qq, family(obj)$q(q, pp))
   }
- }  
+  colnames(qq) <- quantile
+}  
+
     yaxislabel <- paste0("PE_quan(", term, ")")
 if (lqq==1)
 {
@@ -144,9 +159,10 @@ if (lqq==1)
   else title  
  #da1= subset(da, da$quantiles==.5)
 #  ggplot(data=da1)+geom_line(aes(x=x,y=y))
-  da <- data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
+  da <- if(inherits(obj,"gamlss ")) 
+    data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
+    else data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,dim(qq)[1], labels = quantile)) 
         #ggplot(DataM, aes(x=x, y=c, col=centiles))
-
 if (it.is.factor)
 {
   pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x=x, y=y, group=factor(quantiles), colour=quantiles))+
