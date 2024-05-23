@@ -96,6 +96,7 @@ importFrom("grDevices", "hcl.colors", "colors")
 importFrom("graphics", "lines", "par", "points")
 importFrom("graphics", "abline")
  importFrom("graphics", "segments")
+ importFrom("gamlss2", "response.name")
 ################################################################################
 importFrom("mgcv", "gam")
 ################################################################################

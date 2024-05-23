@@ -27,26 +27,17 @@ pe_pdf <- function (     obj = NULL,
                        title) 
 {
 #require(ggridges)
-if (is.null(obj) || !class(obj)[1] == "gamlss") 
-    stop("Supply a standard GAMLSS model in obj")
+if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
+    stop("the model is not a gamlss model")  
 if (is.null(term)) stop("The model term is not set")
        how <- match.arg(how)
-  x <-  y <- width <- NULL
+   x <-  y <- width <- NULL
 # get the response
-  resp <- paste(obj$mu.formula[[2]])
-# if (any(grepl("data", names(obj$call)))) 
-#   {
-#       DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit")) 
-#                    eval(parse(text = as.character(obj$call["data"])))
-#               else get(as.character(obj$call["data"]))
-#   }
-# else if (is.null(data)) 
-#     stop("The data argument is needed in obj")
-#    v.names <- names(DaTa)
-  if (inherits(obj, "gamlss"))
+if (inherits(obj, "gamlss"))
   {
     if (any(grepl("data", names(obj$call)))) 
     {
+      resp <- paste(obj$mu.formula[[2]]) 
       DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
         eval(parse(text=as.character(obj$call["data"]))) 
       else get(as.character(obj$call["data"]))	
@@ -56,8 +47,9 @@ if (is.null(term)) stop("The model term is not set")
     
   } else
   {
-    DaTa <-model.frame(obj)
-    v.names <-  all.vars(obj$formula) # names(DaTa)
+       resp <- response.name(obj)
+       DaTa <- model.frame(obj)
+    v.names <-  colnames(DaTa)
   }  
        pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
@@ -86,7 +78,9 @@ if (is.factor(DaTa[,pos])||is.character(DaTa[,pos]))
     dat.temp <- as.data.frame(matrix(0, nrow = dim(DaTa)[1] + x.grid.points, ncol = dim(DaTa)[2]))
 names(dat.temp) <- names(DaTa)
 if (pos < 1)  stop("supply a term")
-  for (i in 1:dim(dat.temp)[2]) {
+
+for (i in 1:dim(dat.temp)[2]) 
+{
     if (pos == i) 
       {
       dat.temp[, i] <- c(DaTa[, i], xvar)
@@ -113,8 +107,11 @@ if (is.null(ma))
 if (is.factor(DaTa[, i])) dat.temp[, i] <- c(DaTa[,i],factor(rep(ma, x.grid.points)))
                     else  dat.temp[, i] <- c(DaTa[, i], rep(ma, x.grid.points))
       }
-  }
-# family -------------------------------------------------
+}
+
+if (inherits(obj, "gamlss"))
+{
+# family -----------------------------------------------------------------------
       pdf <- obj$family[1]
    binom  <- pdf%in%gamlss::.gamlss.bi.list # whether binomial
    if (binom) stop("binomial type response is non implemented yet")
@@ -122,23 +119,6 @@ if (is.factor(DaTa[, i])) dat.temp[, i] <- c(DaTa[,i],factor(rep(ma, x.grid.poin
      dfun <- paste("d", obj$family[[1]],sep="")
      lpar <- eval(parse(text=pdf))()$nopar
        pp <-  predictAll(obj, newdata = tail(dat.temp, x.grid.points), output="matrix")
-  # get the x.grid.points 
-  # if (binom)
-  #      {
-  #      pp <-  predictAll(obj, newdata = tail(dat.temp, x.grid.points), output="matrix")
-  #        DevIncr <- switch(lpar, 
-  #                          fn( Y[i], mu = pp[,"mu"], bd=bd[i]),   # 1
-  #                          fn( Y[i], mu = pp[,"mu"],              # 2
-  #                              sigma = pp[,"sigma"], bd=bd[i]),                        
-  #                          fn( Y[i], mu = pp[,"mu"],              # 3
-  #                              sigma = pp[,"sigma"],
-  #                              nu = pp[,"nu"], bd=bd[i]),
-  #                          fn( Y[i], mu = pp[,"mu"],              # 4
-  #                              sigma = pp[,"sigma"],  
-  #                              nu = pp[,"nu"],
-  #                              tau = pp[,"tau"],bd=bd[i]))
-  #      } else
-  #      {
   TypeDist <- eval(parse(text=pdf))()$type
    if (TypeDist=="Discrete") 
    {
@@ -172,6 +152,30 @@ if (lqq==1) # if only one x.grid.points
                 eval(call(dfun, x= yvar, mu=pp[,"mu"][i], sigma=pp[,"sigma"][i],  nu=pp[,"nu"][i], tau=pp[,"tau"][i]))) # 4
   }
  }  
+} else 
+{
+      pp <- predict(obj, newdata=tail(dat.temp, x.grid.points), type="parameter")
+TypeDist <- obj$family$type
+if (TypeDist=="Discrete") 
+{
+    if (is.null(from)) from <- min(obj$y)
+    if (is.null(to)) to <- max(obj$y)
+    yvar <- seq(from =  from, to = to, 1 )  
+} else
+{
+    if (is.null(from)) from <- min(obj$y)
+    if (is.null(to)) to <- max(obj$y)
+    yvar <- seq(from = from, to=to, length.out=y.grid.points )   
+}   
+    qq <- list()
+   lqq <- length(xvar) 
+for (i in 1:lqq)
+   {
+     qq[[i]] <- family(obj)$d(yvar, pp[i,])
+   }   
+   
+   # qq <- family(obj)$p(yvar, pp)
+}  
 xaxislabel <- resp
     
  txt.title <- if (missing(title))
