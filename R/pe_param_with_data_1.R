@@ -127,7 +127,6 @@ if (is.null(term))  stop("The model term is not set")
          x <-  y <- NULL
        how <- match.arg(how)
       type <- match.arg(type)
-      type <- if (type=="parameter") "response" else "link"
  parameter <- match.arg(parameter)
 scale.from <- match.arg(scale.from)
 if (inherits(obj, "gamlss"))
@@ -137,14 +136,15 @@ if (inherits(obj, "gamlss"))
                   DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
                               eval(parse(text=as.character(obj$call["data"]))) 
                            else get(as.character(obj$call["data"]))	
-                  v.names <- names(DaTa)
+               v.names <- names(DaTa)
+                  type <- if (type=="parameter") "response" else "link"
                 }
               else if (missing(data)) stop("The data argument is needed in obj")   
-    
   } else
   {
      DaTa <-model.frame(obj)
     v.names <-  colnames(DaTa) # names(DaTa)
+    type <- if (type=="eta")  "link" else type
   }  
       pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
@@ -208,7 +208,7 @@ if (inherits(obj, "gamlss"))
   fittted.star  <- predict(obj,parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
 }  else 
 {
-  fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type = type)   
+  fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type=type)   
 }  
   
 
