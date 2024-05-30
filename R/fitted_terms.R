@@ -2,9 +2,9 @@
 ################################################################################
 ################################################################################
 ################################################################################
-#require(ggplot2)
-#require(gamlss)
-#require(grid)
+require(ggplot2)
+require(gamlss)
+require(grid)
 ################################################################################
 ################################################################################
 ################################################################################
@@ -56,138 +56,6 @@
 # Local functions
 # i) CheckSmoList() to chech whether they are smoothers in terms
 #-------------------------------------------------------------------------------
-# plotLME <- function(obj)
-# {
-#   OBJ <- unclass(ranef(obj))
-#   sizelist <- length(OBJ)
-#   #  for (i in 1:sizelist) 
-#   plot(OBJ[[1]],type="h", ylab=names(OBJ)[1], main="lme fit 1st random coeff.")
-# }
-#-------------------------------------------------------------------------------
-# draw.polys.in <-function( polys, 
-#                        object = NULL, 
-#                        scheme = NULL,
-#                        swapcolors = FALSE,
-#                        n.col = 100,...)
-# {
-#   ## to get the range of all polygons    
-#   for (i in 1:length(polys)) {
-#     yr <- range(polys[[i]][, 2], na.rm = TRUE)
-#     xr <- range(polys[[i]][, 1], na.rm = TRUE)
-#     if (i == 1) {
-#       ylim <- yr
-#       xlim <- xr
-#     }
-#     else {
-#       if (yr[1] < ylim[1]) 
-#         ylim[1] <- yr[1]
-#       if (yr[2] > ylim[2]) 
-#         ylim[2] <- yr[2]
-#       if (xr[1] < xlim[1]) 
-#         xlim[1] <- xr[1]
-#       if (xr[2] > xlim[2]) 
-#         xlim[2] <- xr[2]
-#     }
-#   }
-#   ## of no object just plot the polygons
-#   mar <- par("mar")
-#   oldpar <- par(mar = c(2, mar[2], 2, 1))
-#   if (is.null(object)) {
-#     plot(0, 0, ylim = ylim, xlim = xlim, xaxt = "n", yaxt = "n", 
-#          type = "n", bty = "n", ylab = "", xlab = "",...)
-#     for (i in 1:length(polys)) {
-#       polygon(polys[[i]], col = NA)
-#     }
-#   }
-#   else 
-#   { # if object is defined  we must two alternatives
-#     ## i) it is MRF object
-#     ## ii) a list which defines the values and the areas    
-#     if(class(object)=="MRF")
-#     {
-#       y.y <- object$beta 
-#       #  x.x <- object$x
-#     }
-#     else
-#     {
-#       if (!is.vector(object))  stop("object class should be MRF or a vector with names matching the areas in the polys")
-#       else
-#       { 
-#         y.y <- object
-#       }
-#   
-#     }
-#     
-#      npolys <- names(polys)
-#     nobject <- names(y.y)
-#     if (is.null(nobject)) stop("the object do not have names")
-#     else (!is.null(nobject) && !is.null(npolys)) 
-# {
-#       if (!all(sort(nobject)%in% sort(npolys))) 
-#         stop("object names and polys names must match")
-#     }
-# y.y <- y.y[npolys]
-# #fv1 <- tapply(y, x, mean)
-# #fv <- object$beta  
-# xmin <- xlim[1]
-# xlim[1] <- xlim[1] - 0.1 * (xlim[2] - xlim[1])
-# n.col <- n.col
-# if (is.null(scheme)||scheme=="gray")
-#   newscheme <- gray(0:n.col/n.col)
-# else if (scheme == "heat"){
-#   newscheme <- heat.colors(n.col + 1)
-#   
-# }
-# else if (scheme == "rainbow")
-#   newscheme <- rainbow(n.col+1)
-# else if(scheme == "terrain")
-#   newscheme <- terrain.colors(n.col+1)
-# else if(scheme == "topo")
-#   newscheme <- topo.colors(n.col+1)
-# else if(scheme=="cm")
-#   newscheme <- cm.colors(n.col+1)
-# else {scheme=scheme
-#       ramp <- colorRamp(c(scheme, "white"))
-#       newscheme <-  rgb(ramp(seq(0, 1, length = n.col)), maxColorValue = 255)
-# }
-# 
-# if(swapcolors==TRUE){
-#   if((scheme=="heat")||(scheme=="rainbow")||(scheme=="terrain")||(scheme=="topo")||(scheme=="cm")) 
-#     newscheme=rev(newscheme)
-#   else stop("swapcolors just work for few options. Please, see help file.")
-# }
-# zlim <- range(pretty(y.y))
-# for (i in 1:length(polys)) polys[[i]][, 2] <- zlim[1] + (zlim[2] - 
-#                                                            zlim[1]) * (polys[[i]][, 2] - ylim[1])/(ylim[2] - ylim[1])
-# ylim <- zlim
-# plot(0, 0, ylim = ylim, xlim = xlim, type = "n", xaxt = "n", 
-#      bty = "n", xlab = "", ylab = "",...)
-# for (i in 1:length(polys)) {
-#   coli <- round((y.y[i] - zlim[1])/(zlim[2] - zlim[1]) * 
-#                   n.col) + 1
-#   polygon(polys[[i]], col = newscheme[coli])
-# }
-# xmin <- min(c(axTicks(1), xlim[1]))
-# dx <- (xlim[2] - xlim[1]) * 0.05
-# x0 <- xmin - 2 * dx
-# x1 <- xmin + dx
-# dy <- (ylim[2] - ylim[1])/n.col
-# poly <- matrix(c(x0, x0, x1, x1, ylim[1], ylim[1] + 
-#                    dy, ylim[1] + dy, ylim[1]), 4, 2)
-# for (i in 1:n.col) {
-#   polygon(poly, col = newscheme[i], border = NA)
-#   poly[, 2] <- poly[, 2] + dy
-# }
-# poly <- matrix(c(x0, x0, x1, x1, ylim[1], ylim[2], ylim[2], 
-#                  ylim[1]), 4, 2)
-# polygon(poly, border = "black")
-#   }
-# par(oldpar)
-# }
-#----------------------------------------------------------------------
-# the results is something like 
-#     c(0,0,1,2,2,2,3,4) if smootherrs where used in positions
-#     c(0,0,1,1,0,0,1,1) 
 CheckSmoList <- function(termList)
   {
 #     gamlss.sm.list1 <- c( "cs","scs", "ps", "pb", "cy", "pvc", "pbm",  "pbj",   
@@ -215,7 +83,7 @@ CheckSmoList <- function(termList)
     attr(res, "whichSmo") <- att
     res
   }
-#----end of local function------CheckSmoList-----------------------------  
+#----end of local function------CheckSmoList------------------------------------  
 CheckSmoWithPlot <- function(termList)
 {
   #gamlss.Smo.plot.list <- c( "tr", "ga")
@@ -231,122 +99,137 @@ CheckSmoWithPlot <- function(termList)
   }
 res  
 }
-# more local functions--------------------------------------------------
+# more local functions----------------------------------------------------------
 carrier <- function(term) 
   {
   if (length(term) > 1)   carrier(term[[2]])
   else eval(term, data, enclos = pf)
   }# with envir  Global
-#-----------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 carrier.name <- function(term) 
     {
     if (length(term) > 1) carrier.name(term[[2]])
     else as.character(term)
     }
-#--------END of local functions-----------------------------------------
-#-----------------------------------------------------------------------
-########################################################################
+#--------END of local functions-------------------------------------------------
+#-------------------------------------------------------------------------------
+################################################################################
 #  begining of the proper function
-########################################################################
+################################################################################
 ## only for gamlss objects 
-    if (!is.gamlss(object))  stop(paste("This is not an gamlss object", "\n", "")) 
+if (!inherits(object, c("gamlss", "gamlss2")))  
+  stop(paste("This is not an gamlss object", "\n", "")) 
            what <- if (!is.null(parameter))  {
-    match.arg(parameter, choices=c("mu", "sigma", "nu", "tau"))} else  match.arg(what)
+match.arg(parameter, choices=c("mu", "sigma", "nu", "tau"))} else  match.arg(what)
            ylim <- match.arg(ylim)
-           se <- TRUE # dummy
-           par(ask=FALSE)
-       #  pages <-  1
-       #  scheme <- match.arg(scheme)
-## checking the parameter
-    if (!what%in%object$par) stop(paste(what,"is not a parameter in the object","\n"))
-## getting the specific term for plotting
-    which.terms <- terms
+             se <- TRUE # dummy
+par(ask=FALSE)
+if (inherits(object, "gamlss"))
+{
+if (!what%in%object$par) stop(paste(what,"is not a parameter in the object","\n"))
+  which.terms <- terms
 ## get all terms and attributes 
-      par.terms <- object[[paste(what, "terms", sep=".")]]
-      par.attr  <- attributes(par.terms)
-          Terms <- if (is.null(terms)) lpred(object, what = what, type = "terms", se.fit = TRUE)
-                                  else lpred(object, what = what, type = "terms", se.fit = TRUE, terms = terms)
-# the number of terms
-          n.tms <- ncol(tms <- as.matrix(Terms$fit))
+    par.terms <- object[[paste(what, "terms", sep=".")]]
+    par.attr  <- attributes(par.terms)  
+#browser()
+  Terms <- if (is.null(terms)) lpred(object, what = what, type = "terms", se.fit = TRUE)
+            else lpred(object, what = what, type = "terms", se.fit = TRUE, terms = terms)
+## the number of terms
+        n.tms <- ncol(tms <- as.matrix(Terms$fit))
 ## if the parameters has only a constant fitted stop
-     if (n.tms == 0)
-          stop("The model for ", what, " has only the constant fitted") 
+if (n.tms == 0)
+         stop("The model for ", what, " has only the constant fitted") 
 ## model frame   
-             mf <- model.frame(object, what = what) 
+          mf <- model.frame(object, what = what)  
 ## this take care if data is used         
-    if (is.null(data))  # get the data from gamlss data 
-           data <- eval(object$call$data, envir)
-    if (is.null(data))  # if still null get from model frame
-           data <- mf
-    if (NROW(tms) < NROW(data)) 
-     {
-       use.rows <- match(rownames(tms), rownames(data))
-     }
-    else use.rows <- NULL
-            nmt <- colnames(tms)                    # the names of terms 
+if (is.null(data))  # get the data from gamlss data 
+        data <- eval(object$call$data, envir)
+if (is.null(data))  # if still null get from model frame
+        data <- mf
+if (NROW(tms) < NROW(data)) 
+  {
+    use.rows <- match(rownames(tms), rownames(data))
+  }
+ else use.rows <- NULL
+           nmt <- colnames(tms)                    # the names of terms  
+            mf <- model.frame(object, what = what) 
 ## whether there are interactions in the model (they are difficult to plot)
-   Interactions <- par.attr$order > 1 
+ Interactions <- par.attr$order > 1
 ## if interaction nmt has to change -------------------------------------
-     if (any(Interactions))
-        {
-                     nmt <- nmt[!Interactions] # take out interactions
-               Terms$fit <- Terms$fit[,nmt,  drop = FALSE]  
-            Terms$se.fit <- Terms$se.fit[,nmt,  drop = FALSE] 
-                   n.tms <- ncol(tms <- as.matrix(Terms$fit))
-           # I am assuming that 'terms' will be used wisely here 
-           warning("interactions have been taken out from the plots,
+if (any(Interactions))
+{
+          nmt <- nmt[!Interactions] # take out interactions
+    Terms$fit <- Terms$fit[,nmt,  drop = FALSE]  
+ Terms$se.fit <- Terms$se.fit[,nmt,  drop = FALSE] 
+        n.tms <- ncol(tms <- as.matrix(Terms$fit))
+# I am assuming that 'terms' will be used wisely here 
+  warning("interactions have been taken out from the plots,
                   plots maybe mislealing, try pe_param() instead")
-        }
-#------------------------------------------------------------------------
+
+}
            cn <- parse(text = nmt) # as expression
  ifSpecialSmo <- CheckSmoWithPlot(nmt) #??????????????????????????????????
-whichValueSmo <- CheckSmoList(nmt)
+whichValueSmo <- CheckSmoList(nmt) 
 # if (!is.null(smooth)) # I do not need this but match.fun() is very interesting 
 #         smooth <- match.fun(smooth) 
-    if (is.null(ylabs)) 
-          ylabs <- paste("Partial for", nmt) # get the labels 
-    if (is.null(main)) 
-           main <- ""
-    else if (is.logical(main)) 
-           main <- if (main)  deparse(object$call, 500)
-                  else ""
-                 else if (!is.character(main)) 
-                   stop("`main' must be TRUE, FALSE, NULL or character (vector).")
-          main <- rep(main, length = n.tms)
-            pf <- envir  # the carrier has different envir (the Global)
-
+if (is.null(ylabs)) 
+  ylabs <- paste("Partial for", nmt) # get the labels 
+if (is.null(main)) 
+  main <- ""
+else if (is.logical(main)) 
+  main <- if (main)  deparse(object$call, 500)
+else ""
+else if (!is.character(main)) 
+  stop("`main' must be TRUE, FALSE, NULL or character (vector).")
+        main <- rep(main, length = n.tms)
+          pf <- envir  # the carrier has different envir (the Global)
 if (is.null(xlabs))#  get the x lables
-    {
+  {
        xlabs <- unlist(lapply(cn, carrier.name))
-}
+  }
         pres <- residuals(object, what = what, type="partial")
 if (!is.null(which.terms)) 
         pres <- pres[, which.terms, drop = FALSE]
 if (any(Interactions))
-        pres <- pres[, nmt, drop = FALSE]
-      is.fac <- sapply(nmt, function(i) is.factor(mf[, i])) # whether factors
-      nb.fig <- prod(par("mfcol")) # the number of figures
-       ylims <- ylim # default "common"
+         pres <- pres[, nmt, drop = FALSE]
+       is.fac <- sapply(nmt, function(i) is.factor(mf[, i])) # whether factors
+       nb.fig <- prod(par("mfcol")) # the number of figures
+        ylims <- ylim # default "common"
 if (identical(ylims, "common"))  # whether common limit in y
-    {
-        suppressWarnings(   
-                   {
-                    Terms$se.fit <- ifelse(Terms$se.fit==Inf, NA, Terms$se.fit)
-                     ylims <-  range(tms + 1.05 * 2 * Terms$se.fit, tms - 1.05 * 
-                        2 * Terms$se.fit, na.rm = TRUE)
-                      })
-     if ( partial) 
-        ylims <- range(ylims, pres, na.rm = TRUE)
-     if (rug) 
-        ylims[1L] <- ylims[1L] - 0.07 * diff(ylims)
-    } # finnish  limits for y
-########################################################################
+  {
+  suppressWarnings(   
+            {
+ Terms$se.fit <- ifelse(Terms$se.fit==Inf, NA, Terms$se.fit)
+        ylims <-  range(tms + 1.05 * 2 * Terms$se.fit, tms - 1.05 * 
+                                2 * Terms$se.fit, na.rm = TRUE)
+            })
+if ( partial) 
+            ylims <- range(ylims, pres, na.rm = TRUE)
+if (rug) 
+            ylims[1L] <- ylims[1L] - 0.07 * diff(ylims)
+  } # finnish  limits for y
+#------------------------------------------------------------------------
+} else 
+{
+  if (!what%in%object$family$names) stop(paste(what,"is not a parameter in the object","\n"))  
+  which.terms <- terms
+    par.terms <- terms(object$model)
+    par.attr  <- attributes(par.terms)  
+        Terms <- if (is.null(terms)) predict(object, model = what, type = "terms", 
+                                             se.fit = TRUE)
+            else predict(object, model = what, type = "terms", se.fit = TRUE, 
+                         terms = terms)  
+          mf <- model.frame(object) 
+  
+}  
+################################################################################
+################################################################################
 # pages 
  grp <- fit <- x <- y <-low <- high <- pre <- NULL 
    n.plots <- n.tms
         GG <- list()     
-########################################################################
-########################################################################
+################################################################################
+################################################################################
 for (i in 1:n.tms) # START of the 1:n.tms loop
   {
 # if we need different y limit for each variable 
