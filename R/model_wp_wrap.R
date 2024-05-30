@@ -31,7 +31,7 @@ gamlss_prep_data <- function (obj, value=3, i, ...)
       for (resp in list(...)) 
       {
         JJ= JJ+1
-        res <- residuals(resp) 
+        res <- get_residuals(resp) 
         obs <- seq_len(length(res))
         wei <- get_weights(resp)
         res <- res[wei!=0]
@@ -71,7 +71,7 @@ x <- rqres  <- model <-  low <- high <- z <- NULL
    if (!inherits(obj, c("gamlss", "gamlss2")))
      stop("the model is not GAMLSS object")
 if (length(names)<=1) stop("you need more than two models")
-if (missing(xvar)) stop("moment_buckets_wrap() expects one xvar")
+if (missing(xvar)) stop("worm plot wrap() expects one xvar")
        z <- if (is.factor(xvar))  xvar else ggplot2::cut_number(xvar, n=n_inter) 
 # loop for i levels   
      DA1 <- DA2 <- NULL

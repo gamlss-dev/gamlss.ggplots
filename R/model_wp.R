@@ -9,7 +9,7 @@ model_wp <- function(obj,...,
 # local function
 gamlss_prep_data <- function (obj, ... ) 
   {
-       rqres <- residuals(obj)
+       rqres <- get_residuals(obj)
      weights <- get_weights(obj)
          obs <- seq_len(length(rqres))
        rqres <- rqres[weights!=0]
@@ -19,12 +19,12 @@ gamlss_prep_data <- function (obj, ... )
            x <- qnorm(ppoints(length(rqres)))[order(order(rqres))]
         out <- data.frame(obs = obs, rqres = rqres-x, x=x, model=rep(names[[1]], 
                                                           length(rqres))) 
-    if (length(list(...)) > 0) 
+if (length(list(...)) > 0) 
     {
-       i= 1
+       JJ=1
   for (resp in list(...)) 
     {
-        i= i+1
+      JJ= JJ+1
         if ((is(resp,"gamlss")))
         {
           res <- resp[["residuals"]] 
@@ -35,7 +35,7 @@ gamlss_prep_data <- function (obj, ... )
           res <- res[!is.na(res)]
           obs <- obs[!is.na(res)]
             x <- qnorm(ppoints(length(res)))[order(order(res))]
-         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], length(rqres))) 
+         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[JJ]], length(rqres))) 
         } else
         {
           res <- residuals(resp) 
@@ -47,11 +47,12 @@ gamlss_prep_data <- function (obj, ... )
           res <- res[!is.na(res)]
           obs <- obs[!is.na(res)]
             x <- qnorm(ppoints(length(res)))[order(order(res))] 
-         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[i]], 
+         resa <- data.frame(obs = obs, rqres=res-x, x=x, model=rep(names[[JJ]], 
                                                           length(res)))  
         } 
+      out <- rbind(out, resa)
   }    
-         out <- rbind(out, resa)
+        
     }
     return(out)    
 }  
@@ -78,6 +79,7 @@ if (!inherits(obj, c("gamlss", "gamlss2")))
      stop("the model is not GAMLSS object")
 if (length(names)<=1) stop("you need more than two models")
        d <- gamlss_prep_data(obj, ...)
+     
        N <-  dim(d)[1]
      
        table(d$model)
