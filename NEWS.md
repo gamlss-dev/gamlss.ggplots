@@ -39,13 +39,20 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 
 # Version 2.1-13
 
-- all `resid_` functions are now compatible with the objecrs creates with the 
-`gamlss2()` function
+-   all `resid_` functions are now compatible with the objecrs creates
+    with the `gamlss2()` function
 
-- `family_cdf` a bug was corrected when plotting only one curve
+-   `family_cdf` a bug was corrected when plotting only one curve
 
-- `family.pdf` the `aes_string()` was removed (it is depreciated from `ggplot2`)
+-   `family.pdf` the `aes_string()` was removed (it is depreciated from
+    `ggplot2`)
 
 # Version 2.1-14
 
-- `fitted_pdf` and `fitted_cdf` are working with gamlss2 object but the binimial responses needed checking (not fixed yet)
+-   `fitted_pdf` and `fitted_cdf` are working with `gamlss2` object but
+    the binomial responses needed checking (not fixed yet)
+
+# Version 2.1-15
+
+-   Most of the function are working now with `gamlss2` object (need
+    checking)
