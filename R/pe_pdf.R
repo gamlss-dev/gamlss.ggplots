@@ -47,7 +47,7 @@ if (inherits(obj, "gamlss"))
     
   } else
   {
-       resp <- response.name(obj)
+       resp <- response_name(obj)
        DaTa <- model.frame(obj)
     v.names <-  colnames(DaTa)
   }  

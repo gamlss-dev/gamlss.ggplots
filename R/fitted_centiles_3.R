@@ -67,7 +67,7 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 if (inherits(obj, "gamlss2"))
 {
    xvarCh <- all.vars(obj$call$formula)[[2]] 
-   yvarCh <- response.name(obj)
+   yvarCh <- response_name(obj)
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
    if (missing(xvar))
    {
@@ -240,7 +240,7 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 if (inherits(obj, "gamlss2"))
 {
   xvarCh <- all.vars(obj$call$formula)[[2]] 
-  yvarCh <- response.name(obj)
+  yvarCh <- response_name(obj)
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
 if (any(grepl("data", names(obj$call))))# if data exist 
   {
