@@ -1,6 +1,9 @@
 \name{model_GAIC}
 \alias{model_GAIC}
+\alias{model_TD}
 \alias{model_GAIC_lollipop}
+\alias{model_TD_lollipop}
+
 
 \title{Plotting GAIC for GAMLSS models}
 \description{
@@ -20,19 +23,31 @@ model_GAIC_lollipop(object, ..., k = 2, c = FALSE, plot = TRUE,
          col = "skyblue", col.point = "blue", pch.point = 19, 
          width = 0.9, horiz = TRUE, 
          scale = c("[0,1]", "[max,min]"), order.val = TRUE, title)  
+         
+model_TD(..., newdata, plot = TRUE, text.to.show = NULL, 
+        col = "rosybrown", diff.TD = 1000, width = 0.9, horiz = TRUE, 
+        scale = c("[0,1]", "[min,max]"), title)
+
+model_TD_lollipop(..., newdata, plot = TRUE, diff.TD = 1000, 
+         text.to.show = NULL, col = "skyblue", 
+         col.point = "blue", pch.point = 19, width = 0.9, 
+         horiz = TRUE, scale = c("[0,1]", "[min,max]"), 
+         order.val = TRUE, title)
+
 }
 \arguments{
   \item{object}{
 a set of \code{gamlss} fitted model(s) or a matrix table produced by \code{chooseDist()}.
 }
   \item{\dots}{
-it allows several GAMLSS object to be compared using a GAIC
+\code{gamlss} or \code{gamlss2} objects
 }
+\item{newdata}{the test data}
   \item{k}{the penalty with default k=2}
   \item{c}{whether the corrected AIC, i.e. AICc, should be used, note that it applies only when  \code{k=2}}
   \item{plot}{whether to plot with default equal \code{TRUE}}
   \item{which}{which column of GAIC table to plot}
-  \item{diff.dev}{this argument applies only a matrix table produced by \code{chooseDist()} and  prevents models with a difference in deviance greater than \code{diff.dev} from the `best' model to be considered (or plotted).}
+  \item{diff.dev, diff.TD}{this argument mainly applies only a matrix table produced by \code{chooseDist()} and  prevents models with a difference in deviance greater than \code{diff.dev} from the `best' model to be considered (or plotted).}
   \item{text.to.show}{if NULL, \code{model_GAIC()} shows the model names otherwise the character in this list (the length of which should be equal to the length of models)}
   \item{col}{The colour of the bars (or lines. in the lollipop)}
   \item{col.point}{The colour of the points in the lollipop}

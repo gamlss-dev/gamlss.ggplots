@@ -32,6 +32,10 @@ found in <https://www.gamlss.com/>.
 The GitHub repository is now hosted under the new `gamlss-dev`
 organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 
+# Version 2.1-16
+
+- The function `model_TD()` and `model_TD_lollipop()` is introduced but not in the help file yet  
+
 # Version 2.1-12
 
 -   the package was withdraw from CRAN, but now version 2.1.12
