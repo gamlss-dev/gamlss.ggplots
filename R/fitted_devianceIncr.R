@@ -149,14 +149,14 @@ deviance_Incr <- function(object, newdata = NULL, ...)
 {
   if (!inherits(object, "gamlss2")) stop("the model should be an gamlss2 object")
   par <- predict(object, type = "parameter", newdata = newdata)
-  y <- if (!is.null(newdata)) 
-  {
+     y <- if (!is.null(newdata)) 
+      {
     model.response(model.frame(object, data = newdata, keepresponse = TRUE))
-  } else 
-  {
+      } else 
+      {
     model.response(model.frame(object))
-  }
-  dI <- -2*family(object)$d(y, par, log=TRUE)
+      }
+    dI <- -2*family(object)$d(y, par, log=TRUE)
   nobs <- length(dI)
   attr(dI, "nobs") <- nobs
   attr(dI, "df") <- object$df

@@ -10,7 +10,7 @@ The function \code{fit_PB()} fits a P-spline   univariate smoother [Eilers and M
 \usage{
 fit_PB(x, y, weights, data, xmin, xmax, nseg = 20, 
       lambda = 10, order = 2, degree = 3, max.df = 20, 
-      ylim, plot = TRUE, col.ribbon = "pink")
+      ylim, plot = FALSE, col.ribbon = "pink")
 }
 \arguments{
   \item{x}{the explanatory variable}
