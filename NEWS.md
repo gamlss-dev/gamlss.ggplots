@@ -7,8 +7,7 @@ editor_options:
 # Introduction
 
 The package `gamlss.ggplots` is a `R` package to allow the use of
-several plotting functions of the the package `gamlss` to be plotting
-using `ggplot2`. The package `gamlss` is an implementation of the
+several plotting functions for objects created by the the packages `gamlss` and `gamlss2`. It uses the plotting functions of the package`ggplot2`. Both  packages `gamlss` and `gamlss2`  are implementations of the
 Generalised Additive Models for Location, Scale and Shape (GAMLSS) of
 Rigby and Stasinopoulos (2005), Appl. Statist., 54, pp. 507-554).
 
@@ -32,9 +31,6 @@ found in <https://www.gamlss.com/>.
 The GitHub repository is now hosted under the new `gamlss-dev`
 organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 
-# Version 2.1-16
-
-- The function `model_TD()` and `model_TD_lollipop()` is introduced but not in the help file yet  
 
 # Version 2.1-12
 
@@ -60,3 +56,9 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 
 -   Most of the function are working now with `gamlss2` object (need
     checking)
+
+# Version 2.1-16
+
+- The function `model_TD()` and `model_TD_lollipop()` is introduced but not in the help file yet  
+
+
