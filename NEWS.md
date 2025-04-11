@@ -62,3 +62,8 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 - The function `model_TD()` and `model_TD_lollipop()` is introduced but not in the help file yet  
 
 
+# Version 2.1-17
+
+- The function `pe_pdf_fv()` is introduced but not in the help file yet  
+
+

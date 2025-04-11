@@ -285,22 +285,22 @@ if (it.is.factor)
 ################################################################################
 ################################################################################
 pe_2_param <- function(obj = NULL, # the gamlss object
-                    terms = NULL, # which terms to get the derivative
-                     data = NULL, # which data is needed here
-                 n.points = 100,  # number of points needed for evaluating the function
-                parameter = c("mu", "sigma", "nu", "tau"), # which parameter
-                     type = c("parameter", "eta"),
-                      how = c("median", "last", "fixed"),
-                 scenario = list(), # see below (1)
-                      col = "darkblue",
-                linewidth = 1.3,
-                data.plot = TRUE,
-                 data.col = "lightblue",
-                data.size = 0.1,
-               data.alpha = 0.9,
-                     bins = 30, # for contour plot
-                   filled = FALSE, #for contour plot
-                 name.obj = NULL,
+                     terms = NULL, # which terms to get the derivative
+                      data = NULL, # which data is needed here
+                  n.points = 100,  # number of points needed for evaluating the function
+                 parameter = c("mu", "sigma", "nu", "tau"), # which parameter
+                      type = c("parameter", "eta"),
+                       how = c("median", "last", "fixed"),
+                  scenario = list(), # see below (1)
+                       col = "darkblue",
+                 linewidth = 1.3,
+                 data.plot = TRUE,
+                  data.col = "lightblue",
+                 data.size = 0.1,
+                data.alpha = 0.9,
+                      bins = 30, # for contour plot
+                    filled = FALSE, #for contour plot
+                  name.obj = NULL,
                    title) # whether to plot
 {
 #  scenario:a named list of the values to use for the other predictor terms. 
