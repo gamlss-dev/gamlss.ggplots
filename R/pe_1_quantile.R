@@ -138,7 +138,6 @@ if (inherits(obj, "gamlss"))
   }
   colnames(qq) <- quantile
 }  
-
     yaxislabel <- paste0("PE_quan(", term, ")")
 if (lqq==1)
 {
@@ -160,8 +159,8 @@ if (lqq==1)
  #da1= subset(da, da$quantiles==.5)
 #  ggplot(data=da1)+geom_line(aes(x=x,y=y))
   da <- if(inherits(obj,"gamlss ")) 
-    data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
-    else data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,dim(qq)[1], labels = quantile)) 
+         data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
+    else data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
         #ggplot(DataM, aes(x=x, y=c, col=centiles))
 if (it.is.factor)
 {

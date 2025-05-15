@@ -59,20 +59,21 @@ gamlss.bi.list <- .binom
          fam <- as.gamlss.family(family)  # this is created so I can get things
       rorfun <- paste("r",fname,sep="") 
    par.names <- names(fam$parameters)
-#################################################################
-   txt.title <- if (missing(title))  paste("information matrix from ",fname)
+################################################################################
+      txt.title <- if (missing(title))  paste("information matrix from ",fname)
    else title   
    if (fname%in%gamlss.bi.list) bd=bd
 ## whether binomial type
   if(any(fname%in%.gamlss.bi.list)) bd <- bd   
 ## the number of plots  
     lobs <- max(c(length(mu),length(sigma),length(nu),length(tau)))
-#################################################################  
+################################################################################  
 # get the parameters
 if ("mu"%in%par.names)
    { if (is.null(mu)) stop("At least one value of mu has to be set")
       mu.var <- rep(mu, length = lobs) 
       if (!fam$mu.valid(mu.var))  stop( "`mu' parameter out of range")
+      
       samp <- eval(call(rorfun, no.sim, mu=mu.var))
    }
 if ("sigma"%in%par.names)
@@ -104,7 +105,7 @@ txt.title <- if (missing(title))  paste("Correlations from family",fname)
              else title  
 if (plot==FALSE) return(CC)
 # end loop
-############################################################
+################################################################################
         method <- match.arg(method)
           corr <- meltit(CC)
 colnames(corr) <- c("var_1", "var_2", "value")
