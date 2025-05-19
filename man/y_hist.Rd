@@ -13,7 +13,7 @@ The function \code{y_dots()} is design for long tail right skewed variables. It 
 
 }
 \usage{
-y_hist(y, data, with.density = TRUE, hist.col = "black",
+y_hist(y, data,  xlab = NULL, with.density = TRUE, hist.col = "black",
          hist.fill = "white", dens.fill = "#FF6666", 
          binwidth = (max(y)-min(y))/20,  from, to, title)
          
@@ -32,6 +32,7 @@ y_dots(y, data, value=3, point.size = 2, point.col = "gray",
 \arguments{
   \item{y,x}{a continuous variable}
   \item{data}{where to find argument y}
+  \item{xlab}{The x-label if it should be different from the variable name}
   \item{value}{value to identify outliers i.e. for upper tail an outliers is if it is greater than Q_3+value*IQ} 
   \item{with.density}{whether a density is required, default is \code{TRUE}}
   \item{hist.col}{the colour of lines of the histogram}

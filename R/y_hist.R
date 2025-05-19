@@ -5,6 +5,7 @@
 ################################################################################
 y_hist <- function(y,
                   data,
+                  xlab = NULL,
           with.density = TRUE,
               hist.col = "black", 
              hist.fill = "white",
@@ -22,7 +23,8 @@ other_prep_data <- function (y)
 return(out)
 }  
 ################################################################################ 
-         xlab <- deparse(substitute(y))
+xlab <- if (is.null(xlab)) deparse(substitute(y))
+        else xlab
 if (missing(y))  stop("the y is not declared")
 if (with.density) # with the density
 {
