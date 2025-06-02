@@ -144,9 +144,9 @@ get_family <- function (model)
     nopar <- length(param)
      dfun <- paste("d",fname,sep="")
      pfun <- paste("p",fname,sep="")
-    p_d_f <- eval(family$d) 
-    c_d_f <- eval(family$p) 
-    q_fun <- eval(family$q) 
+    p_d_f <- eval(family$pdf) 
+    c_d_f <- eval(family$cdf) 
+    q_fun <- eval(family$quantile) 
   } 
 list(fname=fname, type=type, nopar=nopar, param=param, dfun=dfun, pfun=pfun,
      p_d_f=p_d_f, c_d_f=c_d_f, q_fun=q_fun)  

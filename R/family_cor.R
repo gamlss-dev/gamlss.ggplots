@@ -60,8 +60,8 @@ gamlss.bi.list <- .binom
       rorfun <- paste("r",fname,sep="") 
    par.names <- names(fam$parameters)
 ################################################################################
-      txt.title <- if (missing(title))  paste("information matrix from ",fname)
-   else title   
+   #    txt.title <- if (missing(title))  paste("information matrix from ",fname)
+   # else title   
    if (fname%in%gamlss.bi.list) bd=bd
 ## whether binomial type
   if(any(fname%in%.gamlss.bi.list)) bd <- bd   
@@ -95,8 +95,8 @@ if ("tau"%in%par.names)
       if (!fam$tau.valid(tau.var))  stop( "`tau' parameter out of range")
       samp <- eval(call(rorfun, no.sim, mu=mu.var, sigma=sigma.var, nu=nu.var, tau=tau.var))
 }
-    
-     model0 <- gamlssML(samp, family=fname) 
+   # model0 <- gamlssML(samp, family=fname) # decide which to use 
+     model0 <- gamlss2(samp~1, family=fname, trace=FALSE) 
          CC <- vcov(model0, type="cor")
          CC <- base::round(x = CC, digits = digits)
 if ( diag.off) diag(CC) <- NA
