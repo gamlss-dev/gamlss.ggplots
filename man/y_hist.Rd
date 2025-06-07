@@ -26,7 +26,8 @@ y_dots(y, data, value=3, point.size = 2, point.col = "gray",
           line.col = c("black","red", "black"),
           line.type = c("dotted", "solid",  "dotted"),
           line.size = c(1,1,1), x.axis.col = "black", 
-          x.axis.line.type = "solid", seed = 123, from, to, title)
+          x.axis.line.type = "solid", seed = 123, from, to, title,
+          plot = TRUE)
 
 }
 \arguments{
@@ -53,6 +54,7 @@ y_dots(y, data, value=3, point.size = 2, point.col = "gray",
   \item{x.axis.line.type}{the type of the x-axix}
   \item{seed}{the seed to  jitter  the y}
   \item{title}{use this for a different title}
+   \item{plot}{whether to plot or just print the outliers}
 }
 
 \value{

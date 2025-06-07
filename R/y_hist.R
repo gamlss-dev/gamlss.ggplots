@@ -79,7 +79,8 @@ y_dots <- function(y,
                 x.axis.col = "black",
           x.axis.line.type = "solid",
                       seed = 123,
-                   from, to, title)
+                   from, to, title,
+                      plot = TRUE)
 {
 ################################################################################
 other_prep_data <- function (y, seed, value) 
@@ -112,6 +113,8 @@ if (!missing(data)) y <- get(xlab, envir = as.environment(data))
   xlimitfrom <- if (missing(from))   min(y) else from
     xlimitto <- if (missing(to))     max(y) else to  
            d <- other_prep_data(y, seed=seed, value=value) 
+if (plot)
+{
    gg <- ggplot2::ggplot(d, ggplot2::aes(x = y, y = rand, label = txt, 
                                          ymin = 0, ymax = rand)) +
          ggplot2::geom_point(size=point.size, col=point.col)  +
@@ -123,7 +126,7 @@ if (!missing(data)) y <- get(xlab, envir = as.environment(data))
         ggplot2::geom_vline(xintercept = quantile(y, quantile[2]), 
                  col=line.col[2], linewidth=line.size[2], linetype=line.type[2])+
         ggplot2::geom_vline(xintercept = quantile(y, quantile[3]), 
-                            col=line.col[3], size=line.size[3], 
+                            col=line.col[3], linewidth=line.size[3], 
                             linetype=line.type[3])+
         ggplot2::ggtitle(txt.title) +
         ggplot2::xlim(xlimitfrom, xlimitto)+
@@ -138,6 +141,8 @@ if (!missing(data)) y <- get(xlab, envir = as.environment(data))
                   linetype = x.axis.line.type, colour = x.axis.col),
                     panel.background = ggplot2::element_blank())
   return(gg)
+} else 
+return(d$obs[!is.na(d$txt)])  
 }
 ##########################################################################
 ##########################################################################
