@@ -67,3 +67,9 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 - The function `pe_pdf_fv()` is introduced but not in the help file yet  
 
 
+# Version 2.1-18
+
+- the function `fitted_pdf_legend()` is introduced but not exported in the NAMSPACE. To use it use 
+  `gamlss.ggplots:::fitted_pdf_legend()`.
+  
+- the package vignette can be found in <https://mstasinopoulos.github.io/Functions-from-packages/.>    
