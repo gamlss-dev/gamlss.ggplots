@@ -131,7 +131,6 @@ if (!what%in%object$par) stop(paste(what,"is not a parameter in the object","\n"
 ## get all terms and attributes 
     par.terms <- object[[paste(what, "terms", sep=".")]]
     par.attr  <- attributes(par.terms)  
-#browser()
   Terms <- if (is.null(terms)) lpred(object, what = what, type = "terms", se.fit = TRUE)
             else lpred(object, what = what, type = "terms", se.fit = TRUE, terms = terms)
 ## the number of terms
