@@ -90,9 +90,10 @@ other_prep_data <- function (y, seed, value)
         y <- y[!is.na(y)]
        ly <- length(y)
         G <- quantile(y, probs=c(.25,.75))
-       IQ <- (G[2]-G[1])/2 
- value_lo <- G[1] - value * IQ
- value_up <- G[2] + value * IQ
+    #   IQ <- (G[2]-G[1])/2 
+       MAD <- mad(y)
+ value_lo <- G[1] - value * MAD#IQ
+ value_up <- G[2] + value * MAD#IQ
 set.seed(seed)
      rand <- runif(ly)
       out <- data.frame(obs = obs, rand=rand, y = as.numeric(y))
@@ -137,7 +138,7 @@ if (plot)
             panel.border = ggplot2::element_blank(),
              panel.grid.major.y = ggplot2::element_blank(),
              panel.grid.minor.y = ggplot2::element_blank(),
-             axis.line.x = ggplot2::element_line(size = 0.5, 
+             axis.line.x = ggplot2::element_line(linewidth = 0.5, 
                   linetype = x.axis.line.type, colour = x.axis.col),
                     panel.background = ggplot2::element_blank())
   return(gg)

@@ -9,7 +9,7 @@ The function \code{y_hist()} creates a histogram and a density plot for a contin
 
 The functions \code{y_acf()} and \code{y_pacf()} plot the autocorrolation and partial autocorrolation functions  for y.
 
-The function \code{y_dots()} is design for long tail right skewed variables. It is  a plot emphasising  the right tail of the distribution for such variables. 
+The function \code{y_dots()} is design for highly skewed variables. It is  a plot emphasising  long  tails of the distribution for such variables. 
 
 }
 \usage{
