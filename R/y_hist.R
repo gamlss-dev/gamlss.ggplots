@@ -91,7 +91,7 @@ other_prep_data <- function (y, seed, value)
        ly <- length(y)
         G <- quantile(y, probs=c(.25,.75))
     #   IQ <- (G[2]-G[1])/2 
-       MAD <- mad(y)
+       MAD <- stats::mad(y)
  value_lo <- G[1] - value * MAD#IQ
  value_up <- G[2] + value * MAD#IQ
 set.seed(seed)
