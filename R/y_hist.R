@@ -88,11 +88,11 @@ other_prep_data <- function (y, seed, value)
       obs <- seq_len(length(y))
       obs <- obs[!is.na(y)]
         y <- y[!is.na(y)]
-       ly <- length(y)
-        G <- quantile(y, probs=c(.25,.75))
+       ly <- length(y)# tha actual length
+        G <- quantile(y, probs=c(.25,0.50,.75))
     #   IQ <- (G[2]-G[1])/2 
        MAD <- stats::mad(y)
- value_lo <- G[1] - value * MAD#IQ
+ value_lo <- G[2] - value * MAD#IQ
  value_up <- G[2] + value * MAD#IQ
 set.seed(seed)
      rand <- runif(ly)
