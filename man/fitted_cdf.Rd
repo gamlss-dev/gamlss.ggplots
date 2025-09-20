@@ -93,7 +93,7 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 }
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
-\seealso{  \code{\link{gamlss}}}
+\seealso{  \code{\link[gamlss]{gamlss}}}
 \examples{
 # function fitted_cdf
 # continuous variabe

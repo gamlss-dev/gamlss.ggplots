@@ -68,7 +68,7 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 Mikis Stasinopulos, Rober Rigby and Fernanda de Bastiani 
 }
 
-\seealso{\code{\link{gamlss}}}
+\seealso{\code{\link[gamlss]{gamlss}}}
 
 \examples{
 m1 <- gamlss(R~pb(Fl)+pb(A)+H+loc, data=rent, family=GA )

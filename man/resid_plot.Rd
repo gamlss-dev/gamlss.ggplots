@@ -108,7 +108,7 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
 
-\seealso{  \code{\link{gamlss}}, \code{\link{plot.gamlss} }}
+\seealso{  \code{\link[gamlss]{gamlss}}, \code{\link[gamlss]{plot.gamlss} }}
 
 \examples{
 library(ggplot2)

@@ -219,20 +219,20 @@ residuals.Psplines  <- function(object,...)
 ################################################################################
 ################################################################################
 ################################################################################
-plot.Psplines <- function(object, ...)
+plot.Psplines <- function(x, ...)
 {
-  x <-y <- lower <- upper <- NULL
+  y <- lower <- upper <- NULL
   stopifnot(requireNamespace("ggplot2"))
-  df <- data.frame(y=object$y, x=object$x, fv=object$fv, 
-                   lower=object$fv-2*sqrt(object$varfv), 
-                   upper=object$fv+2*sqrt(object$varfv)) 
+  df <- data.frame(y=x$y, x=x$x, fv=x$fv, 
+                   lower=x$fv-2*sqrt(x$varfv), 
+                   upper=x$fv+2*sqrt(x$varfv)) 
   #   theme_bw(base_size = 18)
   gg <- ggplot2::ggplot(data=df, ggplot2::aes(x=x, y=y))+
-    ggplot2::geom_point(, col="black", size=0.5)+
-    ggplot2:: geom_line( ggplot2::aes(x=x, y=fv), col="blue", linewidth=1)+
-    ggplot2::ylab(object$yname)+ ggplot2::xlab(object$xname)+
-    ggplot2::geom_ribbon(data=df, ggplot2::aes(ymin = lower, ymax = upper, x = x), 
-                         alpha=.5, fill="pink")
+        ggplot2::geom_point(, col="black", size=0.5)+
+        ggplot2:: geom_line( ggplot2::aes(x=x, y=fv), col="blue", linewidth=1)+
+        ggplot2::ylab(x$yname)+ ggplot2::xlab(x$xname)+
+        ggplot2::geom_ribbon(data=df, ggplot2::aes(ymin = lower, ymax = upper,
+        x = x), alpha=.5, fill="pink")
   print(gg)
 }
 ################################################################################

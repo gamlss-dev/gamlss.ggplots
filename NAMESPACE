@@ -81,6 +81,7 @@ S3method(print, ACE)
 ################################################################################
 # fit_PB object
 S3method(print, Psplines)
+S3method(plot, Psplines)
 S3method(coef, Psplines)
 S3method(deviance, Psplines)
 S3method(fitted, Psplines)

@@ -38,7 +38,7 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
 
-\seealso{  \code{\link{gamlss}}, \code{\link{resid_index} }}
+\seealso{  \code{\link[gamlss]{gamlss}}, \code{\link{resid_index} }}
 \examples{
 m1 <- gamlss(y~x, data=abdom)
 m2 <- gamlss(y~pb(x), data=abdom)

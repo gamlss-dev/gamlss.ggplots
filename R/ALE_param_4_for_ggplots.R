@@ -90,7 +90,7 @@ if (length(term) == 1)
 ################################################################################
 # if factor
 ################################################################################  
-if (class(X[, term]) == "factor") 
+if (inherits(X[, term], "factor")) 
   {
        X[, term] <- droplevels(X[, term])
       x.count <- as.numeric(table(X[, term]))
@@ -100,7 +100,7 @@ if (class(X[, term]) == "factor")
             D <- matrix(0, K, K)
 for (j in setdiff(1:d, term)) 
   {
-    if (class(X[, j]) == "factor") 
+    if (inherits(X[, j],"factor")) 
       {
           A = table(X[, term], X[, j])
           A = A/x.count
@@ -176,8 +176,8 @@ if (plot)
 ################################################################################
 # if continuous
 ################################################################################  
-    else if (class(X[, term]) == "numeric" | class(X[, term]) == 
-             "integer") {
+    else if (inherits(X[, term], "numeric") | inherits(X[, term],
+             "integer")) {
             z <- c(min(X[, term]), as.numeric(quantile(X[, term], seq(1/K, 
                                               1, length.out = K), type = 1)))
             z <- unique(z)
@@ -238,11 +238,11 @@ if (plot)
 ################################################################################   
 else if (length(term) == 2) 
 {
- if (class(X[, term[2]]) != "numeric" & class(X[, term[2]]) != "integer") 
+ if (inherits(X[, term[2]],"numeric") & inherits(X[, term[2]], "integer")) 
    {
       print("error: X[,term[2]] must be numeric or integer. Only X[,term[1]] can be a factor")
    }
- if (class(X[, term[1]]) == "factor") 
+ if (inherits(X[, term[1]], "factor")) 
    {
       X[, term[1]] <- droplevels(X[, term[1]])
         x.count <- as.numeric(table(X[, term[1]]))
@@ -252,7 +252,7 @@ else if (length(term) == 2)
               D <- matrix(0, K1, K1)
     for (j in setdiff(1:d, term[1])) 
       {
-        if (class(X[, j]) == "factor") 
+        if (inherits(X[, j],"factor")) 
           {
              A <- table(X[, term[1]], X[, j])
              A <- A/x.count
@@ -398,8 +398,8 @@ X22[row.ind.neg, term[2]] <- z2[a2 + 1][row.ind.neg]
         }
       }
     }
-  else if (class(X[, term[1]]) == "numeric" | class(X[, term[1]]) == 
-             "integer") 
+  else if (inherits(X[, term[1]],"numeric") | inherits(X[, term[1]],
+             "integer")) 
     {
       z1 <- c(min(X[, term[1]]), as.numeric(quantile(X[, term[1]], 
                                                  seq(1/K, 1, length.out = K), type = 1)))
