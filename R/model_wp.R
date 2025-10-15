@@ -79,9 +79,7 @@ if (!inherits(obj, c("gamlss", "gamlss2")))
      stop("the model is not GAMLSS object")
 if (length(names)<=1) stop("you need more than two models")
        d <- gamlss_prep_data(obj, ...)
-     
        N <-  dim(d)[1]
-     
        table(d$model)
 txt.title <- if (missing(title))  "worm-plots of residuals from different models" else title   
    se <- getSE(max(abs(d$x))+.5)
