@@ -39,7 +39,7 @@ pe_1_quantile <- function (obj = NULL,
 #   }
 # else if (is.null(data)) 
 #     stop("The data argument is needed in obj")
- if (inherits(obj, "gamlss"))
+ if (inherits(obj, "gamlss")) ########################################## GAMLSS
  {
    if (any(grepl("data", names(obj$call)))) 
    {
@@ -57,22 +57,29 @@ pe_1_quantile <- function (obj = NULL,
 #   v.names <- names(DaTa)
        pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
-if (is.factor(DaTa[,pos])) 
-   {
-         xvar <- levels(DaTa[,pos])
-     n.points <- nlevels(DaTa[,pos])
- it.is.factor <- TRUE
-   } else
-   {
-        xvar <-  seq(from = min(DaTa[,pos]), to=max(DaTa[,pos]), length.out=n.points)
-it.is.factor <- FALSE
-   }                 
+if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) 
+       {
+         if (is.factor(DaTa[,pos]))
+         {
+           xvar <- levels(DaTa[,pos])
+           n.points <- nlevels(DaTa[,pos])
+           it.is.factor <- TRUE
+         } else  # chararacter 
+         {
+           xvar <- attr(table(DaTa[,pos]),"names")
+           n.points <- length(xvar)
+           it.is.factor <- TRUE
+         }  
+       } else
+       {
+         xvar <-  seq(from = min(DaTa[,pos]), to=max(DaTa[,pos]), length.out=n.points)
+         it.is.factor <- FALSE
+       }          
          mat <- matrix(0, nrow = dim(DaTa)[1] + n.points, ncol = dim(DaTa)[2])
     dat.temp <- as.data.frame(mat)
 names(dat.temp) <- v.names
-#  xvar <- seq(from = min(DaTa[, pos]), to = max(DaTa[, pos]), 
-#              length.out = n.points)
-  for (i in 1:dim(dat.temp)[2]) {
+for (i in 1:dim(dat.temp)[2]) 
+  {
     if (pos == i) 
       {
       dat.temp[, i] <- c(DaTa[, i], xvar)
@@ -82,7 +89,7 @@ names(dat.temp) <- v.names
       ma <- scenario[[v.names[i]]]
       if (is.null(ma)) 
         {
-          if (how == "median") 
+         if (how == "median") 
             {
              if (is.character(DaTa[,i])) DaTa[,i] <- as.factor(DaTa[,i])
              ma <- if (is.factor(DaTa[, i])) levels(DaTa[, i])[which.max(table(DaTa[, i]))]
@@ -127,12 +134,12 @@ if (inherits(obj, "gamlss"))
                         eval(call(qfun, p= quantile[i], mu=pp[,"mu"], sigma=pp[,"sigma"],  nu=pp[,"nu"], tau=pp[,"tau"])))
     }
   }    
-} else 
+} else # gamlss2
 {
-  pp <-  predict(obj,  newdata=tail(dat.temp, n.points), type="parameter") 
-  qq <- list()
-  lqq <- length(quantile)  
-  for(q in quantile)
+   pp <-  predict(obj,  newdata=tail(dat.temp, n.points), type="parameter") 
+   qq <- list()
+   lqq <- length(quantile)  
+for (q in quantile)
   {
     qq <- cbind(qq, family(obj)$q(q, pp))
   }
@@ -158,16 +165,18 @@ if (lqq==1)
   else title  
  #da1= subset(da, da$quantiles==.5)
 #  ggplot(data=da1)+geom_line(aes(x=x,y=y))
-  da <- if(inherits(obj,"gamlss ")) 
+  da <- if(inherits(obj,"gamlss")) 
          data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
-    else data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
+    else data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,dim(qq)[1], labels = quantile)) 
+ # da <- data.frame(y=unlist(qq), x=rep(xvar,lqq), quantiles=gl(lqq,length(qq[[1]]), labels = quantile)) 
         #ggplot(DataM, aes(x=x, y=c, col=centiles))
 if (it.is.factor)
 {
   pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x=x, y=y, group=factor(quantiles), colour=quantiles))+
     ggplot2::geom_line(linewidth=linewidth)+
     ggplot2::geom_point( size=linewidth+2)+
-    ggplot2::ylab(yaxislabel) + xlab(term)+ 
+    ggplot2::ylab(yaxislabel) +  
+    ggplot2::xlab(term)+ 
     ggplot2::ggtitle(txt.title)
 if (!is.null(ylim)) pp <- pp + ggplot2::ylim(ylim)   
 if (!is.null(ylab)) pp <- pp + ggplot2::ylab(ylab) 
@@ -177,6 +186,7 @@ if (legend=="FALSE") pp <- pp+ ggplot2::theme(legend.position = "none")
 {
   pp <- ggplot2::ggplot(data=da, ggplot2::aes(x=x, y=y, col=quantiles))+
     ggplot2::geom_line(linewidth=linewidth)+
+  #  ggplot2::geom_point( size=linewidth+2)+
     ggplot2::ylab(yaxislabel)+
     ggplot2::xlab(term)+ 
     ggplot2::ggtitle(txt.title)
