@@ -5,7 +5,6 @@
 # ii)  binomial is excluded at the meoment 
 # iii) waht about  count data
 # v)   different colour scheme? 
-require(ggridges)
 # -------------------------------------------------------------
 pe_pdf_fv <- function (obj = NULL, 
                         term = NULL, 
@@ -21,7 +20,6 @@ pe_pdf_fv <- function (obj = NULL,
                        alpha = 0.6,
                        title) 
 {
-#require(ggridges)
 if (is.null(obj) || !class(obj)[1] == "gamlss") 
     stop("Supply a standard GAMLSS model in obj")
 if (is.null(term)) stop("The model term is not set")

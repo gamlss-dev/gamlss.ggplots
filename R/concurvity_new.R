@@ -176,7 +176,6 @@ data_concurvity <- function(data,
     daf <-  na.omit(data.frame(Var1, Var2, value=value)) 
     daf
   }      
-  #require(reshape2)  
          dimD <- dim(data)
          daTa <- subset(data,  select=ifelse(sapply(data,is.factor)|sapply(data,is.character)==TRUE, FALSE, TRUE))
           Dim <- dim(daTa)

@@ -84,8 +84,6 @@ pe_2_quantile <- function(obj,
 )
 {
 ################################################################################  
-#require(ggplot2)
-#require(gamlss)
 ################################################################################  
 # checking things
   if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 

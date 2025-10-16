@@ -26,7 +26,6 @@ pe_pdf <- function (     obj = NULL,
                         xlim = NULL,
                        title) 
 {
-#require(ggridges)
 if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
 if (is.null(term)) stop("The model term is not set")

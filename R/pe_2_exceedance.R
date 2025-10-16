@@ -22,8 +22,6 @@ pe_2_exceedance<-function(obj,
 )
 {
 ################################################################################  
-#require(ggplot2)
-#require(gamlss)
 ################################################################################ 
   xrangev <- yrva <- p_exceedance <- NULL
 # checking things

@@ -94,7 +94,6 @@ if (length(list(...))) # if a list of model
   if  (plot) # if we need to plot
       {
     val$models <- rownames(val)
-# require(dplyr)
 # val %>%
 #   arrange(val$scaled) %>%    # First sort by val. This sort the dataframe but NOT the factor levels
 #   mutate(models=factor(models, levels=models)) %>%   # This trick update the factor levels
