@@ -5,7 +5,7 @@
 # TO DO
 # i)   what action we should have with factors? fixed
 # ii)  binomial is excluded at the meoment 
-# iii) waht about  count data
+# iii) what about  count data
 # v)   different colour scheme? 
 # -------------------------------------------------------------
 pe_pdf <- function (     obj = NULL, 
@@ -152,7 +152,7 @@ if (lqq==1) # if only one x.grid.points
                 eval(call(dfun, x= yvar, mu=pp[,"mu"][i], sigma=pp[,"sigma"][i],  nu=pp[,"nu"][i], tau=pp[,"tau"][i]))) # 4
   }
  }  
-} else 
+} else  # gamlss2
 {
       pp <- predict(obj, newdata=tail(dat.temp, x.grid.points), type="parameter")
 TypeDist <- obj$family$type
@@ -171,7 +171,7 @@ if (TypeDist=="Discrete")
    lqq <- length(xvar) 
 for (i in 1:lqq)
    {
-     qq[[i]] <- family(obj)$d(yvar, pp[i,])
+     qq[[i]] <- family(obj)$pdf(yvar, pp[i,])
    }   
    
    # qq <- family(obj)$p(yvar, pp)
