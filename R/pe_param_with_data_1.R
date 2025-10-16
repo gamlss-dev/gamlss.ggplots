@@ -203,7 +203,7 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
 } # end going thought the variables
 ## predict  
 # pp = attr(predict(obj,  type = "term", parameter = parameter),"constant")
-if (inherits(obj, "gamlss"))
+if (inherits(obj, "gamlss")) ## GAMLSS
 {
   fittted.star  <- predict(obj,parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
 }  else 
@@ -252,7 +252,7 @@ if (it.is.factor)
                   ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
                   size = data.size, alpha = data.alpha, colour = data.col)
      }
-    } else 
+    } else  # GAMLSS 2
     {
       pp <- ggplot2::ggplot(data=da) +
         ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
