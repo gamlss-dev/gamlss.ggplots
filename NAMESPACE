@@ -70,14 +70,9 @@ export( resid_index,
         #pe_pdf, pe_quantile_grid
         quantile_gamlss, # should be called fitted_quantile() or get_quantile()
         fit_PB, # 
-        ACE, 
-        mcor,
         prof_term, model_TD, model_TD_lollipop
 )        
 ################################################################################
-# ACE object
-S3method(plot, ACE)
-S3method(print, ACE)
 ################################################################################
 # fit_PB object
 S3method(print, Psplines)
