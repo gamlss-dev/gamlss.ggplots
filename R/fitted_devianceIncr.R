@@ -156,7 +156,7 @@ deviance_Incr <- function(object, newdata = NULL, ...)
       {
     model.response(model.frame(object))
       }
-    dI <- -2*family(object)$d(y, par, log=TRUE)
+    dI <- -2*family(object)$pdf(y, par, log=TRUE)
   nobs <- length(dI)
   attr(dI, "nobs") <- nobs
   attr(dI, "df") <- object$df
