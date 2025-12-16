@@ -189,11 +189,12 @@ p11
 ################################################################################
 ################################################################################
 # adding data in 
-fitted_pdf_data <- function(model, obs, from, to, ...)  
+fitted_pdf_data <- function(model, obs, from, to, 
+      colour = hcl.colors(length(obs), palette="viridis"), ...)  
 {
   
-  fitted_pdf(model, obs=obs, from=from, to=to, ...)+
-    ggplot2::geom_vline(xintercept = model$y[obs], colour="gray")
+  fitted_pdf(model, obs=obs, from=from, to=to, ...) +
+    ggplot2::geom_vline(xintercept = model$y[obs], colour=colour[1:length(obs)])
 }
 ################################################################################
 ################################################################################

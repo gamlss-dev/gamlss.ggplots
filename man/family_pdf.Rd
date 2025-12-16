@@ -29,13 +29,13 @@ fitted_pdf(model, obs, title, from = 0, to = 10, no.points = 201, alpha = 0.4,
          size.seqment = 1.5, plot.point = TRUE, size.point = 1, plot.line = TRUE,
          size.line = 0.2, ...)
          
-fitted_pdf_data(model, obs, from, to, ...)         
+fitted_pdf_data(model, obs, from, to, 
+             colour = hcl.colors(length(obs), palette = "viridis"), ...)  
          
 predict_pdf(model, newdata, title, from = 0, to = 10, no.points = 201, 
          alpha = 0.4, col.fill = hcl.colors(lobs, palette = "viridis"), 
          size.seqment = 1.5, plot.point = TRUE, size.point = 1, 
          plot.line = TRUE, size.line = 0.2, ...)
-         
 }
 \arguments{
   \item{family}{A GAMLSS family}
@@ -52,6 +52,7 @@ predict_pdf(model, newdata, title, from = 0, to = 10, no.points = 201,
   \item{no.points}{number of points (relevant for continuous responses)}
   \item{alpha}{trasparency factor}
   \item{col.fill}{the colour pallet default is \code{hcl.colors(lobs, palette="viridis")}}
+  \item{colour}{the colour pallet default is \code{hcl.colors(lobs, palette="viridis")}}
   \item{size.seqment}{for discrete responses the size of the bars}
   \item{plot.point}{for discrete responses whether to put poits on the top of the bars}
   \item{size.point}{for discrete responses }
