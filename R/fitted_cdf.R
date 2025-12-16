@@ -183,10 +183,11 @@ p11
 }
 ##############################################################################
 ##############################################################################
-fitted_cdf_data <- function(model, obs, from, to, ...)  
+fitted_cdf_data <- function(model, obs, from, to,
+          colour = hcl.colors(length(obs), palette="viridis"), ...)  
 {
   fitted_cdf(model, obs=obs, from=from, to=to, ...)+
-    ggplot2::geom_vline(xintercept = model$y[obs], colour="gray")
+    ggplot2::geom_vline(xintercept = model$y[obs],  colour=colour[1:length(obs)])
 }
 #############################################################################
 #############################################################################

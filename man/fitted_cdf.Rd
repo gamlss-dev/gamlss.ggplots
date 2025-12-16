@@ -23,7 +23,8 @@ fitted_cdf(model, obs, title, from = 0, to = 10, no.points = 201,
           size.seqment = 1.5, size.point = 1, 
           plot.line = TRUE, size.line.disc = 0.2, lower.tail = TRUE, ...)
 
-fitted_cdf_data(model, obs, from, to, ...)
+fitted_cdf_data(model, obs, from, to, 
+    colour =  hcl.colors(length(obs), palette = "viridis"), ...)
 
 predict_cdf(model, newdata, title, from = 0, to = 10, no.points = 201, 
           alpha = 0.4, size.line = 1.2, 
@@ -53,6 +54,7 @@ family_cdf(family = NO(), mu = NULL, sigma = NULL, nu = NULL,
   \item{no.points}{number of points (relevant for continuous responses)}
   \item{alpha}{trasparency factor}
   \item{col.fill}{the colour pallet default is \code{hcl.colors(lobs, palette="viridis")}}
+  \item{colour}{the colour pallet default is \code{hcl.colors(lobs, palette="viridis")}}
   \item{size.seqment}{for discrete responses the size of the bars}
   \item{plot.point}{for discrete responses whether to put poits on the top of the bars}
   \item{size.point}{for discrete responses }
