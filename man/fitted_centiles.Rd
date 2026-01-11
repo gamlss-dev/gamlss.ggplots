@@ -2,6 +2,9 @@
 \alias{fitted_centiles}
 \alias{fitted_centiles_legend}
 \alias{model_centiles}
+\alias{fitted_centiles_gap}
+
+
 
 \title{
 Plotting centile (growth) curves
@@ -10,6 +13,8 @@ Plotting centile (growth) curves
 The function \code{fitted_centiles()} plots centiles curves for distributions belonging to the GAMLSS family of distributions. The plot is equivalent to the standard plot of \code{gamlss:::centiles()} without a legend.
 
 The function \code{fitted_centiles_legend()} plots centiles curves for distributions belonging to the GAMLSS family of distributions and it is  equivalent to the standard plot of \code{gamlss:::centiles()} with a legend. The function  is slower than \code{fitted_centiles()} since in order to plot the legend the data have to expanded.  
+
+The function \code{fitted_centiles_gap()} is based  on the function  \code{fitted_centiles_legend()} but it can cope with data that have gaps in the x-variable. A Typical example is data collected during  pregnant when some weeks do not have data, see the data \code{APL} in the package \code{gamlss.data}.   
 
 The function \code{model_centiles()} plots centile curves for more than one model.  There is no equivalent  plot in the original GAMLSS centile plots  but it perform the same function as \code{gamlss:::centiles.com()}  which compares centiles from different models.
 
@@ -22,7 +27,7 @@ fitted_centiles(obj, xvar,
                point.size = 1, line.size = 0.8, 
                line.col = hcl.colors(lc, palette = "Dark 2"), 
                line.type = rep(1, length(cent)),
-               xlab = NULL, ylab = NULL, title, ...)
+               xlab = NULL, ylab = NULL, ylim, title, ...)
                
 fitted_centiles_legend(obj, xvar, 
                cent = c(99.4, 98, 90, 75, 50, 25, 10, 2, 0.4),   
@@ -30,7 +35,15 @@ fitted_centiles_legend(obj, xvar,
                line.size = 0.8, line.col = hcl.colors(ncent, 
                palette = "Dark 2"), line.type = rep(1, length(cent)),               
                show.legend = TRUE, save.data = FALSE, title, 
-               xlab = NULL, ylab = NULL, ...)               
+               xlab = NULL, ylab = NULL, ylim, ...)               
+
+fitted_centiles_gap(obj, xvar, 
+               cent = c(98, 90, 75, 50, 25, 10, 2), 
+               points = TRUE, point.col = "gray", point.size = 1, 
+               line.size = 0.8, line.col = hcl.colors(ncent, 
+               palette = "Dark 2"), line.type = rep(1, length(cent)), 
+               show.legend = TRUE, save.data = FALSE, title, 
+               xlab = NULL, ylab = NULL, ylim, ...)
 
 model_centiles(obj, ..., cent = c(97, 90, 75, 50, 25, 10, 3), 
                xvar, xlab = "age", points = TRUE, 
@@ -38,7 +51,8 @@ model_centiles(obj, ..., cent = c(97, 90, 75, 50, 25, 10, 3),
                point.size = 0.05, line.size = 0.7, 
                line.col = hcl.colors(ncent,palette = "Dark 2"), 
                ncol = 2, nrow = ceiling(nnames/ncol),  in.one = FALSE,
-               title)               
+               title) 
+               
 }
 
 \arguments{
@@ -53,6 +67,7 @@ model_centiles(obj, ..., cent = c(97, 90, 75, 50, 25, 10, 3),
   \item{line.type}{the type of line (different types of lines for each centile are working with \code{fitted_centiles_legend})}
   \item{xlab}{the label of the x-axis variable}
   \item{ylab}{the label of the resposnse variable}
+  \item{ylim}{the limits of the resposnse variable}
    \item{in.one}{whether the \code{model_centile} plot should be one or multiple}
   \item{title}{the title if need it otherwise a dfault title is pronted}
     \item{show.legend}{whether to show the legend}
