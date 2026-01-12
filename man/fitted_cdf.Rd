@@ -3,6 +3,8 @@
 \alias{family_cdf}
 \alias{predict_cdf}
 \alias{fitted_cdf_data}
+\alias{fitted_survival}
+\alias{fitted_survival_data}
 
 \title{
 Plotting Cumulative Distribution Functions (cdf's) for GAMLSS,
@@ -12,7 +14,11 @@ The function \code{family_cdf()} takes a GAMLSS family distribution and plots di
 
 The function \code{fitted_cdf()} takes a gamlss fitted object and plots the fitted distributions for specified observations.
 
-The function \code{fitted_cdf_data()} is similat to  \code{fitted_cdf()} but also adds the data points as gray vertical lines. 
+The function \code{fitted_survival()} takes a gamlss fitted object and plots the the survival function  for specified observations.
+
+The function \code{fitted_cdf_data()} is similat to  \code{fitted_cdf()} but also adds the data points as vertical lines. 
+
+The function \code{fitted_survival_data()} is similat to  \code{fitted_survival()} but also adds the data points as  vertical lines. 
 
 The function \code{predict_pdf()} (NOT IMPLEMENTED YET) takes a fitted object and test  data and plots the predictive cdf's.
 }
@@ -23,8 +29,18 @@ fitted_cdf(model, obs, title, from = 0, to = 10, no.points = 201,
           size.seqment = 1.5, size.point = 1, 
           plot.line = TRUE, size.line.disc = 0.2, lower.tail = TRUE, ...)
 
+fitted_survival(model, obs, title, from = 0, to = 10, no.points = 201, 
+         alpha = 1, size.line = 1.2, 
+         col.fill = hcl.colors(lobs, palette = "viridis"), 
+         size.seqment = 1.5, size.point = 1, 
+         plot.line = TRUE, size.line.disc = 0.2, lower.tail = TRUE, ...)
+
+
 fitted_cdf_data(model, obs, from, to, 
     colour =  hcl.colors(length(obs), palette = "viridis"), ...)
+
+fitted_survival_data(model, obs, from, to, 
+    colour = hcl.colors(length(obs), palette = "viridis"), ...)
 
 predict_cdf(model, newdata, title, from = 0, to = 10, no.points = 201, 
           alpha = 0.4, size.line = 1.2, 
