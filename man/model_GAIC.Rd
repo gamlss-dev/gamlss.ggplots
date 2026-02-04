@@ -90,7 +90,7 @@ Stasinopoulos, M.D., Kneib, T., Klein, N., Mayr, A. and Heller, G.Z., (2024). \e
 \author{Mikis Stasinopoulos, Bob Rigby and Fernanda De Bastiani}
 
 
-\seealso{ \code{\link[gamlss]{GAIC.scaled}} }
+\seealso{ \code{\link[gamlss]{GAIC_scaled}} }
 
 \examples{
 data(abdom)
