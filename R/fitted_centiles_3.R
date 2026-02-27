@@ -1,4 +1,4 @@
-# functions for centile plots in ggplots 
+m1 <- gamlss# functions for centile plots in ggplots 
 # last change on may 2021
 # there are two functions 
 # fitted_centile_1()
@@ -30,7 +30,7 @@ if (inherits(obj, "gamlss"))
   yvarCh <- all.vars(obj$call$formula)[[1]]
   if (missing(xvar))
   {
-    xvarCh <-  all.vars(obj$call$formula)[[2]]   # get it from fotmula
+    xvarCh <-  all.vars(obj$call$formula)[[2]]   # get it from formula
     if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")  
     if (any(grepl("data", names(obj$call))))# if data exist 
     {
@@ -67,7 +67,7 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 ################################################################################
 if (inherits(obj, "gamlss2"))
 {
-   xvarCh <- all.vars(obj$call$formula)[[2]] 
+   xvarCh <-if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
    yvarCh <- response_name(obj)
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
    if (missing(xvar))
@@ -242,7 +242,7 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 ################################################################################
 if (inherits(obj, "gamlss2"))
 {
-  xvarCh <- all.vars(obj$call$formula)[[2]] 
+  xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
   yvarCh <- response_name(obj)
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
 if (any(grepl("data", names(obj$call))))# if data exist 
@@ -414,7 +414,7 @@ if (inherits(obj, "gamlss"))
 ################################################################################
 if (inherits(obj, "gamlss2"))
   {
-    xvarCh <- all.vars(obj$call$formula)[[2]] 
+    xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
     yvarCh <- response_name(obj)
     if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
     if (any(grepl("data", names(obj$call))))# if data exist 
