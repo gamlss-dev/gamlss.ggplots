@@ -65,6 +65,7 @@ export( resid_index,
         pe_param_grid,  
         pe_pdf,
         pe_pdf_grid,
+        pe_terms,
         boot_coef, boot_coef_one,
         histSmo_plot,
         pcr_coef_path,# for pcr model
