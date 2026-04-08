@@ -7,7 +7,7 @@
 \alias{resid_xvar}
 \alias{resid_quantile}
 
-\title{A residual plots}
+\title{Residual plots}
 \description{
 
 The function \code{resid_index()} is plotting the residuals of a GAMLSS fitted model (or any other suitable standardised residual) against the observation number index. 
@@ -16,11 +16,11 @@ The function \code{resid_mu()} plots the residuals against fitted values for \co
 
 The function \code{resid_median()} plots the residuals against fitted median values.
 
-The function \code{resid_param()} plots the residuals against any of the GAMLSS fitted parameters, \code{mu}, \code{sigma}, \code{nu}, or \code{tau}.
+The function \code{resid_param()} plots the residuals against any of the GAMLSS fitted parameters, e.g. \code{mu}, \code{sigma}, \code{nu}, or \code{tau}.
 
 The function \code{resid_quantile()} plots the residuals against any fitted quantile. 
 
-The function \code{resid_xvar()} plots the residuals against an explanatory term.
+The function \code{resid_xvar()} plots the residuals against any explanatory term.
 
 
 The function \code{resid_plots()} produces a plot similar to the one that the function  \code{plot()} produce for a GAMLSS model in package \pkg{gamlss}. This is, four plots:   a) \code{resid_index()}(b) \code{resid_mu()}, (c) \code{resid_density()} and (d) \code{resid_qqplot()}. 
@@ -52,7 +52,7 @@ resid_plots(obj, theme = c("original", "ts", "new", "ecdf"), value = 3)
 resid_xvar(obj, xvar, plot = TRUE, value = 2, title, annotate = TRUE)
 }
 \arguments{
-  \item{obj}{a GAMLSS object}
+   \item{obj}{a GAMLSS object}
    \item{resid}{or any other suitable standardised residual vector.}
    \item{xvar}{a continuous explanatory variable}
    \item{plot}{whether to plot the result}
@@ -68,7 +68,7 @@ resid_xvar(obj, xvar, plot = TRUE, value = 2, title, annotate = TRUE)
   "new" it uses (a) \code{resid_index()},  (b) \code{resid_density()}, (c) \code{resid_wp()} and (d) 
   \code{resid_dtop().}
   }
-  \item{no.lines}{this option allows to hide the horizontal lines so the resulting gg-plot can be used later with say \code{facet_wrap()} see example}  
+  \item{no.lines}{this option allows to hide the horizontal lines so the resulting gg-plot can be used later with say  \code{facet_wrap()} see example}  
   \item{newdata}{whether the evaluation should be in newdata or the old data points}
   \item{quantile}{which quantile? default the median (0.50).}
 }
