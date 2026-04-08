@@ -86,8 +86,8 @@ else if (lterm==2) {
 ################################################################################
 ################################################################################
 # created on the 08-06-2021
-# to Do
-# i) what is data set inculeds character vectors no declared as factors
+# to check
+# i) what is data set includes character vectors but declared as factors
 ################################################################################
 ################################################################################
 ################################################################################
@@ -99,7 +99,7 @@ else if (lterm==2) {
                   parameter = c("mu", "sigma", "nu", "tau"), # which parameter
                        type = c("parameter", "eta"),
                         how = c("median", "last", "fixed"),
-                 scale.from = c("mean", "median", "none"),
+                     adjust = c( "mean", "median", "none", "intercept"),
                    scenario = list(), # see below (1)
                         col = "darkblue",
                   linewidth = 1.3,
@@ -117,9 +117,8 @@ else if (lterm==2) {
 {
 #  scenario:a named list of the values to use for the other predictor terms. 
 #  Variables omitted from this list will have values set to the median 
-#  for continuous variables and 
-#  the most commonly occuring level for factors 
-#  or the last observation
+#  for continuous variables and the most commonly occuring level for factors 
+#  or the last observation (I guesss for TS)
 #if (is.null(obj)||!class(obj)[1]=="gamlss") stop("Supply a standard GAMLSS model in obj")
 if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
@@ -128,44 +127,43 @@ if (is.null(term))  stop("The model term is not set")
        how <- match.arg(how)
       type <- match.arg(type)
  parameter <- match.arg(parameter)
-scale.from <- match.arg(scale.from)
-if (inherits(obj, "gamlss"))
+adjust <- match.arg(adjust)
+if (inherits(obj, "gamlss")) # for gamlss ######################################
   {
     if (any(grepl("data", names(obj$call)))) 
       {
-                  DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
+      DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
                               eval(parse(text=as.character(obj$call["data"]))) 
-                           else get(as.character(obj$call["data"]))	
+              else get(as.character(obj$call["data"]))	
                v.names <- names(DaTa)
                   type <- if (type=="parameter") "response" else "link"
-                }
-              else if (missing(data)) stop("The data argument is needed in obj")   
-  } else
+      } else if (missing(data)) stop("The data argument is needed in obj")   
+  } else ###################### gamlss2 ########################################  
   {
      DaTa <-model.frame(obj)
     v.names <-  colnames(DaTa) # names(DaTa)
     type <- if (type=="eta")  "link" else type
-  }  
+  } ########################  end ##############################################  
       pos <- which(v.names==term)
 if (pos<1) stop("supply a  term")
-if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) 
-{
+if (is.factor(DaTa[,pos])||is.character(DaTa[,pos])) # if factor ###############
+ {
    if (is.factor(DaTa[,pos]))
      {
          xvar <- levels(DaTa[,pos])
      n.points <- nlevels(DaTa[,pos])
- it.is.factor <- TRUE
+ x.is.factor <- TRUE
      } else 
      {
         xvar <- attr(table(DaTa[,pos]),"names")
     n.points <- length(xvar)
-it.is.factor <- TRUE
+x.is.factor <- TRUE
      }  
-} else
+  } else ####################################### not a factor ################## 
   {
         xvar <-  seq(from = min(DaTa[,pos]), to=max(DaTa[,pos]), length.out=n.points)
-it.is.factor <- FALSE
-  }   
+x.is.factor <- FALSE
+  } ######## finish  ###########################################################
          mat <- matrix(0, nrow = dim(DaTa)[1]+n.points, ncol =dim(DaTa)[2])
     dat.temp <- as.data.frame(mat)
 names(dat.temp) <- v.names             
@@ -179,51 +177,66 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
                  else c(DaTa[,i],xvar)
     }
     else                            # for all other variables
-    {                               # if scenario is set gets priority
-          ma <- scenario[[v.names[i]]]
-         if (is.null(ma))                  # if scenario in not set
+    {                               # if scenario is set it gets priority
+           ma <- scenario[[v.names[i]]]
+    if (is.null(ma))                # if scenario in not set
           {
-           if (how=="median")          # get the median for continuous 
+           if (how=="median")       # get the median for continuous 
           # or the level with high values for factor
            {
            if (is.character(DaTa[,i])) DaTa[,i] <- as.factor(DaTa[,i])
               ma <- if(is.factor(DaTa[,i])) levels(DaTa[,i])[which.max(table(DaTa[,i]))]
-            else median(DaTa[,i])
+            else median(DaTa[,i]) # get the median continuous 
             }
-        if (how=="last")       # otherwise get the last values
+        if (how=="last")         # otherwise get the last values
         {
           if (is.character(DaTa[,i])) DaTa[,i] <- as.factor(DaTa[,i])
                ma <- if(is.factor(DaTa[,i])) levels(DaTa[,i])[which.max(table(DaTa[,i]))]
-          else tail(DaTa[,i],1)
+          else tail(DaTa[,i],1) # otherwise get the last values
         }
       }
   dat.temp[,i] <- if (is.factor(DaTa[,i])) as.factor(c(as.character(DaTa[,i]),as.character(rep(ma,n.points))))
                       else c(DaTa[,i],rep(ma,n.points))
     }
 } # end going thought the variables
-## predict  
+## Now predict  
 # pp = attr(predict(obj,  type = "term", parameter = parameter),"constant")
 if (inherits(obj, "gamlss")) ## GAMLSS
 {
-  fittted.star  <- predict(obj,parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
-}  else 
-{
-  fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type=type)   
-}  
-  
-
-if (it.is.factor) {
-   value1stlevel <- fittted.star[1] 
-   fittted.orig  <- fittted.star-value1stlevel
-  } else 
-{
-aver.fittted.star <- switch(scale.from, 
-                           "mean" = mean(fittted.star),
-                         "median" = median(fittted.star),
-                           "none" = 0 )
+      Intercept <- coef(obj, parameter=parameter)[1]
+  fittted.star  <- predict(obj, parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
+      Intercept <- if(type=="link")  Intercept else # needs code here 
+  if (x.is.factor) {
+    value1stlevel <- fittted.star[1] # need the refencce level here 
+    fittted.orig  <- fittted.star-value1stlevel
+  } else  # x is not a factor 
+  {
+    aver.fittted.star <- switch(adjust, 
+                                "intercept" = Intercept, 
+                                 "mean" = mean(fittted.star),
+                                 "median" = median(fittted.star),
+                                 "none" = 0 )
     fittted.orig <- fittted.star - aver.fittted.star
- #        theFun <- splinefun(xvar, fittted.orig)
-} 
+  } 
+}  else # if gamlss2
+{
+          Intercept <- coef(obj)[paste0(parameter, ".p.(Intercept)")]
+      fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type=type)  
+      
+  if (x.is.factor) 
+      {
+        value1stlevel <- fittted.star[1] # need the refencce level here 
+        fittted.orig  <- fittted.star-value1stlevel
+      } else  # x is not a factor 
+      {      
+  aver.fittted.star <- switch(adjust, 
+                           "intercept" = Intercept, 
+                           "mean" = mean(fittted.star),
+                           "median" = median(fittted.star),
+                           "none" = 0 )
+  fittted.orig <- fittted.star - aver.fittted.star
+      }
+}      
         name.obj <-  if (is.null(name.obj))  deparse(substitute(obj)) else name.obj
         txt.title <- if (missing(title))  
                   paste("Partial effect of",term, "for", parameter, "for model", name.obj)
@@ -232,7 +245,7 @@ aver.fittted.star <- switch(scale.from,
                   else                  paste0("PE_eta](", term, ")")
             da <- data.frame(y=fittted.orig,x=xvar )
         y_name <- paste(eval(obj$call$formula)[[2]])
-if (it.is.factor)
+if (x.is.factor)
     {
         pp <-  ggplot2::ggplot(data=da, ggplot2::aes(x, y))+
         ggplot2::geom_point(color=col, size=factor.size, shape="-")+
@@ -249,16 +262,16 @@ if (it.is.factor)
        if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
        pp <- pp +
          ggplot2::geom_jitter(data = DaTa, 
-                  ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
-                  size = data.size, alpha = data.alpha, colour = data.col)
+         ggplot2::aes(DaTa[,term], y=DaTa[,y_name]-value1stlevel),
+                size = data.size, alpha = data.alpha, colour = data.col)
      }
     } else  # GAMLSS 2
     {
       pp <- ggplot2::ggplot(data=da) +
-        ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
-        ggplot2::ylab(yaxislabel)+ 
-        ggplot2::xlab(term)+ 
-        ggplot2::ggtitle(txt.title)
+            ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
+            ggplot2::ylab(yaxislabel)+ 
+            ggplot2::xlab(term)+ 
+            ggplot2::ggtitle(txt.title)
       if (data.plot)
       {
         if (parameter!="mu")  stop("data.plot=TRUE can be used only with parameter=\"mu\"") 
@@ -303,9 +316,9 @@ pe_2_param <- function(obj = NULL, # the gamlss object
                   name.obj = NULL,
                    title) # whether to plot
 {
-#  scenario:a named list of the values to use for the other predictor terms. 
+#  scenario: a named list of the values to use for the other predictor terms. 
 #  Variables omitted from this list will have values set to the median 
-#  for continuous variables and the most commonly occuring level for factors 
+#  for continuous variables and the most commonly occurring level for factors 
 #  or the last observation
 if (!missing(obj)&&!(inherits(obj,c("gamlss", "gamlss2")))) 
     stop("the model is not a gamlss model")  
@@ -321,7 +334,7 @@ if (inherits(obj, "gamlss"))
         {
              DaTa <- if (startsWith(as.character(obj$call["data"]), "na.omit"))
                          eval(parse(text=as.character(obj$call["data"]))) 
-          else get(as.character(obj$call["data"]))	
+                     else get(as.character(obj$call["data"]))	
          v.names <- names(DaTa)
         }
      else if (missing(data)) stop("The data argument is needed in obj")   
@@ -394,7 +407,7 @@ for (i in 1:dim(dat.temp)[2])
           ma <- if(is.factor(DaTa[,i])) levels(DaTa[,i])[which.max(table(DaTa[,i]))]
                 else median(DaTa[,i])
         }
-        if (how=="last")       # otherwise get the last values
+        if (how=="last")           # otherwise get the last values
         {
           if (is.character(DaTa[,i])) DaTa[,i] <- as.factor(DaTa[,i])
           ma <- if(is.factor(DaTa[,i])) levels(DaTa[,i])[which.max(table(DaTa[,i]))]
@@ -402,10 +415,9 @@ for (i in 1:dim(dat.temp)[2])
         }
 }
   dat.temp[,i] <-   c(DaTa[,i],rep(ma,dim(d1)[1]))       
-
     }
 } # end going thought the variables
-## predict   
+## now predict   
 fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type, 
                         parameter = parameter)
    name.obj  <-  if (is.null(name.obj))  deparse(substitute(obj)) else name.obj
@@ -414,7 +426,7 @@ fittted.orig <- predict(obj, newdata=tail(dat.temp, dim(d1)[1]), type = type,
              else title
          da <- data.frame(z=fittted.orig, d1)
      y_name <- paste(eval(obj$call$formula)[[2]])
-if (case==1)
+if (case==1)  # both continuous
     {
       pp  <-  ggplot2::ggplot(da, ggplot2::aes(.data[[terms[1]]], .data[[terms[2]]]))
 if (data.plot)  
@@ -428,7 +440,7 @@ if (data.plot)
       pp 
       pp <- pp + ggplot2::ggtitle(txt.title)
     } 
-  if (case==2)
+  if (case==2) # fist continuous second categorical
     {
      pp <- ggplot2::ggplot(da, ggplot2::aes_string(x=terms[pv], y=da[,1], 
                                                    color=terms[pf]))+
@@ -443,7 +455,7 @@ if (data.plot)
     }
        
     }  
-  if (case==3)
+  if (case==3) # both factors
   {
     pp <- ggplot2::ggplot(data=da, 
           ggplot2::aes_string(x=terms[1], y=da[,1], group=terms[2], color=terms[2]))+
@@ -485,7 +497,7 @@ grid::pushViewport(grid::viewport(layout=grid::grid.layout(nrow=norow,ncol=nocol
 for (p  in 1:lterms) 
   {
   title.term <- if (length(terms[[p]])==1) terms[[p]]
-                else paste(terms[[p]], collapse=":")  
+                else paste(terms[[p]], collapse=":")
     GG[[title.term]] <- pe_param(model, term=terms[[p]], 
                                     title= title.term,ylim=ylim, ...)
     print(GG[[title.term]], vp=define_region(IJ$i[p], IJ$j[p]))

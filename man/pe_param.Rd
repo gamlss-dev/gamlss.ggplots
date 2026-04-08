@@ -27,7 +27,7 @@ pe_1_param(obj = NULL, term = NULL, data = NULL, n.points = 100,
                 parameter = c("mu", "sigma", "nu", "tau"), 
                 type = c("parameter", "eta"),
                 how = c("median", "last", "fixed"),
-                scale.from = c("mean", "median", "none"),
+                adjust =c("mean", "median", "none", "intercept"),
                 scenario = list(), col = "darkblue", linewidth = 1.3,
                 name.obj = NULL, data.plot = FALSE, 
                 data.col = "lightblue",data.size = 0.1,
@@ -58,8 +58,8 @@ pe_param_grid(model, terms, maxcol = 2, maxrow = 3, ylim=NULL, ...)
   \item{n.points}{the number of points for the evaluation of the term}
   \item{parameter}{the distribution parameter in which  the term is fitted}
   \item{type}{here you specify or the distribution  parameter i.e        \code{"parameter"} or its  prediction, \code{"eta"}}
-  \item{how}{how to set all the other terms in the model}
-  \item{scenario}{this can be a list of values for the rest of the terms in the model for the distribution parameter}
+  \item{how}{how to set all the rest of the  continuous terms in the model}
+  \item{scenario}{this can be a list of values for the rest of the terms in the model for the specific distribution parameter}
   \item{plot}{whether to plot the result}
   \item{col}{the colour of the partial effect of the term}
   \item{linewidth}{the size of the line of partial effect of the term}
@@ -78,7 +78,7 @@ pe_param_grid(model, terms, maxcol = 2, maxrow = 3, ylim=NULL, ...)
   \item{data.alpha}{the trnsparance constant of the data points}
   \item{factor.size}{the size of the symbol if a factor is plotted}
   \item{ylim}{if a common y limit is required}
-  \item{scale.from}{whethet to substact from the mean the median or from zero}
+  \item{adjust}{whethet to substact from the mean the median or from zero}
   \item{\dots}{for passing argument from the function \code{pe_param_grid} to the function \code{pe_param}}
   
 }
