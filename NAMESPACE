@@ -74,7 +74,8 @@ export( resid_index,
         #pe_pdf, pe_quantile_grid
         quantile_gamlss, # should be called fitted_quantile() or get_quantile()
         fit_PB, # 
-        prof_term, model_TD, model_TD_lollipop
+        prof_term, model_TD, model_TD_lollipop,
+        median_cw, median_pc, median_sp, xy_median
 )        
 ################################################################################
 ################################################################################
@@ -130,12 +131,16 @@ importFrom("stats", "fitted", "lm")
 importFrom("stats", "runif")
 importFrom("stats", "density")
 importFrom("stats", "get_all_vars")
-
+importFrom("gamlss.foreach", "getSVD")
 importFrom("stats", "optimise")
 importFrom("stats", "model.weights")
+importFrom("stats", "coef", "df", "optim")
 ################################################################################
 importFrom("foreach", "%dopar%", "foreach", "%do%")
 ################################################################################
+importFrom("MASS",  "kde2d")
+################################################################################
 importFrom("graphics", "axis", "contour", "image", "rect")
+importFrom("graphics", "persp")
 importFrom("stats", "cmdscale", "ecdf", "family", "lm.wfit", "model.response")
 importFrom("yaImpute", "ann")  
