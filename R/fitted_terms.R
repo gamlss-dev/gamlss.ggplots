@@ -41,7 +41,7 @@
                         nrow = NULL,
                         ncol = NULL,
               plots.per.page = 9,
-                    one.by.one = FALSE, #interactive() && nb.fig < n.tms &&.Device != "postscript", #dev.interactive() && nb.fig < n.tms
+                    one.by.one = FALSE,
                  surface.gam = FALSE, 
                        polys = NULL, 
                polys.scheme = "topo",
@@ -207,16 +207,16 @@ if (rug)
 #------------------------------------------------------------------------
 } else 
 {
-  if (!what%in%object$family$names) stop(paste(what,"is not a parameter in the object","\n"))  
+  if (!what%in%object$family$names) stop(paste(what,"is not a parameter in the gamlss2 object","\n"))  
   which.terms <- terms
     par.terms <- terms(object$model)
     par.attr  <- attributes(par.terms)  
+        n.tms <- length(par.attr$term.labels)
         Terms <- if (is.null(terms)) predict(object, model = what, type = "terms", 
                                              se.fit = TRUE)
-            else predict(object, model = what, type = "terms", se.fit = TRUE, 
-                         terms = terms)  
+                 else predict(object, model = what, type = "terms", 
+                      se.fit = TRUE, terms = terms)  
           mf <- model.frame(object) 
-  
 }  
 ################################################################################
 ################################################################################
