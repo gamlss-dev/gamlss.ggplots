@@ -75,7 +75,11 @@ export( resid_index,
         quantile_gamlss, # should be called fitted_quantile() or get_quantile()
         fit_PB, # 
         prof_term, model_TD, model_TD_lollipop,
-        median_cw, median_pc, median_sp, xy_median
+        median_cw, median_pc, median_sp, xy_median,
+        xy_scatter, xy_pit_scatter, xy_hist,
+        xy_pit_hist, xy_density, xy_density_plain,
+        xy_pit_density, xy_ECDF_hist, 
+        xy_ECDF_contour, ECDF_2D
 )        
 ################################################################################
 ################################################################################

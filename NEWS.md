@@ -72,4 +72,27 @@ organization: <https://github.com/gamlss-dev/gamlss.ggplots/>.
 - the function `fitted_pdf_legend()` is introduced but not exported in the NAMSPACE. To use it use 
   `gamlss.ggplots:::fitted_pdf_legend()`.
   
-- the package vignette can be found in <https://mstasinopoulos.github.io/Functions-from-packages/.>    
+  
+# Version 2.1-26
+
+Function for helping modelling for more than one variables as the response are added;
+
+- function `xy_median()` to calculate medians in 2-dimensions.
+
+- functions `xy_scatter()` and `xy_pit_scatter()'  for plotting the original or PIT transform values of two
+continuous variable
+
+- functions `xy_hist()` and `xy_pit_hist()' for plotting histograms in two dimensions
+
+- functions `xy_density()` and `xy_density_plain()' and  `xy_pit_density()'for plotting kernal density estimators in two dimensions
+
+- functions `xy_ECDF_hist()` and `xy_ECDF_contour(x,y)' for plotting empirical csdf's histograms and contour plots in two dimensions
+
+
+
+
+
+  
+## NOTE: 
+
+the package vignette can be found in <https://mstasinopoulos.github.io/Functions-from-packages/.>    

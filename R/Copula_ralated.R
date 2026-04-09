@@ -181,7 +181,7 @@ if (is.null(y))
 ## Optional density contours
 if (density) 
    {
-       p <- p + stat_density_2d(color = density.colour )
+       p <- p +  ggplot2::stat_density_2d(color = density.colour )
 }
  ## ---- Median methods ----      
       mm <- xy_median(x,y, method=method)
@@ -189,7 +189,7 @@ if (density)
                    size = median.size)
 # ---- 50% HDR (median region) ----
 if (HDR) {
-         kde <- kde2d(x, y, n = 100)
+         kde <- MASS::kde2d(x, y, n = 100)
 ## Convert to data frame
           dx <- expand.grid(x = kde$x, y = kde$y)
         dx$z <- as.vector(kde$z)
@@ -200,8 +200,8 @@ if (HDR) {
          z50 <- dx$z[ord][level_index]
 ## Add contour corresponding to 50% HDR
          p <- p +
-           geom_contour(data = dx,
-                        ggplot2::aes(x = x, y = y, z = z),
+           ggplot2::geom_contour(data = dx,
+           ggplot2::aes(x = x, y = y, z = z),
                         breaks = z50,
                         color = HDR.colour,
                         linewidth = 1.2)+
@@ -249,15 +249,16 @@ xy_pit_scatter <- function(x, y = NULL,
 ## Optional density contours
   if (density) 
   {
-    p <- p + stat_density_2d(color =  density.colour)
+    p <- p + ggplot2::stat_density_2d(color =  density.colour)
   }
   ## ---- Median methods ----      
    mm <- xy_median(v,u, method=method)
-    p <- p + ggplot2::geom_point(x = mm[1], y = mm[2], color =  median.colour,
-                               size = median.size)
+    p <- p + ggplot2::geom_point(x = mm[1], y = mm[2], 
+                      color =  median.colour,
+                      size = median.size)
 # ---- 50% HDR (median region) ----
   if (HDR) {
-     kde <- kde2d(v, u, n = 100)
+     kde <- MASS::kde2d(v, u, n = 100)
 ## Convert to data frame
       dx <- expand.grid(x = kde$x, y = kde$y)
     dx$z <- as.vector(kde$z)
@@ -268,11 +269,11 @@ level_index <- which(cumprob >= 0.5)[1]
     z50 <- dx$z[ord][level_index]
 ## Add contour corresponding to 50% HDR
     p <- p +
-       geom_contour(data = dx,
-                    ggplot2::aes(x = x, y = y, z = z),
-                   breaks = z50,
-                   color = HDR.colour,
-                   linewidth = 1.2)
+       ggplot2::geom_contour(data = dx,
+            ggplot2::aes(x = x, y = y, z = z),
+            breaks = z50,
+            color = HDR.colour,
+            linewidth = 1.2)
   }
   return(p)       
 }
@@ -289,171 +290,9 @@ ECDF_2D <- function(value.x, value.y, data.x, data.y) {
 ################################################################################
 ################################################################################
 ################################################################################
-# function 8: NOT-GGPLOTS
-#plot the empirical CDF surface
-xy.ECDF.persp <- function(x,y, 
-                          theta = 30, 
-                            phi = 30,
-                           xlab = "x", 
-                           ylab = "y", 
-                           zlab = "f(x,y)",
-                          color = "lightblue",
-                           main = "ECDF(x,y)")
-{
-  xg <- seq(min(x), max(x), length = 40)
-  yg <- seq(min(y), max(y), length = 40)
-  z <- outer(xg, yg, Vectorize(function(a, b) ECDF_2D(a, b, x, y)))  
-  persp(xg, yg, z,
-        theta = theta, phi = phi,
-        col = "lightblue",
-        xlab = "x", ylab = "y", zlab = "f(x,y)",
-        main = "Bivariate CDF")
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-## function 9:NOT GGPLOTS 
-xy.ECDF.image <- function(x,y, 
+# function 8
+xy_hist <- function(x,y, 
                           colour = hcl.colors(20),
-                            main = "Empirical CDF Heatmap",
-                          countour = TRUE,
-                            points = TRUE,
-                      point.colour = "gray",
-                      point.cex = 0.1
-                          )
-{
-   z <- NULL
-  xg <- seq(min(x), max(x), length = 40)
-  yg <- seq(min(y), max(y), length = 40)
-   z <- outer(xg, yg, Vectorize(function(a, b) ECDF_2D(a, b, x, y)))  
-  image(xg, yg, z,
-        col = colour,
-        xlab = "x", ylab = "y",
-        main = main
-        )
-if (countour)  contour(xg, yg, z, add = TRUE)
-if (points)  points(x,y, col=point.colour, cex=point.cex)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 10 :not GGPLOTS
-xy.ECDF.contour <- function(x,y, 
-                      colour = hcl.colors(20),
-                      main = "Empirical CDF Heatmap",
-                      countour = TRUE,
-                      points = TRUE,
-                                          point.colour = "gray",
-                                          point.cex = 0.1
-)
-{
-  rz <- z <- NULL
-  xg <- seq(min(x), max(x), length = 40)
-  yg <- seq(min(y), max(y), length = 40)
-   z <- outer(xg, yg, Vectorize(function(a, b) ECDF_2D(a, b, x, y)))  
-  contour(xg, yg, z)
-  if (points)  points(x,  y, col=point.colour, cex=point.cex)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 11
-xy.density.contour <- function(x,y, 
-                             colour = hcl.colors(20),
-                               main = "Empirical CDF Heatmap",
-                           countour = TRUE,
-                             points = TRUE,
-                       point.colour = "gray",
-                          point.cex = 0.1,
-                               bins = 50
-)
-{
-  if (is.null(y)) # data handling
-  {
-    if (is.matrix(x) || is.data.frame(x)) 
-    {
-      y <- x[, 2]
-      x <- x[, 1]
-    } else 
-    {
-      stop("Provide either (x, y) or a 2-column matrix/data.frame")
-    }
-  }  
-    kde <- MASS::kde2d(x, y, n = bins)
-  contour(kde$x, kde$y, kde$z)
-  if (points)  points(x,y, col=point.colour, cex=point.cex)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# figure 12
-xy.density.image <- function(x,y, 
-                           colour = hcl.colors(20),
-                             main = "Empirical CDF Heatmap",
-                         countour = TRUE,
-                           points = TRUE,
-                     point.colour = "gray",
-                        point.cex = 0.1,
-                             bins = 50
-)
-{
-  if (is.null(y)) # data handling
-  {
-    if (is.matrix(x) || is.data.frame(x)) 
-    {
-      y <- x[, 2]
-      x <- x[, 1]
-    } else 
-    {
-      stop("Provide either (x, y) or a 2-column matrix/data.frame")
-    }
-  }  
-  kde <- MASS::kde2d(x, y, n = bins)
-  image(kde$x, kde$y, kde$z,
-        col = colour,
-        xlab = "x", ylab = "y",
-        main = main
-  )
-  if (countour)  contour(kde$x, kde$y, kde$z, add = TRUE)
-  if (points)   points(x,y, col=point.colour, cex=point.cex)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# figure 13
-xy.density.persp <- function(x,y, bins=25)
-{
-  if (is.null(y)) # data handling
-  {
-    if (is.matrix(x) || is.data.frame(x)) 
-    {
-      y <- x[, 2]
-      x <- x[, 1]
-    } else 
-    {
-      stop("Provide either (x, y) or a 2-column matrix/data.frame")
-    }
-  }  
-  kde <- MASS::kde2d(x, y, n = bins)
-  persp(x=kde$x, y=kde$y, z=kde$z,
-        theta = 30, phi = 30,
-        col = "lightblue",
-        xlab = "x", ylab = "y", zlab = "F_n(x,y)",
-        main = "Empirical Bivariate CDF")
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 11
-xy_density_bins <- function(x,y, 
-                          colour = hcl.colors(20),
-                            main = "Empirical CDF Heatmap",
                           points = TRUE,
                     point.colour = "gray",
                        point.size = 0.1,
@@ -479,7 +318,8 @@ if (is.null(y)) # data handiling
         ggplot2::labs(title = "2D Histogram (Empirical Density)",
          fill = "Count") 
   if (points)  
-    p=p+geom_point(ggplot2::aes(x = x, y = y), color =  point.colour,
+    p=p+ ggplot2::geom_point(ggplot2::aes(x = x, y = y), 
+                   color =  point.colour,
                    size = point.size)
   p
 }
@@ -487,10 +327,49 @@ if (is.null(y)) # data handiling
 ################################################################################
 ################################################################################
 ################################################################################
-# function 15
+# function 9
+xy_pit_hist <- function(x,y, 
+                      colour = hcl.colors(20),
+                      points = TRUE,
+                point.colour = "gray",
+                  point.size = 0.1,
+                       bins = 50  
+)
+{
+  level <- NULL
+  if (is.null(y)) # data handiling
+  {
+    if (is.matrix(x) || is.data.frame(x)) 
+    {
+      y <- x[, 2]
+      x <- x[, 1]
+    } else 
+    {
+      stop("Provide either (x, y) or a 2-column matrix/data.frame")
+    }
+  }  
+     n <- length(x)  
+     u <- rank(x) / (n + 1)
+     v <- rank(y) / (n + 1)
+    df <- data.frame(u = u, v = v)
+     p <- ggplot2::ggplot(df, ggplot2::aes(u, v)) +
+    ggplot2::geom_bin2d(bins = bins) +
+    ggplot2::scale_fill_gradient(low = "white", high = "red") +
+    ggplot2::labs(title = "2D PIT Histogram (Empirical Density)",
+                  fill = "Count") 
+  if (points)  
+    p=p+ ggplot2::geom_point(ggplot2::aes(x = u, y = v), 
+                             color =  point.colour,
+                             size = point.size)
+  p
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 10
  xy_density <- function(x,y, 
                             colour = hcl.colors(20),
-                              main = "Empirical CDF Heatmap",
                             points = FALSE,
                       point.colour = "black",
                         point.size = 0.1
@@ -510,7 +389,7 @@ if (is.null(y)) # data handiling
   }  
   df <- data.frame(x=x,y=y)
   p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) +
-       ggplot2::stat_density_2d(ggplot2::aes(fill = after_stat(level)),
+       ggplot2::stat_density_2d(ggplot2::aes(fill = ggplot2::after_stat(level)),
                     geom = "polygon",
                     contour = TRUE) +
       ggplot2::scale_fill_viridis_c() +
@@ -522,17 +401,16 @@ if (is.null(y)) # data handiling
                                 color =  point.colour,
                        size = point.size, alpha=0.5)
   }
-  p +  theme_minimal()   
+  p +  ggplot2::theme_minimal()   
   return(p)      
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 16
+# function 11
 xy_density_plain <- function(x,y, 
                     colour = hcl.colors(20),
-                      main = "Empirical CDF Heatmap",
                     points = FALSE,
               point.colour = "black",
                 point.size = 0.1
@@ -566,11 +444,10 @@ if (points)
 ################################################################################
 ################################################################################
 ################################################################################
-# function 17
+# function 12
 # Using MASS Kernel Densiy  2 dimension 
-xy_density_kde2d <- function(x,y, 
+xy_hist_kde2d <- function(x,y, 
                       colour = hcl.colors(20),
-                       main = "Empirical CDF Heatmap",
                      points = TRUE,
                point.colour = "gray",
                  point.size = 0.1,
@@ -589,7 +466,7 @@ xy_density_kde2d <- function(x,y,
         stop("Provide either (x, y) or a 2-column matrix/data.frame")
       }
     }  
-       kde <- kde2d(x, y, n = bins)
+       kde <- MASS::kde2d(x, y, n = bins)
     kde_df <- expand.grid(x = kde$x, y = kde$y)
   kde_df$z <- as.vector(kde$z)  
          p <- ggplot2::ggplot(kde_df, ggplot2::aes(x, y, fill = z)) +
@@ -610,11 +487,12 @@ xy_density_kde2d <- function(x,y,
 ################################################################################
 ################################################################################
 ################################################################################
-# function 18
-xy_ECDF_tile <- function(x,y, 
-                         points = TRUE,
-                         point.colour = "gray",
-                         point.cex = 0.1)
+# function 13
+xy_ECDF_hist <- function(x,y) 
+                        #  points = TRUE,
+                        #  point.colour = "gray",
+                        #  point.size = 0.1
+                        # )
 {
        Fn <- NULL
        xg <- seq(min(x), max(x), length = 40)
@@ -622,28 +500,28 @@ xy_ECDF_tile <- function(x,y,
      grid <- expand.grid(x = xg, y = yg)
   grid$Fn <- mapply(ECDF_2D, grid$x, grid$y,
                     MoreArgs = list( data.x= x, data.y = y))
- p <-  ggplot(grid, ggplot2::aes(x, y, fill = Fn)) +
-       geom_tile() +
-       scale_fill_viridis_c() +
-       labs(title = "Empirical Bivariate CDF",
-         fill = "F_n(x,y)") +
-         theme_minimal()  
-  # if (points)  
+        p <-  ggplot2::ggplot(grid, ggplot2::aes(x, y, fill = Fn)) +
+              ggplot2::geom_tile() +
+              ggplot2::scale_fill_viridis_c() +
+              ggplot2::labs(title = "Empirical Bivariate CDF",
+              fill = "F(x,y)") +
+              ggplot2::theme_minimal()  
+ #  if (points)  
   #   df <- data.frame(x=x, y=y)
   #   p=p + geom_point(data=df, ggplot2::aes(x = x, y = y), color =  point.colour,
-  #                 size = point.cex)
- p
+  #                 size = point.siz)
+ return(p)
 }
 
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 19
-xy_ECDF_contour <- function(x,y, 
-                       points = TRUE,
-                 point.colour = "gray",
-                    point.cex = 0.1)
+# function 14
+xy_ECDF_contour <- function(x,y)  
+                 #       points = TRUE,
+                 # point.colour = "gray",
+                 #    point.cex = 0.1)
 {
     Fn <- NULL
     xg <- seq(min(x), max(x), length = 40)
@@ -653,27 +531,22 @@ xy_ECDF_contour <- function(x,y,
                     MoreArgs = list( data.x= x, data.y = y))
   
   #Heatmap of the empirical CDF
-  ggplot2::ggplot(grid, ggplot2::aes(x, y, z = Fn)) +
-    ggplot2::geom_contour_filled() +
-    ggplot2::labs(title = "Empirical CDF (Contours)",
-         fill = "F_n(x,y)") +
-    ggplot2::theme_minimal()
+  P <-  ggplot2::ggplot(grid, ggplot2::aes(x, y, z = Fn)) +
+        ggplot2::geom_contour_filled() +
+        ggplot2::labs(title = "Empirical CDF (Contours)",
+         fill = "F(x,y)") +
+        ggplot2::theme_minimal()
+ return(P)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 20
+# function 15
 xy_pit_density <- function(x, y = NULL,
-                         method = c("cw", "pc", "sp"), 
                          points = FALSE,
-                            HDR = TRUE,
-                # density.colour = "lightblue",
-                 # median.colour = "red", 
-                 #   median.size = 3, 
-                    point.size = 1,
-                   point.colour = "grey",
-                    HDR.colour = "darkred")
+                     point.size = 1,
+                    point.colour = "grey")
 {
   level <- NULL
   if (is.null(y)) 
@@ -689,16 +562,15 @@ xy_pit_density <- function(x, y = NULL,
   }
   ## input 
        n <- length(x)  
-  method <- match.arg(method)
        u <- rank(x) / (n + 1)
        v <- rank(y) / (n + 1)
       df <- data.frame(u = u, v = v)
-  p <-  ggplot2::ggplot(df, ggplot2::aes(x=u, y=v)) +
-        ggplot2::stat_density_2d(ggplot2::aes(fill = after_stat(level)),
+       p <- ggplot2::ggplot(df, ggplot2::aes(x=u, y=v)) +
+            ggplot2::stat_density_2d(ggplot2::aes(fill = ggplot2::after_stat(level)),
                     geom = "polygon") +
-        ggplot2::scale_fill_viridis_c() +
-        ggplot2::labs(title = "Smoothed Copula Density",
-         fill = "density") 
+            ggplot2::scale_fill_viridis_c() +
+            ggplot2::labs(title = "Smoothed Copula Density",
+             fill = "density") 
 if (points) 
 {
   p = p + ggplot2::geom_point(ggplot2::aes(x = v, y = u), color =  point.colour,
@@ -711,7 +583,7 @@ if (points)
 ################################################################################
 ################################################################################
 ################################################################################
-# function 21
+# function 16
 bivar_pdf  <-  function(pdf,
                         xlim = c(-3, 3),
                         ylim = c(-3, 3),
@@ -751,7 +623,7 @@ bivar_pdf  <-  function(pdf,
 ################################################################################
 ################################################################################
 ################################################################################
-# function 22
+# function 17
 # the function from chatGPD
 # the f() dunction should be a bivariate function
 bivar_fun <- function(fun,
@@ -771,87 +643,6 @@ bivar_fun <- function(fun,
     ggplot2::geom_contour_filled() +
     ggplot2::labs(x = "x", y = "y", fill = "Density") +
     ggplot2::theme_minimal()
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 23
-bivar.fun.contour <- function(f,
-                              xlim = c(-3,3),
-                              ylim = c(-3,3),
-                                 n = 100,
-                              xlab = "x",
-                              ylab = "y",
-                              ...)
-{
-      gx <- seq(xlim[1], xlim[2], length.out = n)
-      gy <- seq(ylim[1], ylim[2], length.out = n)
-   grid <- expand.grid(x = gx, y = gy) 
-      z <- f(grid$x, grid$y, ...)
-      Z <- matrix(z, nrow=n, ncol=n )
- contour(gx, gy, Z, xlab=xlab, ylab=ylab)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 24
-bivar.fun.image <- function(f,
-                            xlim = c(-3,3),
-                            ylim = c(-3,3),
-                            n = 100,
-                            xlab = "x",
-                            ylab = "y",
-                            main = "f()",
-                          colour = hcl.colors(20),
-                        countour = TRUE,
-                            ...)
-{
-    gx <- seq(xlim[1], xlim[2], length.out = n)
-    gy <- seq(ylim[1], ylim[2], length.out = n)
-  grid <- expand.grid(x = gx, y = gy) 
-     z <- f(grid$x, grid$y, ...)
-     Z <- matrix(z, nrow=n, ncol=n )
-     image(gx, gy, Z,
-           col = colour,
-           xlab = xlab, ylab = ylab,
-           main = main
-     )
-     if (countour)  contour(gx, gy, Z, add = TRUE)
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 25
-bivar.fun.persp  <- function(f,
-                          xlim = c(-3,3),
-                          ylim = c(-3,3),
-                             n = 100,
-                        colour = "lightblue",
-                         theta = 30, 
-                           phi = 30,
-                          xlab = "x", 
-                          ylab = "y", 
-                          zlab = "f(x,y)",
-                        main = "f(x,y)",
-                            ...)
-{
-  gx <- seq(xlim[1], xlim[2], length.out = n)
-  gy <- seq(ylim[1], ylim[2], length.out = n)
-  grid <- expand.grid(x = gx, y = gy) 
-  z <- f(grid$x, grid$y, ...)
-  Z <- matrix(z, nrow=n, ncol=n )
-  persp(gx, gy, Z,
-         col = colour,
-        xlab = xlab, 
-        ylab = ylab,
-        zlab = "f(x,y)",
-        main = "f(x,y)",
-       theta = theta, 
-         phi = phi)
 }
 ################################################################################
 ################################################################################
