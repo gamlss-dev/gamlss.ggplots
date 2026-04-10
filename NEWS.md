@@ -89,6 +89,14 @@ continuous variable
 - functions `xy_ECDF_hist()` and `xy_ECDF_contour(x,y)' for plotting empirical csdf's histograms and contour plots in two dimensions
 
 
+# Version 2.1-27
+
+
+
+- function `bivar_fun()`:  for plotting any 2-dimensional  function $f(x,y)$.
+
+- functions `bivar_pdf()`:   for plotting any 2-dimensional pdf function $f(x,y)$.
+
 
 
 

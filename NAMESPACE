@@ -79,7 +79,8 @@ export( resid_index,
         xy_scatter, xy_pit_scatter, xy_hist,
         xy_pit_hist, xy_density, xy_density_plain,
         xy_pit_density, xy_ECDF_hist, 
-        xy_ECDF_contour, ECDF_2D
+        xy_ECDF_contour, ECDF_2D,
+        bivar_pdf, bivar_fun
 )        
 ################################################################################
 ################################################################################
