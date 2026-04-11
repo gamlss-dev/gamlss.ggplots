@@ -78,8 +78,10 @@ export( resid_index,
         median_cw, median_pc, median_sp, xy_median,
         xy_scatter, xy_pit_scatter, xy_hist,
         xy_pit_hist, xy_density, xy_density_plain,
+        xy_hist_kde2d, 
         xy_pit_density, xy_ECDF_hist, 
         xy_ECDF_contour, ECDF_2D,
+        xy.ECDF.contour, xy.ECDF.image, xy.ECDF.persp,
         bivar_pdf, bivar_fun
 )        
 ################################################################################
