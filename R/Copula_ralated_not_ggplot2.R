@@ -4,14 +4,14 @@
 ################################################################################
 # function 1
 # Empirical CDF function
-ECDF_2D <- function(value.x, value.y, data.x, data.y) {
-  mean(data.x <= value.x & data.y <= value.y)
-}
+# ECDF_2D <- function(value.x, value.y, data.x, data.y) {
+#   mean(data.x <= value.x & data.y <= value.y)
+# }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 2: NOT-GGPLOTS
+# function 1: NOT-GGPLOTS
 #plot the empirical CDF surface
 xy.ECDF.persp <- function(x,y, 
                           theta = 30, 
@@ -19,7 +19,7 @@ xy.ECDF.persp <- function(x,y,
                            xlab = "x", 
                            ylab = "y", 
                            zlab = "f(x,y)",
-                          color = "lightblue",
+                         colour = "lightblue",
                            main = "ECDF(x,y)")
 {
   xg <- seq(min(x), max(x), length = 40)
@@ -27,7 +27,7 @@ xy.ECDF.persp <- function(x,y,
   z <- outer(xg, yg, Vectorize(function(a, b) ECDF_2D(a, b, x, y)))  
   persp(xg, yg, z,
         theta = theta, phi = phi,
-        col = "lightblue",
+        col = colour,
         xlab = "x", ylab = "y", zlab = "f(x,y)",
         main = "Bivariate CDF")
 }
@@ -35,14 +35,14 @@ xy.ECDF.persp <- function(x,y,
 ################################################################################
 ################################################################################
 ################################################################################
-## function 3:NOT GGPLOTS 
+## function 2:NOT GGPLOTS 
 xy.ECDF.image <- function(x,y, 
                           colour = hcl.colors(20),
                             main = "Empirical CDF Heatmap",
-                          countour = TRUE,
-                            points = TRUE,
-                      point.colour = "gray",
-                      point.cex = 0.1
+                         contour = TRUE,
+                          points = TRUE,
+                    point.colour = "gray",
+                       point.size = 0.1
                           )
 {
    z <- NULL
@@ -54,21 +54,20 @@ xy.ECDF.image <- function(x,y,
         xlab = "x", ylab = "y",
         main = main
         )
-if (countour)  contour(xg, yg, z, add = TRUE)
-if (points)  points(x,y, col=point.colour, cex=point.cex)
+if (contour)  contour(xg, yg, z, add = TRUE)
+if (points)  points(x,y, col=point.colour, cex=point.size)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 4 :not GGPLOTS
+# function 3 :not GGPLOTS
 xy.ECDF.contour <- function(x,y, 
                       colour = hcl.colors(20),
-                      main = "Empirical CDF Heatmap",
-                      countour = TRUE,
+                        main = "Empirical CDF Heatmap",
                       points = TRUE,
-                                          point.colour = "gray",
-                                          point.cex = 0.1
+                point.colour = "gray",
+                  point.size = 0.1
 )
 {
   rz <- z <- NULL
@@ -76,20 +75,19 @@ xy.ECDF.contour <- function(x,y,
   yg <- seq(min(y), max(y), length = 40)
    z <- outer(xg, yg, Vectorize(function(a, b) ECDF_2D(a, b, x, y)))  
   contour(xg, yg, z)
-  if (points)  points(x,  y, col=point.colour, cex=point.cex)
+  if (points)  points(x,  y, col=point.colour, cex=point.size)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 5
+# function 4
 xy.density.contour <- function(x,y, 
                              colour = hcl.colors(20),
                                main = "Empirical CDF Heatmap",
-                           countour = TRUE,
                              points = TRUE,
                        point.colour = "gray",
-                          point.cex = 0.1,
+                         point.size = 0.1,
                                bins = 50
 )
 {
@@ -105,14 +103,14 @@ xy.density.contour <- function(x,y,
     }
   }  
     kde <- MASS::kde2d(x, y, n = bins)
-  contour(kde$x, kde$y, kde$z)
-  if (points)  points(x,y, col=point.colour, cex=point.cex)
+    contour(kde$x, kde$y, kde$z)
+  if (points)  points(x,y, col=point.colour, cex=point.size)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# figure 6
+# figure 5
 xy.density.image <- function(x,y, 
                            colour = hcl.colors(20),
                              main = "Empirical CDF Heatmap",
@@ -147,7 +145,7 @@ xy.density.image <- function(x,y,
 ################################################################################
 ################################################################################
 ################################################################################
-# figure 7
+# figure 6
 xy.density.image <- function(x,y, bins=25)
 {
   if (is.null(y)) # data handling

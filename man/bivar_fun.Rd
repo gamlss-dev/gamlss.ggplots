@@ -10,15 +10,13 @@ Function to Plot Two Dimensinal Functions
 The function \code{bivar_fun()} is a generic function which can plot the contour plot of any two demensional function \code{f(x,y)}.
 
 The function \code{bivar_pdf()} is a similar  function  to  \code{bivar_fun()}, in that it can plot can plot any two demensional pdf,  \code{f(x,y)},  with the additinal feature that it plots also  the HPR (hight probability region) as one of the contour plots.
-
 }
 \usage{
 bivar_fun(fun, xlim = c(-3, 3), ylim = c(-3, 3), 
          n = 100, xlab = "x", ylab = "y", ...)
 
 bivar_pdf(pdf, xlim = c(-3, 3), ylim = c(-3, 3), 
-        n = 200, xlab = "x", ylab = "y", HDV = TRUE)
-
+        n = 200, xlab = "x", ylab = "y", HDV = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

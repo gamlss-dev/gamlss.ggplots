@@ -10,31 +10,43 @@
 \alias{xy_ECDF_contour}
 \alias{xy_ECDF_hist}
 \alias{ECDF_2D}
+\alias{xy.ECDF.persp}
+\alias{xy.ECDF.contour}
+\alias{xy.ECDF.image}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Data Plot for Bivariate Vectors 
 }
 \description{
-This set of plots are for helping visuallise relationship between two continuous variables which both could be considered as responses.
+This set of plots are for helping visuallise relationship between two continuous variables in the case where  both variables could be considered as possible responses. The idea is to investigate graphically their relationship for a possible use of copula.
 
-The function \code{xy_scatter()} plot the scatter plott of the two continuous variables but also add the point of the median, the heigh denstity region (50\%) and and a 2- dimnesional kernal density estimator (KDE).
+There are two types of functions. 
+The ones whichs are eperated by \code{_} e.g. \code{xy_scatter()} which are using  the \code{ggplot2} package grapics  and the ones using ordinary \code{R} graphics which  are using a point, \code{.}, as a seperator e.g. \code{xy.ECDF.contour()}. Here we enumarate  the \code{ggplot2} function while the ordinary graphic functions are indicated within. 
+ 
+i) The function \code{xy_scatter()} plot the scatter plot of the two continuous variables but also add a) the points of the medians, b) the heigh denstity region (50\%)  and c) a 2- dimnesional kernal density estimator (KDE) contour plot.
 
-The function \code{xy_pit_scatter()} is similar to the the function  \code{xy_scatter()}  but instaead of the original variables it plots their PIT (probability intergral trsnsormation).
+ii) The function \code{xy_pit_scatter()} is similar to the the function  \code{xy_scatter()}  but instead of the original variables it plots their PIT (probability intergral trsnsormation) values.
 
-The function \code{xy_hist()} (similar to the\code{xy_scatter()}), it plots a 2D-histogram of the original data with  which uses \eqn{bins\times bins}, by default \eqn{ bins=50}.
+iii) The function \code{xy_hist()} (which convey similar information to the\code{xy_scatter()}), it plots a 2D-histogram of the original bivariate data.  It uses as grid \eqn{bins\times bins}.  The default value of the option \code{bins} is \eqn{ bins=50}.
 
-The function \code{xy_hist_kde2d()}is using the \code{MASS} package function  \code{kde2d()} to produce a two dimensional histogram.
+iv) The function \code{xy_hist_kde2d()}, similar information to \code{xy_hist()}. It is using the \code{MASS} package function  \code{kde2d()} to produce the two dimensional histogram.
 
-The function \code{xy_pin_hist()} (similar to the\code{xy_pin_scatter()}), it plots a 2D-histogram of the transformed data ia a grid \eqn{bins\times bins}, by default \eqn{ bins=50}.
 
-The function \code{xy_density()} produce a kernel density estimator KDE od the two continuous variables.
+v) The function \code{xy_pit_hist()} (similar information to the\code{xy_pit_scatter()}), it plots a 2D-histogram of the transformed data ia a grid \eqn{bins\times bins}, by default \eqn{ bins=50}.
 
-The function \code{xy_density_plain()}  produces identical results to  \code{xy_density()} but it shoes just the contour plots of the  2d kernel density estimator.
+vi) The function \code{xy_density()} produce a kernel density estimator, KDE, od the two continuous variables.
 
-The functions \code{xy_ECDF_contour())}  and \code{xy_ECDF_hist()}  produce a contour plot or a 2D-histogram, rerpectively,  of the ECDF of \eqn{x} and \eqn{y} calculated by the function \code{ECDF_2D()}.
+vii) The function \code{xy_density_plain()}  produces identical results to  \code{xy_density()} but it shows just the contour plots of the  2-D kernel density estimator.
+
+viii) The functions \code{xy_ECDF_contour())}  produce a contour plot of the ECDF of \eqn{x} and \eqn{y}. The 2D-ECDF is calculate using  the function \code{ECDF_2D()}.
+
+ix)  The function \code{xy_ECDF_hist()}  produce a  a 2D-histogram, of the ECDF of \eqn{x} and \eqn{y}. The 2D-ECDF is calculated by the function \code{ECDF_2D()}. 
+
+Note that similar information like the function  \code{xy_ECDF_contour())} can be produve uding the \code{R} graphics functions  \code{xy.ECDF.contour())} and   \code{xy.ECDF.image())} and  \code{xy.ECDF.persp()}
 
 }
+
 \usage{
 xy_scatter(x, y = NULL, method = c("cw", "pc", "sp"), 
           density = TRUE, HDR = TRUE, 
@@ -83,6 +95,21 @@ xy_ECDF_contour(x, y)
 xy_ECDF_hist(x, y) 
 
 ECDF_2D(value.x, value.y, data.x, data.y)
+
+xy.ECDF.persp(x, y, theta = 30, phi = 30, xlab = "x", 
+              ylab = "y", zlab = "f(x,y)", 
+              colour = "lightblue", main = "ECDF(x,y)")
+
+xy.ECDF.contour(x, y, colour = hcl.colors(20), 
+             main = "Empirical CDF Heatmap", 
+             points = TRUE, point.colour = "gray", 
+             point.size = 0.1)
+
+xy.ECDF.image(x, y, colour = hcl.colors(20), 
+            main = "Empirical CDF Heatmap", 
+            contour = TRUE, points = TRUE, 
+            point.colour = "gray", point.size = 0.1)
+
 }
 
 \arguments{
@@ -97,13 +124,20 @@ ECDF_2D(value.x, value.y, data.x, data.y)
   \item{point.size}{The size of the points points for the scatter plot}
   \item{point.colour}{the colour of the points in he scatter plot}
   \item{HDR.colour}{the colour used for the HDR}
-  \item{colour}{the colours in the 2D-histogram}
+  \item{colour}{the colour of the respective plot}
   \item{points}{whether to show the points}
   \item{bins}{the number of the bins in the the 2-D histogram defaul 50 }
   \item{value.x}{the value of x to evaluate the ECDF}
   \item{value.y}{the value of y to evaluate the ECDF}
   \item{data.x}{the x data vector for the creation of the ECDF}
   \item{data.y}{the y data vector for the creation of the ECDF}
+  \item{theta, phi}{angles defibne the view direction}
+  \item{xlab}{the label for x}
+  \item{ylab}{the label for y}
+  \item{zlab}{the label for z}
+  \item{main}{the title of the plot}
+  \item{contour}{whether contour}
+   
 } 
 
 \details{

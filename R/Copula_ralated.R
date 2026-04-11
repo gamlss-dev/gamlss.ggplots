@@ -590,7 +590,8 @@ bivar_pdf  <-  function(pdf,
                            n = 200, 
                         xlab = "x",
                         ylab = "y", 
-                        HDV = TRUE) 
+                        HDV = TRUE,
+                        ...) 
 {
 ## Grid
       x <- seq(xlim[1], xlim[2], length.out = n)
@@ -598,7 +599,7 @@ bivar_pdf  <-  function(pdf,
    grid <- expand.grid(x = x, y = y)
 ## Evaluate density
  z <- NULL
- grid$z <- mapply(pdf, grid$x, grid$y)
+ grid$z <- mapply(pdf, grid$x, grid$y, ...)
 ## Approximate probability mass
   dx <- diff(x)[1]
   dy <- diff(y)[1]
