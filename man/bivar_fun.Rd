@@ -1,12 +1,20 @@
 \name{bivar_fun}
 \alias{bivar_fun}
 \alias{bivar_pdf}
+\alias{bivar.fun.contour}
+\alias{bivar.fun.image}
+\alias{bivar.fun.persp}
+\alias{bivar_fun_plotly}
+
+
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Function to Plot Two Dimensinal Functions
 }
 \description{
+The first two functions are usining `ggplot2` the function 
+
 The function \code{bivar_fun()} is a generic function which can plot the contour plot of any two demensional function \code{f(x,y)}.
 
 The function \code{bivar_pdf()} is a similar  function  to  \code{bivar_fun()}, in that it can plot can plot any two demensional pdf,  \code{f(x,y)},  with the additinal feature that it plots also  the HPR (hight probability region) as one of the contour plots.
@@ -17,18 +25,42 @@ bivar_fun(fun, xlim = c(-3, 3), ylim = c(-3, 3),
 
 bivar_pdf(pdf, xlim = c(-3, 3), ylim = c(-3, 3), 
         n = 200, xlab = "x", ylab = "y", HDV = TRUE, ...)
-}
+
+
+bivar_fun_plotly(f, xlim = c(-3, 3), ylim = c(-3, 3), 
+                 n = 100, ...)  
+        
+bivar.fun.persp(f, xlim = c(-3, 3), ylim = c(-3, 3), 
+               n = 100, colour = "lightblue", theta = 30, phi = 30, 
+               xlab = "x", ylab = "y", zlab = "f(x,y)", 
+               main = "f(x,y)", ...)
+
+bivar.fun.image(f, xlim = c(-3, 3), ylim = c(-3, 3), 
+              n = 100, xlab = "x", ylab = "y", main = "f()", 
+              colour = hcl.colors(20), contour = TRUE, ...)
+
+bivar.fun.contour(f, xlim = c(-3, 3), ylim = c(-3, 3), 
+              n = 100, xlab = "x", ylab = "y", ...)
+              
+bivar_fun_plotly(f, xlim = c(-3, 3), ylim = c(-3, 3), 
+             n = 100, ...)
+}        
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{fun}{any two dimensional function f(x,y)}
+  \item{fun, f}{any two dimensional function f(x,y)}
  \item{pdf}{any two dimensinal joint pdf}
   \item{xlim}{the limits of the x}
   \item{ylim}{the limits of the x}
   \item{n}{the number of grid}
   \item{xlab}{the x lable}
   \item{ylab}{the y label}
- \item{HDV}{whether to show the hight density values (50\%)}
-  \item{\dots}{additinal argument passes to the function}
+  \item{zlab}{the z label}
+  \item{HDV}{whether to show the hight density values (50\%)}
+  \item{colour}{the apropriate colour}
+  \item{contour}{whether to plot the contour}
+  \item{theta, phi}{angles defibne the view direction}
+  \item{main}{the title}
+  \item{\dots}{additinal argument passes to the relevent function}
 }
 
 

@@ -200,7 +200,7 @@ bivar.fun.image <- function(f,
                             ylab = "y",
                             main = "f()",
                           colour = hcl.colors(20),
-                        countour = TRUE,
+                         contour = TRUE,
                             ...)
 {
     gx <- seq(xlim[1], xlim[2], length.out = n)
@@ -213,7 +213,7 @@ bivar.fun.image <- function(f,
            xlab = xlab, ylab = ylab,
            main = main
      )
-     if (countour)  contour(gx, gy, Z, add = TRUE)
+     if (contour)  contour(gx, gy, Z, add = TRUE)
 }
 ################################################################################
 ################################################################################
@@ -259,7 +259,9 @@ bivar_fun_plotly  <- function(f,
                              n = 100,
                              ...)
 {
-#requireNamespace(plotly)  
+    if (!requireNamespace("plotly", quietly = TRUE)) {
+      stop("Package 'plotly' is required for this function. Please install it.")
+    }
     gx <- seq(xlim[1], xlim[2], length.out = n)
     gy <- seq(ylim[1], ylim[2], length.out = n)
   grid <- expand.grid(x = gx, y = gy) 

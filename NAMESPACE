@@ -83,7 +83,9 @@ export( resid_index,
         xy_ECDF_contour, ECDF_2D,
         xy.ECDF.contour, xy.ECDF.image, xy.ECDF.persp,
         bivar_pdf, bivar_fun,
-        xy.density.persp, xy.density.image,  xy.density.contour
+        bivar.fun.image, bivar.fun.contour, bivar.fun.persp,
+        xy.density.persp, xy.density.image,  xy.density.contour,
+        bivar_fun_plotly
 )        
 ################################################################################
 ################################################################################
