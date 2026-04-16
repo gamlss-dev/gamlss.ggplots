@@ -521,7 +521,7 @@ xy_ECDF_hist <- function(x,y)
 xy_ECDF_contour <- function(x,y)  
                  #       points = TRUE,
                  # point.colour = "gray",
-                 #    point.cex = 0.1)
+                 #    point.size = 0.1)
 {
     Fn <- NULL
     xg <- seq(min(x), max(x), length = 40)

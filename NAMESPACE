@@ -82,7 +82,8 @@ export( resid_index,
         xy_pit_density, xy_ECDF_hist, 
         xy_ECDF_contour, ECDF_2D,
         xy.ECDF.contour, xy.ECDF.image, xy.ECDF.persp,
-        bivar_pdf, bivar_fun
+        bivar_pdf, bivar_fun,
+        xy.density.persp, xy.density.image,  xy.density.contour
 )        
 ################################################################################
 ################################################################################
@@ -114,6 +115,8 @@ import(gamlss.foreach)
 import(ggridges)
 import(ggplot2)
 ################################################################################
+importFrom("plotly", "plot_ly", "add_surface")
+################################################################################
 importFrom("grid", "grid.layout", "grid.newpage", "pushViewport", "viewport")
 importFrom("stats", "model.matrix", "logLik")
 ################################################################################
@@ -144,6 +147,8 @@ importFrom("stats", "model.weights")
 importFrom("stats", "coef", "df", "optim")
 ################################################################################
 importFrom("foreach", "%dopar%", "foreach", "%do%")
+################################################################################
+importFrom("plotly", "plot_ly", "add_surface")
 ################################################################################
 importFrom("MASS",  "kde2d")
 ################################################################################

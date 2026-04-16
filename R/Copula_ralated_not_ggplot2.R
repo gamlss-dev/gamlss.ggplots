@@ -84,7 +84,7 @@ xy.ECDF.contour <- function(x,y,
 # function 4
 xy.density.contour <- function(x,y, 
                              colour = hcl.colors(20),
-                               main = "Empirical CDF Heatmap",
+                               main = "Empirical Density",
                              points = TRUE,
                        point.colour = "gray",
                          point.size = 0.1,
@@ -103,7 +103,7 @@ xy.density.contour <- function(x,y,
     }
   }  
     kde <- MASS::kde2d(x, y, n = bins)
-    contour(kde$x, kde$y, kde$z)
+    contour(kde$x, kde$y, kde$z, main=main)
   if (points)  points(x,y, col=point.colour, cex=point.size)
 }
 ################################################################################
@@ -113,11 +113,11 @@ xy.density.contour <- function(x,y,
 # figure 5
 xy.density.image <- function(x,y, 
                            colour = hcl.colors(20),
-                             main = "Empirical CDF Heatmap",
-                         countour = TRUE,
+                             main = "Empirical Density",
+                          contour = TRUE,
                            points = TRUE,
                      point.colour = "gray",
-                        point.cex = 0.1,
+                       point.size = 0.1,
                              bins = 50
 )
 {
@@ -138,15 +138,15 @@ xy.density.image <- function(x,y,
         xlab = "x", ylab = "y",
         main = main
   )
-  if (countour)  contour(kde$x, kde$y, kde$z, add = TRUE)
-  if (points)   points(x,y, col=point.colour, cex=point.cex)
+  if (contour)  contour(kde$x, kde$y, kde$z, add = TRUE)
+  if (points)   points(x,y, col=point.colour, cex=point.size)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
 # figure 6
-xy.density.image <- function(x,y, bins=25)
+xy.density.persp <- function(x,y, bins=25, main = "Empirical Bivariate Density")
 {
   if (is.null(y)) # data handling
   {
@@ -164,50 +164,13 @@ xy.density.image <- function(x,y, bins=25)
         theta = 30, phi = 30,
         col = "lightblue",
         xlab = "x", ylab = "y", zlab = "F_n(x,y)",
-        main = "Empirical Bivariate CDF")
+        main = main)
 }
 ################################################################################
 ################################################################################
 ################################################################################
 ################################################################################
-# function 8
-xy_histogram <- function(x,y, 
-                          colour = hcl.colors(20),
-                          points = TRUE,
-                    point.colour = "gray",
-                       point.size = 0.1,
-                         bins = 50  
-)
-{
-  level <- NULL
-if (is.null(y)) # data handiling
-  {
-    if (is.matrix(x) || is.data.frame(x)) 
-    {
-      y <- x[, 2]
-      x <- x[, 1]
-    } else 
-    {
-      stop("Provide either (x, y) or a 2-column matrix/data.frame")
-    }
-  }  
-  df <- data.frame(x=x,y=y)
-   p <- ggplot2::ggplot(df, ggplot2::aes(x, y)) +
-        ggplot2::geom_bin2d(bins = bins) +
-        ggplot2::scale_fill_gradient(low = "white", high = "red") +
-        ggplot2::labs(title = "2D Histogram (Empirical Density)",
-         fill = "Count") 
-  if (points)  
-    p=p+ ggplot2::geom_point(ggplot2::aes(x = x, y = y), 
-                   color =  point.colour,
-                   size = point.size)
-  p
-}
-################################################################################
-################################################################################
-################################################################################
-################################################################################
-# function 9
+# function 7
 bivar.fun.contour <- function(f,
                               xlim = c(-3,3),
                               ylim = c(-3,3),
@@ -228,7 +191,7 @@ bivar.fun.contour <- function(f,
 ################################################################################
 ################################################################################
 ################################################################################
-# function 10
+# function 8
 bivar.fun.image <- function(f,
                             xlim = c(-3,3),
                             ylim = c(-3,3),
@@ -256,7 +219,7 @@ bivar.fun.image <- function(f,
 ################################################################################
 ################################################################################
 ################################################################################
-# function 11
+# function 9
 bivar.fun.persp  <- function(f,
                           xlim = c(-3,3),
                           ylim = c(-3,3),
@@ -275,6 +238,7 @@ bivar.fun.persp  <- function(f,
   grid <- expand.grid(x = gx, y = gy) 
   z <- f(grid$x, grid$y, ...)
   Z <- matrix(z, nrow=n, ncol=n )
+  
   persp(gx, gy, Z,
          col = colour,
         xlab = xlab, 
@@ -283,6 +247,27 @@ bivar.fun.persp  <- function(f,
         main = "f(x,y)",
        theta = theta, 
          phi = phi)
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+# function 10
+bivar_fun_plotly  <- function(f,
+                             xlim = c(-3,3),
+                             ylim = c(-3,3),
+                             n = 100,
+                             ...)
+{
+#requireNamespace(plotly)  
+    gx <- seq(xlim[1], xlim[2], length.out = n)
+    gy <- seq(ylim[1], ylim[2], length.out = n)
+  grid <- expand.grid(x = gx, y = gy) 
+     z <- f(grid[,"x"], grid[, "y"], ...)
+     Z <- matrix(z, nrow=n, ncol=n )
+#if (requireNamespace("plot_ly", quietly = TRUE)) 
+  plotly::plot_ly(x = gx, y = gy, z = Z) |>
+  plotly::add_surface()
 }
 ################################################################################
 ################################################################################

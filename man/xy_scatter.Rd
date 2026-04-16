@@ -13,6 +13,11 @@
 \alias{xy.ECDF.persp}
 \alias{xy.ECDF.contour}
 \alias{xy.ECDF.image}
+\alias{xy.density.contour}
+\alias{xy.density.image}
+\alias{xy.density.persp}
+
+
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -110,6 +115,17 @@ xy.ECDF.image(x, y, colour = hcl.colors(20),
             contour = TRUE, points = TRUE, 
             point.colour = "gray", point.size = 0.1)
 
+xy.density.contour(x, y, colour = hcl.colors(20), 
+           main = "Empirical Density", points = TRUE, 
+           point.colour = "gray", point.size = 0.1, bins = 50)
+
+xy.density.image(x, y, colour = hcl.colors(20), 
+          main = "Empirical Density", contour = TRUE, 
+          points = TRUE, point.colour = "gray", 
+          point.size = 0.1, bins = 50)   
+          
+xy.density.persp(x, y, bins = 25, 
+         main = "Empirical Bivariate Density")   
 }
 
 \arguments{
