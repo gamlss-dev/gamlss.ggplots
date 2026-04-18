@@ -157,3 +157,28 @@ if  (show.outliers)  ggplot2::geom_text(data = d, ggplot2::aes(x = y,
 ################################################################################
 ################################################################################
 ################################################################################
+# this function it plots a spkike function for empirical pdf
+y_epdf <- function(y, plot=TRUE)
+{
+  x <- freq <- NULL 
+  #check if continuous  
+  # get the data frame 
+  df <- as.data.frame(table(as.numeric(format(y, digits=4))))
+  # rename the variables 
+  names(df) <- c("x", "freq")
+  # he x is a factor make it numetric  
+  df$x <- as.numeric(as.character(df$x))  
+  #plot the 
+  if (plot)
+  {
+    p<-  ggplot(df, aes(x = x, y = freq)) +
+      geom_linerange(aes(ymin = 0, ymax = freq)) +
+      theme_minimal()  
+    return(p)
+  } else 
+    return(df)  
+}
+################################################################################
+################################################################################
+################################################################################
+################################################################################

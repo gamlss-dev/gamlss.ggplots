@@ -2,6 +2,7 @@
 \alias{resid_dtop}
 \alias{resid_ecdf}
 \alias{y_ecdf}
+\alias{y_epdf}
 
 \title{Detrended Transformed Owen's Plot and ECDF for the residuals}
 \description{
@@ -12,6 +13,8 @@ This could be true if the horizontal line is within the confidence intervals.
 The function \code{resid_ecdf()} provides the empirical cumulative distribution function of the residuals.
 
 The function \code{y_ecdf()} provides the empirical cumulative distribution function of any numerical vector \code{y}.
+
+The function \code{y_epdf()} provides the empirical probability distribution function of any numerical vector \code{y}. The plot could be uniterpretable if there are no repetitions  in the number of dinstict values for \code{y}.
 
 }
 \usage{
@@ -25,7 +28,10 @@ resid_ecdf(obj, resid, type = c("Owen", "JW"), conf.level = c("95", "99"),
            
 y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2, 
            points.col = "steelblue4", check_overlap = TRUE, 
-           show.outliers = FALSE, from, to, title, ...)           
+           show.outliers = FALSE, from, to, title, ...)   
+
+y_epdf(y, plot = TRUE)
+
 }
 \arguments{
   \item{obj}{A GAMLSS fitted model}
@@ -41,6 +47,7 @@ y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2,
   \item{ylim}{if the y limit should be different from the default max(y)+.1}
    \item{from}{where to start the ecdf}
   \item{to}{where to finish the ecdf}
+  \item{plot}{wheteher to plot or save the data as a \code{data.frame}}
   \item{\dots}{ further arguments}
 }
 \value{A ggplot is generated}
