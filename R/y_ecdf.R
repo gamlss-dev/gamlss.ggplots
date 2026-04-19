@@ -171,8 +171,9 @@ y_epdf <- function(y, plot=TRUE, colour=gray(.5))
   #plot the 
   if (plot)
   {
-    p <-  ggplot2::ggplot(df, aes(x = x, y = freq)) +
-          ggplot2::geom_linerange(aes(ymin = 0, ymax = freq), color=colour) +
+    p <-  ggplot2::ggplot(df, ggplot2::aes(x = x, y = freq)) +
+          ggplot2::geom_linerange(ggplot2::aes(ymin = 0, ymax = freq), 
+                                  color=colour) +
           ggplot2::theme_minimal()  
     return(p)
   } else 
