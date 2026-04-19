@@ -3,6 +3,7 @@
 \alias{resid_ecdf}
 \alias{y_ecdf}
 \alias{y_epdf}
+\alias{y_epit}
 
 \title{Detrended Transformed Owen's Plot and ECDF for the residuals}
 \description{
@@ -15,6 +16,9 @@ The function \code{resid_ecdf()} provides the empirical cumulative distribution 
 The function \code{y_ecdf()} provides the empirical cumulative distribution function of any numerical vector \code{y}.
 
 The function \code{y_epdf()} provides the empirical probability distribution function of any numerical vector \code{y}. The plot could be uniterpretable if there are no repetitions  in the number of dinstict values for \code{y}.
+
+The function \code{y_epit()} calculates the empirical probability intergral transform, PIT, for a continuous vector in the data. 
+
 
 }
 \usage{
@@ -31,6 +35,8 @@ y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2,
            show.outliers = FALSE, from, to, title, ...)   
 
 y_epdf(y, plot = TRUE,  colour=gray(.5))
+
+y_epit(y)
 
 }
 \arguments{
