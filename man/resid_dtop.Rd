@@ -30,7 +30,7 @@ y_ecdf(y, type = c("Owen", "JW"), conf.level = c("95", "99"), value = 2,
            points.col = "steelblue4", check_overlap = TRUE, 
            show.outliers = FALSE, from, to, title, ...)   
 
-y_epdf(y, plot = TRUE)
+y_epdf(y, plot = TRUE,  colour=gray(.5))
 
 }
 \arguments{
@@ -48,6 +48,7 @@ y_epdf(y, plot = TRUE)
    \item{from}{where to start the ecdf}
   \item{to}{where to finish the ecdf}
   \item{plot}{wheteher to plot or save the data as a \code{data.frame}}
+  \item{colour}{the colour of the spikes in the \code{y_epdf}}
   \item{\dots}{ further arguments}
 }
 \value{A ggplot is generated}

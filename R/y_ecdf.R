@@ -158,7 +158,7 @@ if  (show.outliers)  ggplot2::geom_text(data = d, ggplot2::aes(x = y,
 ################################################################################
 ################################################################################
 # this function it plots a spkike function for empirical pdf
-y_epdf <- function(y, plot=TRUE)
+y_epdf <- function(y, plot=TRUE, colour=gray(.5))
 {
   x <- freq <- NULL 
   #check if continuous  
@@ -171,9 +171,9 @@ y_epdf <- function(y, plot=TRUE)
   #plot the 
   if (plot)
   {
-    p<-  ggplot(df, aes(x = x, y = freq)) +
-      geom_linerange(aes(ymin = 0, ymax = freq)) +
-      theme_minimal()  
+    p <-  ggplot2::ggplot(df, aes(x = x, y = freq)) +
+          ggplot2::geom_linerange(aes(ymin = 0, ymax = freq), color=colour) +
+          ggplot2::theme_minimal()  
     return(p)
   } else 
     return(df)  
