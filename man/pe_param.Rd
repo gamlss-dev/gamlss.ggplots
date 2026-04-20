@@ -21,7 +21,7 @@ pe_param(obj = NULL, term = NULL, data = NULL, n.points = 100,
                data.size = 0.1, factor.size = 15,
                data.alpha = 0.9, bins = 30, 
                filled = FALSE, ylim = NULL,
-                    title) 
+                    title, ...) 
 
 pe_1_param(obj = NULL, term = NULL, data = NULL, n.points = 100,  
                 parameter = c("mu", "sigma", "nu", "tau"), 
@@ -80,7 +80,6 @@ pe_param_grid(model, terms, maxcol = 2, maxrow = 3, ylim=NULL, ...)
   \item{ylim}{if a common y limit is required}
   \item{adjust}{whethet to substact from the mean the median or from zero}
   \item{\dots}{for passing argument from the function \code{pe_param_grid} to the function \code{pe_param}}
-  
 }
 \details{
 The functions \code{pe_param()} and \code{pe_param_grid()} can be used to help the use the  interpretation of a GAMLSS model. 

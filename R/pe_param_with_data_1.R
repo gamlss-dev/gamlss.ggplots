@@ -32,7 +32,7 @@ pe_param <- function(obj = NULL, #  gamlss or gamlss2 object
                     bins = 30, # for contour plot
                   filled = FALSE, #for contour plot
                     ylim = NULL,
-                    title) # whether to plot
+                    title, ...) # whether to plot
 {
      lterm <- length(term)
   name.obj <-  if (is.null(name.obj)) deparse(substitute(obj))
@@ -57,7 +57,7 @@ if (lterm==1) {
                   linewidth = linewidth, 
                    name.obj = name.obj, 
                        ylim = ylim,
-                      title = title)}
+                      title = title, ...)}
 else if (lterm==2) {
       gg <-  pe_2_param(obj = obj, 
                       terms = term,
@@ -76,7 +76,7 @@ else if (lterm==2) {
                   data.size = data.size,
                  data.alpha = data.alpha, 
                   data.plot = data.plot,
-                      title = title)}
+                      title = title, ...)}
     else stop("only up to two way interactions can be plotted")
   gg  
 }
@@ -204,7 +204,14 @@ dat.temp[,i]  <- if (is.factor(DaTa[,i]))
 if (inherits(obj, "gamlss")) ## GAMLSS
 {
       Intercept <- coef(obj, parameter=parameter)[1]
-  fittted.star  <- predict(obj, parameter = parameter, newdata=tail(dat.temp, n.points), type = type)  
+  fittted.star  <- predict(obj, parameter = parameter, 
+                      newdata=tail(dat.temp, n.points), type = type) 
+  aver.fittted.star <- switch(adjust, 
+                              "intercept" = Intercept, 
+                              "mean" = mean(fittted.star),
+                              "median" = median(fittted.star),
+                              "none" = 0 )
+  fittted.orig <- fittted.star - aver.fittted.star
       Intercept <- if(type=="link")  Intercept else # needs code here 
   if (x.is.factor) {
     value1stlevel <- fittted.star[1] # need the refencce level here 
@@ -222,7 +229,6 @@ if (inherits(obj, "gamlss")) ## GAMLSS
 {
           Intercept <- coef(obj)[paste0(parameter, ".p.(Intercept)")]
       fittted.star  <- predict(obj, model = parameter, newdata=tail(dat.temp, n.points), type=type)  
-      
   if (x.is.factor) 
       {
         value1stlevel <- fittted.star[1] # need the refencce level here 
@@ -239,7 +245,7 @@ if (inherits(obj, "gamlss")) ## GAMLSS
 }      
         name.obj <-  if (is.null(name.obj))  deparse(substitute(obj)) else name.obj
         txt.title <- if (missing(title))  
-                  paste("Partial effect of",term, "for", parameter, "for model", name.obj)
+        paste("Partial effect of",term, "for", parameter, "for model", name.obj)
                   else title
     yaxislabel <- if (type=="response") paste0("PE_param(", term, ")")
                   else                  paste0("PE_eta](", term, ")")
@@ -267,18 +273,16 @@ if (x.is.factor)
      }
     } else  # GAMLSS 2
     {
-      pp <- ggplot2::ggplot(data=da) +
-            ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
-            ggplot2::ylab(yaxislabel)+ 
-            ggplot2::xlab(term)+ 
-            ggplot2::ggtitle(txt.title)
+  pp <- ggplot2::ggplot(data=da) +
+        ggplot2::geom_line( ggplot2::aes(x=x, y=y), color=col, linewidth=linewidth) +
+        ggplot2::ylab(yaxislabel)+ 
+        ggplot2::xlab(term)+ 
+        ggplot2::ggtitle(txt.title)
       if (data.plot)
       {
-        if (parameter!="mu")  stop("data.plot=TRUE can be used only with parameter=\"mu\"") 
-        if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
-       pp <- pp +  ggplot2::geom_point(data=DaTa,aes(y =DaTa[,y_name]- aver.fittted.star,  
-                                                     x = DaTa[,term]),
-                   size = data.size, alpha = data.alpha, colour = data.col)#
+  if (parameter!="mu")  stop("data.plot=TRUE can be used only with parameter=\"mu\"") 
+  if (type=="link") stop("it is not a good idea to plot the data with type=\"eta\"") 
+    pp <- pp + ggplot2::geom_point(data=DaTa,ggplot2::aes(y =DaTa[,y_name]- aver.fittted.star,  x = DaTa[,term]), size = data.size, alpha = data.alpha, colour = data.col)#
       }
       if ( rug.plot)
       {
