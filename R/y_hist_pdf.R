@@ -7,6 +7,7 @@ y_hist_pdf <- function(y,
                dens.fill = "#FF6666",
                 binwidth = (max(y)-min(y))/20,
                    from, to, title,
+                  family = gamlss.dist::dLOGSHASH,
                       mu = NULL,
                    sigma = NULL,
                       nu = NULL,
@@ -45,13 +46,13 @@ txt.title <- if (missing(title))   paste("Histogram and density plot of",xlab)
                              binwidth = binwidth, 
                              colour=hist.col, fill=hist.fill)+
      ggplot2::xlim(xlimitfrom, xlimitto)+ 
-     ggplot2::stat_function(fun = dLOGSHASH, args = list(mu = mu, sigma = sigma, nu=nu, tau=tau), 
+     ggplot2::stat_function(fun = family, args = list(mu = mu, sigma = sigma, nu=nu, tau=tau), 
                             color = "blue", size = 1.2) +
      ggplot2::labs( x = "Value", y = "Density") 
-   # ggplot2::ggplot(data.frame(y=y), ggplot2::aes(x=y))+
-   #   ggplot2::geom_histogram(ggplot2::aes(y=ggplot2::after_stat(density)),
-   #                           binwidth = binwidth,
-   #                           colour=hist.col, fill=hist.fill) #+
+  # ggplot2::ggplot(data.frame(y=y), ggplot2::aes(x=y))+
+  #   ggplot2::geom_histogram(ggplot2::aes(y=ggplot2::after_stat(density)),
+  #                           binwidth = binwidth,
+  #                           colour=hist.col, fill=hist.fill) #+
   #   ggplot2::xlab(xlab) + 
   #   ggplot2::xlim(xlimitfrom, xlimitto)+      
   #   ggplot2::ylab("histogram")# + 

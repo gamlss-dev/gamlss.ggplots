@@ -7,7 +7,7 @@
 \alias{pe_eta_grid}
 
 \title{
-Partial Effect of a Term IN a Parameters OR Predictor}
+Partial Effect of a Term in a Parameters or Predictor}
 \description{
 
 There are several functions here for plottong partial effect of terms in  a distributional parameter GAMLSS model.
@@ -60,6 +60,7 @@ pe_2_parameter(obj = NULL, terms = NULL, data = NULL,
 
 pe_param(obj = NULL, term = NULL, data = NULL, n.points = 100, 
           parameter = c("mu", "sigma", "nu", "tau"), 
+          type = c("parameter", "eta"),
           scenario = list(), how.scenario = c("median", "last", "fixed"), 
           col = "darkblue", linewidth = 1.3, name.obj = NULL, 
           rug.plot = TRUE, rug.col = "gray", rug.size = 0.5, 
@@ -161,7 +162,7 @@ library(gamlss)
 m1 <- gamlss(R~pb(Fl)+pb(A)+loc+H, data=rent, gamily=GA)
 pe_param(m1, "A")
 pe_param(m1, c("Fl","A"), filled=TRUE)
-pe_param_grid(m1, list(c("Fl","A"), c("H","loc")), filled=TRUE)
+#pe_param_grid(m1, list(c("Fl","A"), c("H","loc")), filled=TRUE)
 # the terms are additive no interaction
 }
 
