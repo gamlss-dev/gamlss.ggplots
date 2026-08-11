@@ -49,7 +49,7 @@ if (inherits(obj, "gamlss"))
       xvar <- get(xvarCh, envir=as.environment(DaTa))
     } else { xvar <- get(xvarCh, envir=globalenv())}
   }
-     fam <-  get_family(obj)
+     fam <-  gamlss.ggplots:::get_family(obj)
    fname <- fam$fname
     lpar <- fam$nopar
     qfun <- paste0("q", fname)
