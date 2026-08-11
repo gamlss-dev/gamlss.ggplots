@@ -25,12 +25,12 @@ fitted_centiles <-function (obj,
 ################################################################################
 if (missing(obj)) stop("the model is  missing")
 if (!inherits(obj, c("gamlss", "gamlss2"))) stop("the model is not a gamlss model")  
-if (inherits(obj, "gamlss"))
+if (inherits(obj, "gamlss")) 
 {
   yvarCh <- all.vars(obj$call$formula)[[1]]
   if (missing(xvar))
   {
-    xvarCh <-  all.vars(obj$call$formula)[[2]]   # get it from formula
+     xvarCh <-  all.vars(obj$call$formula)[[2]]   # get it from formula
     if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")  
     if (any(grepl("data", names(obj$call))))# if data exist 
     {
@@ -49,7 +49,7 @@ if (inherits(obj, "gamlss"))
       xvar <- get(xvarCh, envir=as.environment(DaTa))
     } else { xvar <- get(xvarCh, envir=globalenv())}
   }
-     fam <-  gamlss.ggplots:::get_family(obj)
+     fam <-  get_family(obj)
    fname <- fam$fname
     lpar <- fam$nopar
     qfun <- paste0("q", fname)
@@ -67,8 +67,10 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 ################################################################################
 if (inherits(obj, "gamlss2"))
 {
-   xvarCh <-if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
+  xvarCh <- all.vars(obj$call$formula)[2]
+  #  xvarCh <-if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
    yvarCh <- response_name(obj)
+   
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
    if (missing(xvar))
    {
@@ -94,8 +96,8 @@ if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
      DaTa <- DaTa[order(xvar),]
       par <- predict(obj, newdata=DaTa, type="parameter")
      lpar <- length(obj$family$names)
-      fam <- get_family(obj)
-    fname <- fam$fname
+      fam <- obj$call$family
+    fname <- paste(fam)
     oxvar <- xvar[order(xvar)]
     oyvar <- obj$y[order(xvar)]  
 if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
@@ -149,7 +151,7 @@ if (inherits(obj, "gamlss"))
 } else # gamlss2
 {
   ii <- ii+1
-   centM[,ii] <- fam$q_fun(p=var/100, par=par)
+   centM[,ii] <- obj$family$quantile(p=var/100, par=par)
 }  
 }###############################################################################
    DataC <-  data.frame(c = centM, 
