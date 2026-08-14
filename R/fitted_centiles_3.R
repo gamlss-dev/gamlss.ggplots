@@ -1,4 +1,4 @@
-m1 <- gamlss# functions for centile plots in ggplots 
+# functions for centile plots in ggplots 
 # last change on may 2021
 # there are two functions 
 # fitted_centile_1()
@@ -244,7 +244,8 @@ if (is.matrix(obj$y)) # Monday, March 26, 2007 at 14:12
 ################################################################################
 if (inherits(obj, "gamlss2"))
 {
-  xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
+  xvarCh <- all.vars(obj$call$formula)[2]
+#  xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
   yvarCh <- response_name(obj)
 if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
 if (any(grepl("data", names(obj$call))))# if data exist 
@@ -272,11 +273,11 @@ txt.title <- if (missing(title))
 else title
 col <- 3 # set this to 1 if you do not want colour 
 #length(obj$parameters)
-ii <- 0
-per <- rep(0,length(cent))
-centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
+             ii <- 0
+            per <- rep(0,length(cent))
+          centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
 colnames(centM) <- cent 
-lc <- length(cent)
+             lc <- length(cent)
 ############## get the centiles ################################################ 
 for(var in cent) 
 { # centile loop 
@@ -393,13 +394,13 @@ if (inherits(obj, "gamlss"))
         xvar <- get(xvarCh, envir=as.environment(DaTa))
       } else { xvar <- get(xvarCh, envir=globalenv())}
     }
-      fam <-  get_family(obj)
+      fam <- get_family(obj)
     fname <- fam$fname
      qfun <- paste0("q", fname)
      lpar <- length(obj$parameters)
     oxvar <- xvar[order(xvar)]
     oyvar <- obj$y[order(xvar)]  
-    ooxvar <-seq(from=oxvar[1], to=oxvar[length(oxvar)], length.out=length(oxvar))  
+   ooxvar <- seq(from=oxvar[1], to=oxvar[length(oxvar)], length.out=length(oxvar))  
    # ooyvar <-seq(from=oyvar[1], to=oyvar[length(oyvar)], length.out=length(oyvar))  
    yvarCh <- paste(obj$call$formula[[2]])
    
@@ -412,11 +413,63 @@ if (inherits(obj, "gamlss"))
        lpar <- fam$nopar
      yvarCh <- paste(obj$call$formula[[2]])
     }
+    x <- y <-   NULL
+    txt.title <- if (missing(title)) 
+      paste("Centile curves using", fname, sep = " ")
+    else title
+    #  col <- 3 # set this to 1 if you do not want colour 
+    #length(obj$parameters)
+    ii <- 0
+    per <- rep(0,length(cent))
+    centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
+    colnames(centM) <- cent 
+    lc <- length(cent)    
+############## get the centiles ################################################ 
+    for(var in cent) 
+    { # centile loop 
+      if (inherits(obj, "gamlss"))
+      {  
+        if(lpar==1) 
+        {
+          newpred <-  predictAll(obj, newdata=data.frame(ga=ooxvar))
+          newcall <-call(qfun,var/100, mu = newpred$mu) 
+        }
+        else if(lpar==2)
+        {
+          newpred <-  predictAll(obj, newdata=data.frame(ga=ooxvar))
+          newcall <-call(qfun,var/100, mu = newpred$mu,
+                         sigma = newpred$sigma) 
+        }
+        else if(lpar==3)
+        {
+          newpred <-  predictAll(obj, newdata=data.frame(ga=ooxvar))
+          newcall <-call(qfun,var/100, mu = newpred$mu,
+                         sigma = newpred$sigma,
+                         nu = newpred$nu) 
+        }
+        else 
+        {
+          newpred <-predictAll(obj, newdata=data.frame(ga=ooxvar))
+          newcall <-call(qfun,var/100, mu = newpred$mu,
+                         sigma = newpred$sigma,
+                         nu = newpred$nu,
+                         tau = newpred$tau) 
+        } 
+        ii <- ii+1
+        centM[,ii] <- eval(newcall)
+      } else # gamlss2
+      {
+        ii <- ii+1
+        centM[,ii] <- fam$q_fun(p=var/100, par=par)
+      }  
+    }
+################################################################################    
   } # end of gamlss
 ################################################################################
 if (inherits(obj, "gamlss2"))
-  {
-    xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
+{
+  xvarCh <- all.vars(obj$call$formula)[2]
+  #  xvarCh <- if (length(all.vars(obj$call$formula))>2) xvar else all.vars(obj$call$formula)[[2]] 
     yvarCh <- response_name(obj)
     if (length(xvarCh)>1) stop("fitted_centiles is design for one x only")
     if (any(grepl("data", names(obj$call))))# if data exist 
@@ -438,22 +491,21 @@ if (inherits(obj, "gamlss2"))
       oyvar <-  obj$y[,1][order(xvar)] 
       ylim  <-  range(obj$y[,1])
        yleg <- max(obj$y[,1])
-    }
-  } # end of gamlss2
-################################################################################  
-txt.title <- if (missing(title)) 
+  }
+}  
+  x <- y <-   NULL
+  txt.title <- if (missing(title)) 
     paste("Centile curves using", fname, sep = " ")
   else title
-################################################################################
-  col <- 3 # set this to 1 if you do not want colour 
+  #  col <- 3 # set this to 1 if you do not want colour 
   #length(obj$parameters)
-     ii <- 0
-            per <- rep(0,length(cent))
-          centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
-colnames(centM) <- cent 
-             lc <- length(cent)
-############## get the centiles ################################################ 
-for(var in cent) 
+  ii <- 0
+  per <- rep(0,length(cent))
+  centM <- matrix(0, ncol=length(cent), nrow= dim(DaTa)[1])
+  colnames(centM) <- cent 
+  lc <- length(cent)  
+############# get the centiles ################################################ 
+  for(var in cent) 
   { # centile loop 
     if (inherits(obj, "gamlss"))
     {  
@@ -479,18 +531,25 @@ for(var in cent)
       {
         newpred <-predictAll(obj, newdata=data.frame(ga=ooxvar))
         newcall <-call(qfun,var/100, mu = newpred$mu,
-                                  sigma = newpred$sigma,
-                                     nu = newpred$nu,
-                                    tau = newpred$tau) 
+                       sigma = newpred$sigma,
+                       nu = newpred$nu,
+                       tau = newpred$tau) 
       } 
       ii <- ii+1
       centM[,ii] <- eval(newcall)
     } else # gamlss2
     {
-      ii <- ii+1
-      centM[,ii] <- fam$q_fun(p=var/100, par=par)
+           ii <- ii+1
+      newpred <-predict(obj, newdata=data.frame(ga=ooxvar))
+   centM[,ii] <- fam$q_fun(p=var/100, par=newpred)
     }  
-}###############################################################################
+  }
+################################################################################  
+txt.title <- if (missing(title)) 
+    paste("Centile curves using", fname, sep = " ")
+  else title
+################################################################################
+  col <- 3 # set this to 1 if you do not want colour 
   #yvarCh <- paste(obj$call$formula[[2]])
          N <- length(xvar) 
         lc <- length(cent)

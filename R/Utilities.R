@@ -9,7 +9,7 @@
 # function to be use with gamlss.ggplots 
 # This function is getting the weights of a fitted gamlss model
 # whether is gamlss or gamlss2
-# is needs the weigjhts to weighted out obsrvation with zero weights
+# is needs the weights to weighted out obsrevation with zero weights
 get_weights <- function(obj)
 {
   if (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
@@ -26,6 +26,7 @@ get_weights <- function(obj)
 ################################################################################
 ################################################################################
 ################################################################################
+# to get the reponse 
 get_response <- function(obj)# getResponse(object, form = formula(object))
 {
   if (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
@@ -38,8 +39,8 @@ get_response <- function(obj)# getResponse(object, form = formula(object))
 ################################################################################
 ################################################################################
 # the function residuals(obj) produce different sizes if there are weights 
-# equal to zero  get_residual() meke sure that both gamlss and gamlss2 residual 
-# are thesame length   
+# equal to zero  get_residual() make sure that both gamlss and gamlss2 residual 
+# are the same length   
 get_residuals <- function(obj)
 {
   if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
@@ -51,6 +52,7 @@ get_residuals <- function(obj)
 ################################################################################
 ################################################################################
 ################################################################################
+# it is is equivalent to fitted(obj, "mu")
 get_fitted_mu <- function(obj)
 {
   if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
@@ -63,6 +65,7 @@ get_fitted_mu <- function(obj)
 ################################################################################
 ################################################################################
 ################################################################################
+# it is is equivalent to fitted(obj, "parameter")
 get_fitted_param <- function(obj, parameter="mu")
 {
   if  (!missing(obj)&&(!inherits(obj, c("gamlss", "gamlss2")))) 
@@ -75,6 +78,7 @@ get_fitted_param <- function(obj, parameter="mu")
 ################################################################################
 ################################################################################
 ################################################################################
+# the quantile has to ve defined
 get_quantile <- function (obj,
                           quantile = 0.5,
                           newdata) 
@@ -117,6 +121,7 @@ if (binom) {bd <- obj$bd ; Y <- obj$y}
 ################################################################################
 ################################################################################
 ################################################################################
+
 get_family <- function (model)
 {
   if  (!missing(model)&&(!inherits(model, c("gamlss", "gamlss2")))) 
@@ -135,7 +140,7 @@ get_family <- function (model)
      p_d_f <- eval(parse(text=dfun)) 
      c_d_f <- eval(parse(text=pfun))
      q_fun <- eval(parse(text=qfun))
-  } else 
+  } else  #if (inherits(model, "gamlss2"))
   {
    family <- model$family
     fname <- family$family
