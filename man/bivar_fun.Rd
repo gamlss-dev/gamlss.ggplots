@@ -13,7 +13,7 @@
 Function to Plot Two Dimensinal Functions
 }
 \description{
-The first two functions are usining `ggplot2` the function 
+The function here plot two dimensional functions. The first two functions are usining `ggplot2.` 
 
 The function \code{bivar_fun()} is a generic function which can plot the contour plot of any two demensional function \code{f(x,y)}.
 
