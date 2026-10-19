@@ -80,7 +80,7 @@ if (lobs==1)
            ggplot2::geom_segment(data=da[[1]], mapping = 
            ggplot2::aes(x=y.var..i.., y=pdfArr..i.., 
                                       xend = y.var..i.., yend = 0), 
-                        color=col.fill[1],  linewide=size.seqment)
+                        color=col.fill[1],  linewidth=size.seqment)
     }
       else   
     {  
@@ -90,13 +90,13 @@ for (i in 1:lobs)
              ggplot2::geom_segment(data=da[[i]], 
               mapping =  ggplot2::aes(x=y.var..i.., y=pdfArr..i.., 
                                        xend = y.var..i.., yend = 0), 
-                          color=col.fill[i], alpha=alpha, linewide=size.seqment)
+                          color=col.fill[i], alpha=alpha, linewidth=size.seqment)
   if (plot.point) p11 <- p11+ 
       ggplot2::geom_point(data=da[[i]],
-      ggplot2::aes(x=y.var..i.., y=pdfArr..i..), linewide= size.point, color=col.fill[i])
+      ggplot2::aes(x=y.var..i.., y=pdfArr..i..), linewidth= size.point, color=col.fill[i])
   if (plot.line)  p11 <- p11 + ggplot2::geom_line(data=da[[i]],
                       ggplot2::aes(x=y.var..i.., y=pdfArr..i..),  
-                      linewide = size.line, color=col.fill[i])
+                      linewidth = size.line, color=col.fill[i])
          } 
     }
      p11 = p11 + ggplot2::labs(x = "y", y =  paste0(fname,"(y)"))+
@@ -147,7 +147,7 @@ if ((type=="Discrete")||(type=="discrete"))
   {
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
       ggplot2::geom_segment(mapping =ggplot2::aes(x=y.var, y=pdfArr, xend = y.var, yend = 0), 
-                   color=col.fill[1],  linewide=size.seqment)
+                   color=col.fill[1],  linewidth=size.seqment)
   }
   else   
   {  
@@ -157,14 +157,14 @@ if ((type=="Discrete")||(type=="discrete"))
         ggplot2::geom_segment(mapping =  
         ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]],
                  xend =.data[["y.var"]],, yend = 0), 
-                    color=col.fill[i], alpha=alpha, linewide=size.seqment)
+                    color=col.fill[i], alpha=alpha, linewidth=size.seqment)
       if (plot.point) p11 <- p11 + ggplot2::geom_point( 
         ggplot2::aes(x=.data[["y.var"]],  y=.data[[paste0("X",i)]]),  
-        linewide= size.point, color=col.fill[i])
+        linewidth= size.point, color=col.fill[i])
       
       if (plot.line)  p11 <- p11 + ggplot2::geom_line( 
         ggplot2::aes(x=.data[["y.var"]], y=.data[[paste0("X",i)]]),  
-        linewide = size.line, color=col.fill[i])
+        linewidth = size.line, color=col.fill[i])
     } 
   }
 } else # continuous 

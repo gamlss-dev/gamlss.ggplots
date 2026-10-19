@@ -90,10 +90,10 @@ for (i in 1:lobs)
              ggplot2::geom_segment(data=da[[i]],
              mapping =  ggplot2::aes(x=y.var..i.., y=cdfArr..i..,
              xend = y.var..i.., yend = 0),
-             color = col.fill[i], alpha = alpha, linewide = size.seqment)
+             color = col.fill[i], alpha = alpha, linewidth = size.seqment)
    if (plot.line)  p11 <- p11 + ggplot2::geom_line(data=da[[i]],
                   ggplot2::aes(x=y.var..i.., y=cdfArr..i..),  
-                  linewide = size.line.disc, color=col.fill[i])
+                  linewidth = size.line.disc, color=col.fill[i])
          } 
     }
      p11 = p11 + ggplot2::labs(x = "y", y =  paste0(fname,"(y)")) +
@@ -150,7 +150,7 @@ if ((type=="Discrete")||(type=="discrete"))
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
       ggplot2::geom_step(direction = "hv", 
       ggplot2::aes(x = y.var, y = cdfArr),  
-      linewide = size.point, color = col.fill[1])
+      linewidth = size.point, color = col.fill[1])
   }
   else   
   {  
@@ -158,19 +158,19 @@ if ((type=="Discrete")||(type=="discrete"))
     {
         p11 <- p11 + ggplot2::geom_step(direction = "hv", 
                      ggplot2::aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
-                     linewide= size.point, color=col.fill[i])
+                     linewidth= size.point, color=col.fill[i])
     } 
   }
 } else # continuous 
 {# one plot 
   if (lobs==1) p11 = p11 + ggplot2::geom_line(color = col.fill[1], 
-                           linewide = size.line, 
+                           linewidth = size.line, 
                            alpha = alpha, aes(x = y.var, y = cdfArr))
   else
   {# more than one plot
     for (i in 1:lobs)
     {
-  p11 <-  p11 +  ggplot2::geom_line(color = col.fill[i], linewide = size.line, 
+  p11 <-  p11 +  ggplot2::geom_line(color = col.fill[i], linewidth = size.line, 
                            alpha = alpha, aes_string(x = "y.var", 
                                                      y = paste0("X",i)))
     } 
