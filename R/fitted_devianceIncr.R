@@ -22,7 +22,7 @@ gamlss_prep_data <- function (obj, quan.val, newdata)
   {
     DIncr <- if (inherits(obj, "gamlss")) gamlss::devianceIncr(obj) 
              else  deviance_Incr(obj)
-    weights <- get_weights(obj)
+  weights <- get_weights(obj)
     value <- quantile(DIncr, quan.val)
       obs <- seq_len(length(DIncr))
       obs <- obs[weights!=0]
@@ -94,8 +94,6 @@ colnames(f) <- c("observation", "quan_resid")
 ################################################################################
 ################################################################################
 ################################################################################
-################################################################################
-################################################################################
 model_devianceIncr_diff <-  function(model1, model2, 
                                      against = "index", 
                                          tol = 20, 
@@ -145,18 +143,11 @@ if (is.null(newdata))
 ################################################################################
 ################################################################################
 ################################################################################
-deviance_Incr <- function(object, newdata = NULL, ...)
+deviance_Incr <- function(object, ...)
 {
   if (!inherits(object, "gamlss2")) stop("the model should be an gamlss2 object")
-  par <- predict(object, type = "parameter", newdata = newdata)
-     y <- if (!is.null(newdata)) 
-      {
-    model.response(model.frame(object, data = newdata, keepresponse = TRUE))
-      } else 
-      {
-    model.response(model.frame(object))
-      }
-    dI <- -2*family(object)$pdf(y, par, log=TRUE)
+ # par <- predict(object, type = "parameter", newdata = newdata)
+    dI <- deviance(object,  sum=FALSE, ...)
   nobs <- length(dI)
   attr(dI, "nobs") <- nobs
   attr(dI, "df") <- object$df
