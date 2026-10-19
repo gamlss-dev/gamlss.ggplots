@@ -13,7 +13,7 @@ Partial Effect of a Term in a Parameters or Predictor}
 There are several functions here for plottong partial effect of terms in  a distributional parameter GAMLSS model.
 Those functions help the intepretation of a GAMLSS model.
 
-In the hard of it there are the two functions; 
+In the hard of it there are  two functions; 
 
 i) \code{pe_1_paramater()} and 
 
