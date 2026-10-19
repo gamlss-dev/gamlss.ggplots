@@ -20,7 +20,7 @@ The function \code{fitted_cdf_data()} is similat to  \code{fitted_cdf()} but als
 
 The function \code{fitted_survival_data()} is similat to  \code{fitted_survival()} but also adds the data points as  vertical lines. 
 
-The function \code{predict_pdf()} (NOT IMPLEMENTED YET) takes a fitted object and test  data and plots the predictive cdf's.
+The function \code{predict_pdf()} takes a fitted object and test  data and plots the predictive cdf's.
 }
 \usage{
 fitted_cdf(model, obs, title, from = 0, to = 10, no.points = 201, 
