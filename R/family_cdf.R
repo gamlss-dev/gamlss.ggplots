@@ -141,7 +141,7 @@ if (type=="Discrete")
     p11 <- p11 +  
       ggplot2::geom_step(direction = "hv", 
               ggplot2::aes(x = y.var, y = cdfArr),  
-                size = size.point, color = col.fill[1])
+              linewidth = size.point, color = col.fill[1])
   }
   else
   {
@@ -149,18 +149,18 @@ if (type=="Discrete")
     {
         p11 <- p11 + ggplot2::geom_step(direction = "hv", 
                 ggplot2::aes(x = .data[["y.var"]], y = .data[[paste0("X",i)]]),  
-                               size= size.point, color=col.fill[i])
+                linewidth= size.point, color=col.fill[i])
     } 
   }
 } else
 {
   if (lobs==1) p11 = p11 + ggplot2::geom_line(color=col.fill[1], alpha=alpha, 
-                                              size=size.line, aes(x=y.var, y=cdfArr))
+                                              linewidth=size.line, aes(x=y.var, y=cdfArr))
   else
   {# more than one
     for (i in 1:lobs)
     {
-      p11 <-p11 +  ggplot2::geom_line(color=col.fill[i], alpha=alpha, size=size.line, 
+      p11 <-p11 +  ggplot2::geom_line(color=col.fill[i], alpha=alpha, linewidth=size.line, 
                             ggplot2::aes(x=.data[["y.var"]], y= .data[[paste0("X",i)]]))
     } 
   }

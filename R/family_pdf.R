@@ -85,7 +85,6 @@ if (!fam$y.valid(y.var))  stop( "response variable out of range")
 # loop over         
 for (j in 1:lobs)
   {
-  
 if (fname%in%gamlss.bi.list)
 {
   pdf11 <-  switch(nopar,
@@ -98,12 +97,12 @@ if (fname%in%gamlss.bi.list)
 } else
 {  
       pdf11 <-  switch (nopar,
-                        paste0("d",fname,"(y.var,mu.var[j])"),
-                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j])"),
-                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], 
-                               nu.var[j])"),
-                        paste0("d",fname,"(y.var,mu.var[j],sigma.var[j], 
-                               nu.var[j], tau.var[j])")
+                        paste0("d",fname,"(y.var, mu=mu.var[j])"),
+                        paste0("d",fname,"(y.var, mu=mu.var[j],sigma=sigma.var[j])"),
+                        paste0("d",fname,"(y.var,mu=mu.var[j],sigma=sigma.var[j], 
+                               nu=nu.var[j])"),
+                        paste0("d",fname,"(y.var,mu=mu.var[j],sigma=sigma.var[j], 
+                               nu=nu.var[j], tau=tau.var[j])")
       )
 }
             fy11 <- eval(parse(text=pdf11))
@@ -140,7 +139,7 @@ if (type=="Discrete")
     p11 <- p11 +  #geom_hline( aes(yintercept = 0)) +
       ggplot2::geom_segment(mapping =  ggplot2::aes(x=y.var, y=pdfArr, 
                               xend = y.var, yend = 0), 
-                   color=col.fill[1],  size=size.seqment)
+                   color=col.fill[1],  linewidth = size.seqment)
   }
   else
   {
@@ -150,17 +149,17 @@ if (type=="Discrete")
              ggplot2::geom_segment(mapping = 
                     ggplot2::aes(x=.data[["y.var"]], 
                     y=.data[[paste0("X",i)]], xend = .data[["y.var"]], yend = 0), 
-                    color=col.fill[i], alpha=alpha, size=size.seqment)
+                    color=col.fill[i], alpha=alpha, linewidth=size.seqment)
       if (plot.point) p11 <- p11+ 
             ggplot2::geom_point(  
             ggplot2::aes(x=.data[["y.var"]], 
                          y=.data[[paste0("X",i)]]),  
-                  size = size.point, color=col.fill[i])
+            linewidth = size.point, color=col.fill[i])
       if (plot.line)  p11 <- p11 +  
           ggplot2::geom_line(  
           ggplot2::aes(x=.data[["y.var"]], 
                        y=.data[[paste0("X",i)]]),   
-                        size= size.line, color=col.fill[i])
+          linewidth = size.line, color=col.fill[i])
     } 
   }
 } else
