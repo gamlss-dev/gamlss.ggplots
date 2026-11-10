@@ -91,16 +91,32 @@ continuous variable
 
 # Version 2.1-27
 
-
-
 - function `bivar_fun()`:  for plotting any 2-dimensional  function $f(x,y)$.
 
 - functions `bivar_pdf()`:   for plotting any 2-dimensional pdf function $f(x,y)$.
 
+
+# Version 2.1-35
+
+several changes have been made during the last few months. Here we try to remember few;
+
+- `pe_param`, `pe_1_param` and `pe_2_param` 
+
+- `fitted_pdf`
+
+- `fitted_cdf`
+
+- `fitted_devianceIncr`
+
+- `fitted_centiles_gap`
+
+- `fitted_centiles`
+
+- `model_GAIC`
 
 
 
   
 ## NOTE: 
 
-the package vignette can be found in <https://mstasinopoulos.github.io/Functions-from-packages/.>    
+A package vignette can be found in: <https://mstasinopoulos.github.io/Functions-from-packages/.>    
